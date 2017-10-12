@@ -32,16 +32,20 @@ import {
   platformBrowserDynamic 
 } from '@angular/platform-browser-dynamic';
 
-@Component({
-  selector: 'app-hello-world',
-  template: `<span>Hello world</span>`
-})
-export class HelloWorldComponent {};
+import {
+  FormsComponent
+} from './forms/forms.component';
+
+// @Component({
+//   selector: 'app-hello-world',
+//   template: `<span>Hello world</span>`
+// })
+// export class HelloWorldComponent {};
 
 @NgModule({
   imports: [BrowserModule],
-  declarations: [HelloWorldComponent],
-  entryComponents: [HelloWorldComponent]
+  declarations: [FormsComponent],
+  entryComponents: [FormsComponent]
 })
 export class AppModule {
   ngDoBootstrap(app: ApplicationRef) {}
@@ -90,7 +94,7 @@ class FormWidget extends Widget {
     .then(ngModuleRef => {
       this.angularLoader = new AngularLoader(ngModuleRef);
       this.angularLoader.attachComponent(
-        HelloWorldComponent, this.componentNode)
+        FormsComponent, this.componentNode)
     });
   }
 }
