@@ -3,7 +3,7 @@ import {
   ChangeDetectorRef, EventEmitter, Output
 } from '@angular/core';
 
-import { Kernel } from '@jupyterlab/services';
+// import { Kernel } from '@jupyterlab/services';
 
 import { KernelService } from '../kernel.service';
 
@@ -39,7 +39,7 @@ eg: &lt;variable type="string"&gt;name&lt;/variable&gt; or
     }
   }
 
-  variableChanged(value) {
+  variableChanged(value: any) {
     // console.log('variable change')
     if (this.inputType.match('string')) {
       let escapedQuotes = this.variableValue.replace(/\"/g, '\\"')
@@ -85,7 +85,7 @@ except:
 
   fetchVariable() {
     this.myKernelSevice.runCode(this.fetchCode, '"fetch"_"' + this.variableName + '"').then(future => {
-      future.onIOPub = (msg => {
+      future.onIOPub = ((msg: any) => {
         if (msg.content.name == "stdout") {
           if (this.inputType.match('string')) {
             this.variableValue = String(msg.content.text)

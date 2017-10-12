@@ -2,9 +2,7 @@ import {
   Component, OnInit, AfterViewInit, OnDestroy,
   ViewChild, ViewContainerRef, ComponentRef,
   Compiler, ComponentFactory, NgModule,
-  ModuleWithComponentFactories, ComponentFactoryResolver,
-  isDevMode, ElementRef, ViewChildren, QueryList,
-  ChangeDetectorRef
+  ModuleWithComponentFactories, ViewChildren, QueryList
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
@@ -13,7 +11,7 @@ import * as  MarkdownIt from 'markdown-it';
 
 import { Mode } from '@jupyterlab/codemirror';
 
-import { FormWidgetsModule } from '../form-widgets.module';
+import { ScriptedFormElementsModule } from '../scripted-form-elements.module';
 import { KernelService } from '../kernel.service';
 import { StartComponent } from '../start/start.component';
 import { VariableComponent } from '../variable/variable.component';
@@ -45,9 +43,9 @@ export class FormComponent implements OnInit, AfterViewInit {
   private componentRef: ComponentRef<IRuntimeComponent>;
 
   constructor(
-    private componentFactoryResolver: ComponentFactoryResolver,
+    // private componentFactoryResolver: ComponentFactoryResolver,
     private compiler: Compiler,
-    private myKernelSevice: KernelService,
+    // private myKernelSevice: KernelService,
   ) { }
 
   ngOnInit() {
@@ -189,7 +187,7 @@ export class FormComponent implements OnInit, AfterViewInit {
       {
         imports: [
           CommonModule,
-          FormWidgetsModule
+          ScriptedFormElementsModule
         ],
         declarations: [
           RuntimeComponent

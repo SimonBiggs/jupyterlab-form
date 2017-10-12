@@ -1,7 +1,7 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import {
-  Kernel, KernelMessage, Session, ServerConnection
+  Kernel, Session, ServerConnection
 } from '@jupyterlab/services';
 
 
@@ -13,7 +13,7 @@ export class KernelService {
   kernel: Kernel.IKernel;
 
   queueId = 0;
-  queueLog = {};
+  queueLog: any = {};
 
   queue: Promise<any> = Promise.resolve();
 

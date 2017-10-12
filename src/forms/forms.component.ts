@@ -4,10 +4,10 @@ import {
 
 import * as CodeMirror from 'codemirror';
 
-import { ScriptedFormsModule } from '../scripted-forms/scripted-forms.module';
+// import { ScriptedFormsModule } from '../scripted-forms/scripted-forms.module';
 import { FormComponent } from '../scripted-forms/form/form.component';
 
-import { Mode } from '@jupyterlab/codemirror';
+// import { Mode } from '@jupyterlab/codemirror';
 
 import { FORMCONTENTS } from './default-form';
 
@@ -27,7 +27,7 @@ export class FormsComponent implements OnInit, AfterViewInit {
 
   @ViewChild('errorbox') errorbox: ElementRef;
   @ViewChild('form') formComponent: FormComponent;
-  @ViewChild('editor') editor;
+  @ViewChild('editor') editor: any;
 
   constructor(
     private myChangeDetectorRef: ChangeDetectorRef
@@ -87,7 +87,7 @@ export class FormsComponent implements OnInit, AfterViewInit {
     this.formComponent.activateForm();
   }
 
-  sleep(ms) {
+  sleep(ms: Number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 

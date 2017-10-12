@@ -7,7 +7,7 @@ import { OutputArea, OutputAreaModel } from '@jupyterlab/outputarea';
 import { Kernel } from '@jupyterlab/services';
 
 import {
-  Mode, CodeMirrorEditor
+  Mode
 } from '@jupyterlab/codemirror';
 
 import { KernelService } from '../kernel.service';
@@ -52,8 +52,9 @@ export class CodeComponent implements OnInit, AfterViewInit {
 
     })
     this.model = new OutputAreaModel()
-    this.renderMime = new RenderMime(
-      { initialFactories: defaultRendererFactories });
+    this.renderMime = new RenderMime({ 
+      initialFactories: defaultRendererFactories
+    });
 
     this.outputAreaOptions = {
       model: this.model,

@@ -20,7 +20,7 @@ import {
 } from '@jupyterlab/apputils';
 
 import {
-  Component, NgModule, ApplicationRef, Type, Injector,
+  NgModule, ApplicationRef, Type, Injector,
   ComponentFactoryResolver, ComponentRef, NgModuleRef, NgZone
 } from '@angular/core';
 
@@ -35,12 +35,6 @@ import {
 import {
   FormsComponent
 } from './forms/forms.component';
-
-// @Component({
-//   selector: 'app-hello-world',
-//   template: `<span>Hello world</span>`
-// })
-// export class HelloWorldComponent {};
 
 @NgModule({
   imports: [BrowserModule],

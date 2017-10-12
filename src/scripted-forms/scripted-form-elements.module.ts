@@ -11,7 +11,7 @@ import { StartComponent } from './start/start.component';
 import { LiveComponent } from './live/live.component';
 import { ButtonComponent } from './button/button.component';
 import { VariableComponent } from './variable/variable.component';
-import { FormComponent } from './form/form.component';
+// import { FormComponent } from './form/form.component';
 
 @NgModule({
   imports: [

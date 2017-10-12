@@ -1,6 +1,5 @@
 import {
-  Component, OnInit, ContentChildren, QueryList, AfterViewInit,
-  ChangeDetectorRef
+  Component, OnInit, ContentChildren, QueryList, AfterViewInit
 } from '@angular/core';
 
 import { VariableComponent } from '../variable/variable.component'
@@ -21,7 +20,7 @@ export class LiveComponent implements OnInit, AfterViewInit {
   @ContentChildren(CodeComponent) codeComponents: QueryList<CodeComponent>
 
   constructor(
-      private myChangeDetectorRef: ChangeDetectorRef
+      // private myChangeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -37,7 +36,7 @@ export class LiveComponent implements OnInit, AfterViewInit {
     }
   }
 
-  variableChanged(variableName) {
+  variableChanged(variableName: string) {
     if (this.afterViewInit && this.isFormReady) {
       this.codeComponents.toArray().forEach((codeComponent, index) => {
         codeComponent.runCode(
@@ -50,7 +49,7 @@ export class LiveComponent implements OnInit, AfterViewInit {
     this.isFormReady = true
   }
 
-  setId(id) {
+  setId(id: number) {
     this.liveId = id
   }
 }

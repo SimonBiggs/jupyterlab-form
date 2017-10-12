@@ -48,7 +48,7 @@ export class ButtonComponent implements OnInit, AfterViewInit {
     this.isFormReady = true
   }
 
-  setId(id) {
+  setId(id: number) {
     this.buttonId = id
   }
 

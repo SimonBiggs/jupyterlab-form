@@ -30,7 +30,7 @@ export class StartComponent implements OnInit, AfterViewInit {
     })
   }
 
-  setId(id) {
+  setId(id: number) {
     this.startId = id
   }
 }
