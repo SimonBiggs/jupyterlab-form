@@ -4,16 +4,20 @@ import 'core-js/es7/reflect';
 import 'zone.js/dist/zone';
 
 import {
-  JupyterLabPlugin
+  Widget
+} from '@phosphor/widgets';
+
+import {
+  JSONExt
+} from '@phosphor/coreutils';
+
+import {
+  JupyterLab, JupyterLabPlugin, ILayoutRestorer
 } from '@jupyterlab/application';
 
 import {
-  ICommandPalette
+  ICommandPalette, InstanceTracker
 } from '@jupyterlab/apputils';
-
-import {
-  Widget
-} from '@phosphor/widgets';
 
 import {
   Component, NgModule, ApplicationRef, Type, Injector,
@@ -28,14 +32,11 @@ import {
   platformBrowserDynamic 
 } from '@angular/platform-browser-dynamic';
 
-
 @Component({
   selector: 'app-hello-world',
   template: `<span>Hello world</span>`
 })
 export class HelloWorldComponent {};
-
-let component = document.createElement('app-hello-world');
 
 @NgModule({
   imports: [BrowserModule],
@@ -46,76 +47,94 @@ export class AppModule {
   ngDoBootstrap(app: ApplicationRef) {}
 };
 
+export class AngularLoader {
+  private applicationRef: ApplicationRef;
+  private componentFactoryResolver: ComponentFactoryResolver;
+  private ngZone: NgZone;
+  private injector: Injector;
 
-export class DynamicNg2Loader {
-    private appRef: ApplicationRef;
-    private componentFactoryResolver: ComponentFactoryResolver;
-    private zone: NgZone;
-    private injector: Injector;
-    private ngModuleRef: NgModuleRef<AppModule> 
+  constructor( ngModuleRef:NgModuleRef<AppModule> ) {
+    this.injector = ngModuleRef.injector;
+    this.applicationRef = this.injector.get(ApplicationRef);
+    this.ngZone = this.injector.get(NgZone);
+    this.componentFactoryResolver = this.injector.get(ComponentFactoryResolver);
+  }
 
-    constructor( ngModuleRef:NgModuleRef<AppModule> ) {
-      this.ngModuleRef = ngModuleRef;
-      this.injector = this.ngModuleRef.injector;
-      this.appRef = this.injector.get(ApplicationRef);
-      this.zone = this.injector.get(NgZone);
-      this.componentFactoryResolver = this.injector.get(ComponentFactoryResolver);
-    }
+  attachComponent<T>(component:Type<T>, dom:Element): ComponentRef<T> {
+    let componentRef: ComponentRef<T>;
+    this.ngZone.run(() => {
+      let componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
+      componentRef = componentFactory.create(this.injector, [], dom);
+      this.applicationRef.attachView(componentRef.hostView);
 
-    loadComponentAtDom<T>(component:Type<T>, dom:Element, onInit?: (Component:T) => void): ComponentRef<T> {
-        let componentRef: ComponentRef<T>;
-        this.zone.run(() => {
-            try {
-                let componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
-                componentRef = componentFactory.create(this.injector, [], dom);
-                onInit && onInit(componentRef.instance);
-                this.appRef.attachView(componentRef.hostView);
-                
-            } catch (e) {
-                console.error("Unable to load component", component, "at", dom);
-                throw e;
-            }
-        });
-        return componentRef;
-    }
+      console.log('angular bootstrap complete')
+    });
+    return componentRef;
+  }
 }
 
+class FormWidget extends Widget {
+  componentNode: HTMLElement
+  angularLoader: AngularLoader;
 
+  constructor() {
+    super();
+    this.id = 'form';
+    this.title.label = 'form';
+    this.title.closable = true;
 
-/**
- * Initialization data for the jupyterlab_form extension.
- */
+    this.componentNode = document.createElement('app-hello-world');
+    this.node.appendChild(this.componentNode);
+
+    platformBrowserDynamic().bootstrapModule(AppModule)
+    .then(ngModuleRef => {
+      this.angularLoader = new AngularLoader(ngModuleRef);
+      this.angularLoader.attachComponent(
+        HelloWorldComponent, this.componentNode)
+    });
+  }
+}
+
+function activate(app: JupyterLab, palette: ICommandPalette, restorer: ILayoutRestorer) {
+  let widget: FormWidget
+
+  let tracker = new InstanceTracker<Widget>({
+    namespace: 'form'
+  });
+
+  const command: string = 'form:open';
+  
+  app.commands.addCommand(command, {
+    label: 'Open Form',
+    execute: () => {
+      if(!widget) {
+        widget = new FormWidget();
+      }
+      if(!tracker.has(widget)) {
+        tracker.add(widget);
+      }
+      if(!widget.isAttached) {
+        app.shell.addToMainArea(widget);
+      }
+      app.shell.activateById(widget.id);
+    }
+  });
+
+  palette.addItem({command, category: 'Form'})
+
+  restorer.restore(tracker, {
+    command,
+    args: () => JSONExt.emptyObject,
+    name: () => 'form'
+  })
+
+}
+
 const extension: JupyterLabPlugin<void> = {
   id: 'form',
   autoStart: true,
-  requires: [ICommandPalette],
-  activate: (app, palette: ICommandPalette) => {
-    let angularLoader: DynamicNg2Loader;
-    console.log(HelloWorldComponent)
-    let widget: Widget = new Widget();
-    widget.id = 'form';
-    widget.title.label = 'form';
-    widget.title.closable = true;
-
-    widget.node.appendChild(component);
-    platformBrowserDynamic().bootstrapModule(AppModule).then( ng2ModuleInjector => {
-      angularLoader = new DynamicNg2Loader(ng2ModuleInjector);
-      angularLoader.loadComponentAtDom(HelloWorldComponent, widget.node)
-    });
-    
-
-    const command: string = 'form:open';
-    app.commands.addCommand(command, {
-      label: 'Form',
-      execute: () => {
-        if(!widget.isAttached) {
-          app.shell.addToMainArea(widget);
-        }
-        app.shell.activateById(widget.id);
-      }
-    });
-    palette.addItem({command, category: 'Open Form'})
-  }
+  requires: [ICommandPalette, ILayoutRestorer],
+  activate: activate
 };
 
 export default extension;
