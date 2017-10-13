@@ -1,8 +1,4 @@
-export const FORMCONTENTS = `
-[trend name="Average Reading"]average[/trend]
-[trend name="Power Value"]power[/trend]
-
-[start]
+export const FORMCONTENTS = `[start]
 \`\`\`
 import time
 import numpy as np

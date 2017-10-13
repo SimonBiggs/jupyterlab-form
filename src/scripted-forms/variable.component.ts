@@ -9,10 +9,9 @@ import { KernelService } from './kernel.service';
 
 @Component({
   selector: 'form-variable',
-  template: `
-<span #variablecontainer *ngIf="variableName === undefined">
-  <ng-content></ng-content>
-</span>
+  // It is important to not have spaces here before and after
+  // ng-content. White space would be sent through to python.
+  template: `<span #variablecontainer *ngIf="variableName === undefined"><ng-content></ng-content></span>
   
 <md-input-container *ngIf="variableName">
     <input
@@ -33,7 +32,11 @@ import { KernelService } from './kernel.service';
         (ngModelChange)="variableChanged($event)"
         type="number" class="variableNumber">
 </md-input-container>
-`
+`,
+  styles: [`.variableNumber {
+    width: 80px;
+  }
+  `]
 })
 export class VariableComponent implements OnInit, AfterViewInit {
   fetchCode: string
@@ -55,14 +58,16 @@ export class VariableComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
-    if (!this.inputType.match('string') && !this.inputType.match('number')) {
-      throw new RangeError(`When creating a variable must declare the type as either 'string' or 'number'
-eg: &lt;variable type="string"&gt;name&lt;/variable&gt; or
-    &lt;variable type="number"&gt;name&lt;/variable&gt;`)
-    }
+//     this.myChangeDetectorRef.detectChanges()
+//     if (!this.inputType.match('string') && !this.inputType.match('number')) {
+//       throw new RangeError(`When creating a variable must declare the type as either 'string' or 'number'
+// eg: &lt;variable type="string"&gt;name&lt;/variable&gt; or
+//     &lt;variable type="number"&gt;name&lt;/variable&gt;`)
+//     }
   }
 
   variableChanged(value: any) {
+    // this.myChangeDetectorRef.detectChanges()
     // console.log('variable change')
     if (this.inputType.match('string')) {
       let escapedQuotes = this.variableValue.replace(/\"/g, '\\"')
@@ -97,7 +102,7 @@ eg: &lt;variable type="string"&gt;name&lt;/variable&gt; or
   ngAfterViewInit() {
     this.variableName = this.variablecontainer.nativeElement.innerHTML
     this.myChangeDetectorRef.detectChanges()
-
+    
     this.fetchCode = `
 try:
     print(${this.variableName})

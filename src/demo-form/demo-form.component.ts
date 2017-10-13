@@ -1,5 +1,5 @@
 import {
-    Component, OnInit, AfterViewInit, ViewChild
+    Component, OnInit, AfterViewInit, ViewChild, ChangeDetectorRef
 } from '@angular/core';
 
 // import { ScriptedFormsModule } from '../scripted-forms/scripted-forms.module';
@@ -11,7 +11,8 @@ import { FORMCONTENTS } from './demo-form-contents';
 
 @Component({
   selector: 'app-demo-form',
-  template: `<app-form #form></app-form>`,
+  template: `<div class="margin"><app-form #form></app-form></div>`,
+  styles: [`.margin { margin: 20px;}`]
 })
 export class DemoFormComponent implements OnInit, AfterViewInit {
 
@@ -19,12 +20,15 @@ export class DemoFormComponent implements OnInit, AfterViewInit {
 
   @ViewChild('form') formComponent: FormComponent;
 
-  constructor() { }
+  constructor(
+    private myChangeDetectorRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit() { }
 
   ngAfterViewInit() {
     this.formComponent.setFormContents(FORMCONTENTS);
+    this.myChangeDetectorRef.detectChanges();
   }
 
 }

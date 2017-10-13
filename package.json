@@ -9,7 +9,7 @@
     "jupyterlab"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node-sass ./src/theme.scss ./lib/theme.css && cp ./src/style.css ./lib/style.css && cp ./src/mdi.svg ./lib/mdi.svg",
     "clean": "rimraf lib",
     "prepublish": "npm run build"
   },
@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "codelyzer": "^3.2.1",
+    "node-sass": "^4.5.3",
     "rimraf": "^2.6.1",
     "tslint": "^5.7.0",
     "typescript": "~2.4.0"

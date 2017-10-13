@@ -2,7 +2,8 @@ import {
   Component, OnInit, AfterViewInit, OnDestroy,
   ViewChild, ViewContainerRef, ComponentRef,
   Compiler, ComponentFactory, NgModule,
-  ModuleWithComponentFactories, ViewChildren, QueryList
+  ModuleWithComponentFactories, ViewChildren, QueryList,
+  // ChangeDetectorRef
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
@@ -131,10 +132,11 @@ export class FormComponent implements OnInit, AfterViewInit {
 
       constructor(
         private myKernelSevice: KernelService,
+        // private myChangeDetectorRef: ChangeDetectorRef
       ) { }
 
       ngOnInit() {
-        // this.myKernelSevice.startKernel()
+        this.myKernelSevice.startKernel()
       }
 
       ngOnDestroy() {
@@ -146,17 +148,13 @@ export class FormComponent implements OnInit, AfterViewInit {
 
       ngAfterViewInit() {
         this.initialiseForm()
+        // this.myChangeDetectorRef.detectChanges()
       }
 
       initialiseForm() {
         if (this.formActivation === false) {
-          this.myKernelSevice.startKernel();
+          // this.myKernelSevice.startKernel();
           this.formActivation = true;
-
-          console.log(this.startComponents);
-          console.log(this.variableComponents);
-          console.log(this.liveComponents);
-          console.log(this.buttonComponents);
 
           // The order here forces all import components to run first.
           // Only then will the variable component fetch the variables.
