@@ -3,9 +3,11 @@ import { Component, NgModule, ApplicationRef } from '@angular/core';
 
 @Component({
   selector: 'app-hello-world',
-  template: `<span>Hello world</span>`
+  template: `<span>Hello world! Test = {{test}}</span>`
 })
-export class HelloWorldComponent {};
+export class HelloWorldComponent {
+  test = 4;
+};
 
 @NgModule({
   declarations: [

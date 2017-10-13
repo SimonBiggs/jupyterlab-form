@@ -21,24 +21,41 @@ import {
 
 import {
   ApplicationRef, Type, Injector,
-  ComponentFactoryResolver, ComponentRef, NgModuleRef, NgZone
+  ComponentFactoryResolver, ComponentRef, NgZone
+  // NgModuleRef
 } from '@angular/core';
 
 import { 
   platformBrowserDynamic 
 } from '@angular/platform-browser-dynamic';
 
-// import {
-//   FormsComponent
-// } from './forms/forms.component';
+import {
+  DemoFormComponent
+} from './demo-form/demo-form.component';
 
-// import {
-//   DemoFormModule
-// } from './demo-form.module';
+import {
+  DemoFormModule
+} from './demo-form.module';
 
 import {
   HelloWorldModule, HelloWorldComponent
 } from './hello-world-module';
+
+let components: any = {
+  'app-demo-form': DemoFormComponent,
+  'app-hello-world': HelloWorldComponent
+};
+
+let modules: any = {
+  'app-demo-form': DemoFormModule,
+  'app-hello-world': HelloWorldModule
+};
+
+let selector = 'app-demo-form';
+
+// let module = modules[selector];
+// let component = components[selector];
+
 
 export class AngularLoader {
   private applicationRef: ApplicationRef;
@@ -46,7 +63,7 @@ export class AngularLoader {
   private ngZone: NgZone;
   private injector: Injector;
 
-  constructor( ngModuleRef:NgModuleRef<HelloWorldModule> ) {
+  constructor( ngModuleRef: any) {
     this.injector = ngModuleRef.injector;
     this.applicationRef = this.injector.get(ApplicationRef);
     this.ngZone = this.injector.get(NgZone);
@@ -76,14 +93,14 @@ class FormWidget extends Widget {
     this.title.label = 'form';
     this.title.closable = true;
 
-    this.componentNode = document.createElement('app-hello-world');
+    this.componentNode = document.createElement(selector);
     this.node.appendChild(this.componentNode);
 
-    platformBrowserDynamic().bootstrapModule(HelloWorldModule)
+    platformBrowserDynamic().bootstrapModule(modules[selector])
     .then(ngModuleRef => {
       this.angularLoader = new AngularLoader(ngModuleRef);
       this.angularLoader.attachComponent(
-        HelloWorldComponent, this.componentNode)
+        components[selector], this.componentNode)
     });
   }
 }
