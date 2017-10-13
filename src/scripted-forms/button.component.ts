@@ -2,11 +2,11 @@ import {
   Component, OnInit, ContentChildren, QueryList, AfterViewInit
 } from '@angular/core';
 
-import { CodeComponent } from '../code/code.component'
-import { KernelService } from '../kernel.service'
+import { CodeComponent } from './code.component'
+import { KernelService } from './kernel.service'
 
 @Component({
-  selector: 'jupyter-button',
+  selector: 'form-button',
   template: `
 <div>
   <ng-content></ng-content>

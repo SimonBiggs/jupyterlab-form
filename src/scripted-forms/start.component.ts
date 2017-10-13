@@ -2,10 +2,10 @@ import {
   Component, OnInit, ContentChildren, QueryList, AfterViewInit
 } from '@angular/core';
 
-import { CodeComponent } from '../code/code.component'
+import { CodeComponent } from './code.component'
 
 @Component({
-  selector: 'jupyter-start',
+  selector: 'form-start',
   template: `<ng-content></ng-content>`
 })
 export class StartComponent implements OnInit, AfterViewInit {

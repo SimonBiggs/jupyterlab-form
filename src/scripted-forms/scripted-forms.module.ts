@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ScriptedFormElementsModule } from './scripted-form-elements.module';
 
 import { KernelService } from './kernel.service';
-import { FormComponent } from './form/form.component';
+import { FormComponent } from './form.component';
 
 @NgModule({
   imports: [

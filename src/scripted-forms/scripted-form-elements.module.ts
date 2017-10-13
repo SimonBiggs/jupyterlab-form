@@ -6,14 +6,13 @@ import {
   MatButtonModule, MatInputModule, MatIconModule
 } from '@angular/material'
 
-import { CodeComponent } from './code/code.component';
+import { CodeComponent } from './code.component';
 
 import { KernelService } from './kernel.service';
-import { StartComponent } from './start/start.component';
-import { LiveComponent } from './live/live.component';
-import { ButtonComponent } from './button/button.component';
-import { VariableComponent } from './variable/variable.component';
-// import { FormComponent } from './form/form.component';
+import { StartComponent } from './start.component';
+import { LiveComponent } from './live.component';
+import { ButtonComponent } from './button.component';
+import { VariableComponent } from './variable.component';
 
 @NgModule({
   imports: [

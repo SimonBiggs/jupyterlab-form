@@ -10,7 +10,7 @@ import {
   Mode
 } from '@jupyterlab/codemirror';
 
-import { KernelService } from '../kernel.service';
+import { KernelService } from './kernel.service';
 
 @Component({
   selector: 'code',

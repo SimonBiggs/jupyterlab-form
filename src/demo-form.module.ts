@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ApplicationRef } from '@angular/core';
-// import { FormsModule } from '@angular/forms';
-// import { HttpModule } from '@angular/http';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 // import { 
 //   MatButtonModule, MatInputModule, MatIconModule
@@ -19,6 +19,8 @@ import { DemoFormComponent } from './demo-form/demo-form.component';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    HttpModule,
     BrowserAnimationsModule,
     ScriptedFormsModule
   ],

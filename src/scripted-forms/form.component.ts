@@ -11,12 +11,12 @@ import * as  MarkdownIt from 'markdown-it';
 
 import { Mode } from '@jupyterlab/codemirror';
 
-import { ScriptedFormElementsModule } from '../scripted-form-elements.module';
-import { KernelService } from '../kernel.service';
-import { StartComponent } from '../start/start.component';
-import { VariableComponent } from '../variable/variable.component';
-import { LiveComponent } from '../live/live.component';
-import { ButtonComponent } from '../button/button.component';
+import { ScriptedFormElementsModule } from './scripted-form-elements.module';
+import { KernelService } from './kernel.service';
+import { StartComponent } from './start.component';
+import { VariableComponent } from './variable.component';
+import { LiveComponent } from './live.component';
+import { ButtonComponent } from './button.component';
 
 interface IRuntimeComponent {
   initialiseForm: Function;
@@ -75,16 +75,16 @@ export class FormComponent implements OnInit, AfterViewInit {
   }
 
   buildForm(form: string) {
-    const customTags = form.replace(/\[start\]/g, '\n<jupyter-start>\n'
-    ).replace(/\[\/start\]/g, '\n</jupyter-start>\n'
-    ).replace(/\[live\]/g, '\n<jupyter-live>\n'
-    ).replace(/\[\/live\]/g, '\n</jupyter-live>\n'
-    ).replace(/\[button\]/g, '\n<jupyter-button>\n'
-    ).replace(/\[\/button\]/g, '\n</jupyter-button>\n'
-    ).replace(/\[number\]/g, '<jupyter-variable type="number">'
-    ).replace(/\[\/number\]/g, '</jupyter-variable>'
-    ).replace(/\[string\]/g, '<jupyter-variable type="string">'
-    ).replace(/\[\/string\]/g, '</jupyter-variable>');
+    const customTags = form.replace(/\[start\]/g, '\n<form-start>\n'
+    ).replace(/\[\/start\]/g, '\n</form-start>\n'
+    ).replace(/\[live\]/g, '\n<form-live>\n'
+    ).replace(/\[\/live\]/g, '\n</form-live>\n'
+    ).replace(/\[button\]/g, '\n<form-button>\n'
+    ).replace(/\[\/button\]/g, '\n</form-button>\n'
+    ).replace(/\[number\]/g, '<form-variable type="number">'
+    ).replace(/\[\/number\]/g, '</form-variable>'
+    ).replace(/\[string\]/g, '<form-variable type="string">'
+    ).replace(/\[\/string\]/g, '</form-variable>');
 
     const html = this.myMarkdownIt.render(customTags);
     const escapedHtml = html.replace(/{/g, '@~lb~@'
@@ -145,13 +145,18 @@ export class FormComponent implements OnInit, AfterViewInit {
       }
 
       ngAfterViewInit() {
-        // this.initialiseForm()
+        this.initialiseForm()
       }
 
       initialiseForm() {
         if (this.formActivation === false) {
           this.myKernelSevice.startKernel();
           this.formActivation = true;
+
+          console.log(this.startComponents);
+          console.log(this.variableComponents);
+          console.log(this.liveComponents);
+          console.log(this.buttonComponents);
 
           // The order here forces all import components to run first.
           // Only then will the variable component fetch the variables.

@@ -3,7 +3,7 @@ import {
 } from '@angular/core';
 
 // import { ScriptedFormsModule } from '../scripted-forms/scripted-forms.module';
-import { FormComponent } from '../scripted-forms/form/form.component';
+import { FormComponent } from '../scripted-forms/form.component';
 
 // import { Mode } from '@jupyterlab/codemirror';
 
@@ -25,7 +25,6 @@ export class DemoFormComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.formComponent.setFormContents(FORMCONTENTS);
-    this.formComponent.activateForm();
   }
 
 }

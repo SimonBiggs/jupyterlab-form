@@ -5,10 +5,10 @@ import {
 
 // import { Kernel } from '@jupyterlab/services';
 
-import { KernelService } from '../kernel.service';
+import { KernelService } from './kernel.service';
 
 @Component({
-  selector: 'jupyter-variable',
+  selector: 'form-variable',
   template: `
 <span #variablecontainer *ngIf="variableName === undefined">
   <ng-content></ng-content>

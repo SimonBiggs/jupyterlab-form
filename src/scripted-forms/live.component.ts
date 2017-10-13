@@ -2,11 +2,11 @@ import {
   Component, OnInit, ContentChildren, QueryList, AfterViewInit
 } from '@angular/core';
 
-import { VariableComponent } from '../variable/variable.component'
-import { CodeComponent } from '../code/code.component'
+import { VariableComponent } from './variable.component'
+import { CodeComponent } from './code.component'
 
 @Component({
-  selector: 'jupyter-live',
+  selector: 'form-live',
   template: `<ng-content></ng-content>`
 })
 export class LiveComponent implements OnInit, AfterViewInit {
