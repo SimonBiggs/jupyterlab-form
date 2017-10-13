@@ -6,8 +6,7 @@ import { CodeComponent } from '../code/code.component'
 
 @Component({
   selector: 'jupyter-start',
-  templateUrl: './start.component.html',
-  styleUrls: ['./start.component.css']
+  template: `<ng-content></ng-content>`
 })
 export class StartComponent implements OnInit, AfterViewInit {
 

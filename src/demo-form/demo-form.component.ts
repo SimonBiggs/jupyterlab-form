@@ -11,8 +11,7 @@ import { FORMCONTENTS } from './demo-form-contents';
 
 @Component({
   selector: 'app-demo-form',
-  templateUrl: './demo-form.component.html',
-  styleUrls: ['./demo-form.component.css']
+  template: `<app-form #form></app-form>`,
 })
 export class DemoFormComponent implements OnInit, AfterViewInit {
 

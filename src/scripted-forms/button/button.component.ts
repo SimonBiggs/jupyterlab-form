@@ -7,8 +7,19 @@ import { KernelService } from '../kernel.service'
 
 @Component({
   selector: 'jupyter-button',
-  templateUrl: './button.component.html',
-  styleUrls: ['./button.component.css']
+  template: `
+<div>
+  <ng-content></ng-content>
+  <div align="right">
+    <button
+    md-mini-fab
+    (click)="runCode()"
+    [disabled]="!isFormReady || codeRunning">
+      <md-icon>keyboard_return</md-icon>
+    </button>
+  </div>
+</div>
+`
 })
 export class ButtonComponent implements OnInit, AfterViewInit {
 

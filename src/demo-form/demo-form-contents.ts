@@ -1,9 +1,4 @@
 export const FORMCONTENTS = `
-Hello World!
-`
-
-
-export const boo = `
 [trend name="Average Reading"]average[/trend]
 [trend name="Power Value"]power[/trend]
 

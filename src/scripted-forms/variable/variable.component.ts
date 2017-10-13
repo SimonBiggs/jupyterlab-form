@@ -9,8 +9,31 @@ import { KernelService } from '../kernel.service';
 
 @Component({
   selector: 'jupyter-variable',
-  templateUrl: './variable.component.html',
-  styleUrls: ['./variable.component.css']
+  template: `
+<span #variablecontainer *ngIf="variableName === undefined">
+  <ng-content></ng-content>
+</span>
+  
+<md-input-container *ngIf="variableName">
+    <input
+        *ngIf="inputType=='string'"
+        mdInput
+        [disabled]="!isFormReady"
+        [placeholder]="variableName"
+        [(ngModel)]="variableValue"
+        (ngModelChange)="variableChanged($event)"
+        type="text" class="variableString">
+
+    <input
+        *ngIf="inputType=='number'"
+        mdInput
+        [disabled]="!isFormReady"
+        [placeholder]="variableName"
+        [(ngModel)]="variableValue"
+        (ngModelChange)="variableChanged($event)"
+        type="number" class="variableNumber">
+</md-input-container>
+`
 })
 export class VariableComponent implements OnInit, AfterViewInit {
   fetchCode: string

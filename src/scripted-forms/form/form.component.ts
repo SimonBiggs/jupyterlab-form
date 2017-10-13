@@ -24,8 +24,7 @@ interface IRuntimeComponent {
 
 @Component({
   selector: 'app-form',
-  templateUrl: './form.component.html',
-  styleUrls: ['./form.component.css']
+  template: `<div #container></div>`
 })
 export class FormComponent implements OnInit, AfterViewInit {
 

@@ -14,8 +14,12 @@ import { KernelService } from '../kernel.service';
 
 @Component({
   selector: 'code',
-  templateUrl: './code.component.html',
-  styleUrls: ['./code.component.css']
+  template: `
+<span #outputcontainer></span>
+<span #codecontainer *ngIf="future === undefined">
+  <ng-content></ng-content>
+</span>
+`
 })
 export class CodeComponent implements OnInit, AfterViewInit {
 

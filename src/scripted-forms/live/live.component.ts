@@ -7,8 +7,7 @@ import { CodeComponent } from '../code/code.component'
 
 @Component({
   selector: 'jupyter-live',
-  templateUrl: './live.component.html',
-  styleUrls: ['./live.component.css']
+  template: `<ng-content></ng-content>`
 })
 export class LiveComponent implements OnInit, AfterViewInit {
 
