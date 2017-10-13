@@ -14,7 +14,7 @@ testing_outside = "hello"
 
 # Write a title here
 
-This is just a markdown file with a few custom tags.
+This is just a markdown file with a few additional tags.
 Open this file in a text editor to see this form live update.
 
 Edit the values in the input boxes below to see the
