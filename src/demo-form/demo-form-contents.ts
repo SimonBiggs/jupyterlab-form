@@ -14,10 +14,11 @@ testing_outside = "hello"
 
 # Write a title here
 
-Edit the text box on the left.
-Press "Ctrl + Enter" to update the preview.
+This is just a markdown file with a few custom tags.
+Open this file in a text editor to see this form live update.
 
-Live will run and re-run whenever one of the input boxes is changed.
+Edit the values in the input boxes below to see the
+corresponding python code run.
 
 [live]
 
