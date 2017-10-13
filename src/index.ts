@@ -20,30 +20,25 @@ import {
 } from '@jupyterlab/apputils';
 
 import {
-  NgModule, ApplicationRef, Type, Injector,
+  ApplicationRef, Type, Injector,
   ComponentFactoryResolver, ComponentRef, NgModuleRef, NgZone
 } from '@angular/core';
-
-import {
-  BrowserModule
-} from '@angular/platform-browser';
 
 import { 
   platformBrowserDynamic 
 } from '@angular/platform-browser-dynamic';
 
-import {
-  FormsComponent
-} from './forms/forms.component';
+// import {
+//   FormsComponent
+// } from './forms/forms.component';
 
-@NgModule({
-  imports: [BrowserModule],
-  declarations: [FormsComponent],
-  entryComponents: [FormsComponent]
-})
-export class AppModule {
-  ngDoBootstrap(app: ApplicationRef) {}
-};
+// import {
+//   DemoFormModule
+// } from './demo-form.module';
+
+import {
+  HelloWorldModule, HelloWorldComponent
+} from './hello-world-module';
 
 export class AngularLoader {
   private applicationRef: ApplicationRef;
@@ -51,7 +46,7 @@ export class AngularLoader {
   private ngZone: NgZone;
   private injector: Injector;
 
-  constructor( ngModuleRef:NgModuleRef<AppModule> ) {
+  constructor( ngModuleRef:NgModuleRef<HelloWorldModule> ) {
     this.injector = ngModuleRef.injector;
     this.applicationRef = this.injector.get(ApplicationRef);
     this.ngZone = this.injector.get(NgZone);
@@ -84,11 +79,11 @@ class FormWidget extends Widget {
     this.componentNode = document.createElement('app-hello-world');
     this.node.appendChild(this.componentNode);
 
-    platformBrowserDynamic().bootstrapModule(AppModule)
+    platformBrowserDynamic().bootstrapModule(HelloWorldModule)
     .then(ngModuleRef => {
       this.angularLoader = new AngularLoader(ngModuleRef);
       this.angularLoader.attachComponent(
-        FormsComponent, this.componentNode)
+        HelloWorldComponent, this.componentNode)
     });
   }
 }

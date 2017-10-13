@@ -2,7 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { MaterialModule } from '@angular/material';
+import { 
+  MatButtonModule, MatInputModule, MatIconModule
+} from '@angular/material'
 
 import { CodeComponent } from './code/code.component';
 
@@ -16,7 +18,7 @@ import { VariableComponent } from './variable/variable.component';
 @NgModule({
   imports: [
     CommonModule,
-    MaterialModule,
+    MatButtonModule, MatInputModule, MatIconModule,
     FormsModule
   ],
   declarations: [
