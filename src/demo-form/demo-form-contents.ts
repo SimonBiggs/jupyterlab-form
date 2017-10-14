@@ -26,8 +26,9 @@ corresponding python code run.
 
 [number]data[0][/number]
 [number]data[1][/number]
-[number]data[2][/number] Average = 
-\`print("{0:.4f}".format(average))\`
+[number]data[2][/number]
+ 
+\`print("Average = {0:.4f}".format(average))\`
 
 [/live]
 
