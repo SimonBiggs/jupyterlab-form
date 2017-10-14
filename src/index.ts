@@ -5,6 +5,13 @@ import 'zone.js/dist/zone';
 
 import './theme.css';
 import './style.css';
+// import 'https://fonts.googleapis.com/icon?family=Material+Icons';
+
+let link = document.createElement('link');
+link.rel = 'stylesheet';
+link.href = 'https://fonts.googleapis.com/icon?family=Material+Icons';
+link.setAttribute('async', '');
+document.head.appendChild(link);
 
 import {
   Widget

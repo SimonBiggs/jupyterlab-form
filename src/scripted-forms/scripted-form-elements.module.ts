@@ -1,10 +1,15 @@
 import { NgModule } from '@angular/core';
+// import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { 
-  MatButtonModule, MatInputModule, MatIconModule
+  MaterialModule,
+  // MatButtonModule, MatInputModule, MatIconModule, 
+  // MatIconRegistry
 } from '@angular/material'
+
+// import { DomSanitizer } from '@angular/platform-browser';
 
 import { CodeComponent } from './code.component';
 
@@ -17,7 +22,8 @@ import { VariableComponent } from './variable.component';
 @NgModule({
   imports: [
     CommonModule,
-    MatButtonModule, MatInputModule, MatIconModule,
+    MaterialModule,
+    // MatButtonModule, MatInputModule, MatIconModule,
     FormsModule
   ],
   declarations: [
@@ -38,4 +44,9 @@ import { VariableComponent } from './variable.component';
     VariableComponent
   ]
 })
-export class ScriptedFormElementsModule { }
+export class ScriptedFormElementsModule { 
+  // constructor(mdIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
+  //   mdIconRegistry.addSvgIconSet(
+  //     domSanitizer.bypassSecurityTrustResourceUrl('./mdi.svg'));
+  // }
+}

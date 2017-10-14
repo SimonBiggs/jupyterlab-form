@@ -3,11 +3,11 @@ import { NgModule, ApplicationRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { 
-  MatButtonModule, MatInputModule, MatIconModule, MatIconRegistry
-} from '@angular/material'
+// import { 
+//   MaterialModule
+// } from '@angular/material'
 
-import { DomSanitizer } from '@angular/platform-browser';
+// import { DomSanitizer } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ScriptedFormsModule } from './scripted-forms/scripted-forms.module';
@@ -22,16 +22,16 @@ import { DemoFormComponent } from './demo-form/demo-form.component';
     BrowserModule,
     FormsModule,
     HttpModule,
-    MatButtonModule, MatInputModule, MatIconModule,
+    // MaterialModule,
     BrowserAnimationsModule,
     ScriptedFormsModule
   ],
   entryComponents: [DemoFormComponent]
 })
 export class DemoFormModule {
-  constructor(mdIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
-    mdIconRegistry.addSvgIconSet(
-      domSanitizer.bypassSecurityTrustResourceUrl('./mdi.svg'));
-  }
+  // constructor(mdIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
+  //   mdIconRegistry.addSvgIconSet(
+  //     domSanitizer.bypassSecurityTrustResourceUrl('./mdi.svg'));
+  // }
   ngDoBootstrap(app: ApplicationRef) {}
 };

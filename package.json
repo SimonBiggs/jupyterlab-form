@@ -1,6 +1,11 @@
 {
   "name": "jupyterlab-form",
   "version": "0.1.0",
+  "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SimonBiggs/jupyterlab-form.git"
+  },
   "description": "Interactive forms.",
   "author": "Simon Biggs",
   "main": "lib/index.js",
@@ -9,7 +14,7 @@
     "jupyterlab"
   ],
   "scripts": {
-    "build": "tsc && node-sass ./src/theme.scss ./lib/theme.css && cp ./src/style.css ./lib/style.css && cp ./src/mdi.svg ./lib/mdi.svg",
+    "build": "npm run clean && cp -r ./src ./lib && tsc && node-sass ./src/theme.scss ./lib/theme.css",
     "watch": "tsc -w",
     "clean": "rimraf lib",
     "prepublish": "npm run build"
@@ -22,13 +27,13 @@
   },
   "dependencies": {
     "@angular/animations": "4.4.5",
-    "@angular/cdk": "2.0.0-beta.12",
+    "@angular/cdk": "2.0.0-beta.10",
     "@angular/common": "4.4.5",
     "@angular/compiler": "4.4.5",
     "@angular/core": "4.4.5",
     "@angular/forms": "4.4.5",
     "@angular/http": "4.4.5",
-    "@angular/material": "2.0.0-beta.12",
+    "@angular/material": "2.0.0-beta.10",
     "@angular/platform-browser": "4.4.5",
     "@angular/platform-browser-dynamic": "4.4.5",
     "@jupyterlab/application": "0.11.1",
