@@ -13,10 +13,8 @@ import {
 export class KernelService {
   services: ServiceManager;
   path: string;
-  sessionConnected = new PromiseDelegate<void>();
+  sessionConnected = new PromiseDelegate<boolean>();
 
-  settings: ServerConnection.ISettings;
-  options: Session.IOptions;
   session: Session.ISession;
   kernel: Kernel.IKernelConnection;
 
@@ -24,32 +22,6 @@ export class KernelService {
   queueLog: any = {};
 
   queue: Promise<any> = this.sessionConnected.promise;
-
-  testcode = [
-    'import numpy as np',
-    'import matplotlib.pyplot as plt',
-    '%matplotlib inline',
-    'x = np.linspace(-10,10)',
-    'y = x**2',
-    'print(x)',
-    'print(y)',
-    'plt.plot(x, y)'
-  ].join('\n');
-
-  constructor(
-  ) {
-    // this.defineSettings();
-  }
-
-  // defineSettings() {
-  //   this.settings = ServerConnection.makeSettings({});
-
-  //   this.options = {
-  //     kernelName: 'python3',
-  //     serverSettings: this.settings,
-  //     path: './testing.md'
-  //   };
-  // }
 
   setServices(services: ServiceManager) {
     this.services = services;
@@ -64,24 +36,28 @@ export class KernelService {
   }
 
   sessionConnect() {
+    let settings = ServerConnection.makeSettings({});
+    
+    let options = {
+      kernelName: 'python3',
+      serverSettings: settings,
+      path: this.path
+    };
+
     this.services.sessions.findByPath(this.path).then(model => {
       // console.log(model);
-      Session.connectTo(model.id).then(session => {
-        // console.log(session);
+      Session.connectTo(model.id, settings).then(session => {
+        console.log(session);
         this.sessionReady(session);
+        this.sessionConnected.resolve(false);
+        console.log('previous session ready')
       })
     }).catch(() => {
-      let settings = ServerConnection.makeSettings({});
-      
-      let options = {
-        kernelName: 'python3',
-        serverSettings: settings,
-        path: this.path
-      };
-
       Session.startNew(options).then(session => {
-        // console.log(session);
+        console.log(session);
         this.sessionReady(session);
+        this.sessionConnected.resolve(true);
+        console.log('new session ready')
       })
     })
     
@@ -90,15 +66,7 @@ export class KernelService {
   sessionReady(session: Session.ISession) {
     this.session = session;
     this.kernel = this.session.kernel;
-    this.sessionConnected.resolve(undefined);
   }
-
-
-  // sessionConnect() {
-  //   Session.listRunning(this.settings).then(sessionModels => {
-  //     sessionModels[0].path
-  //   })
-  // }
 
   addToQueue(name: string, asyncFunction: (id: number ) => Promise<any>): Promise<any> {
     const currentQueueId = this.queueId;
@@ -107,39 +75,12 @@ export class KernelService {
     this.queueId += 1;
     const previous = this.queue;
     return this.queue = (async () => {
+      // console.log(previous);
       await previous;
       delete this.queueLog[currentQueueId];
       return asyncFunction(currentQueueId);
     })();
   }
-
-  // startKernel(): Promise<void> {
-  //   return this.addToQueue(null, async (id: number): Promise<void> => {
-  //     console.log('Start Kernel Queue Item');
-  //     await this.sessionConnected.promise.then(() => {
-  //       this.kernel = this.session.kernel;
-  //     }).catch(err => {
-  //       console.error(err);
-  //     });
-  //   });
-  // }
-
-  // shutdownKernel(): Promise<void> {
-  //   return this.addToQueue(null, async (id: number): Promise<void> => {
-  //     console.log('Shutdown Kernel Queue Item');
-  //     await this.kernel.shutdown();
-  //   });
-  // }
-
-  // forceShutdownKernel(): Promise<void> {
-  //   this.queue = Promise.resolve();
-  //   return this.shutdownKernel();
-  // }
-
-  // resetKernel(): Promise<void> {
-  //   this.forceShutdownKernel();
-  //   return this.startKernel();
-  // }
 
   runCode(code: string, name: string): Promise<any> {
     let future: Kernel.IFuture;

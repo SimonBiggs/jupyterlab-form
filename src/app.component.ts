@@ -10,37 +10,21 @@ import {
   ServiceManager
 } from '@jupyterlab/services';
 
-import {
-  PromiseDelegate
-} from '@phosphor/coreutils';
+// import {
+//   PromiseDelegate
+// } from '@phosphor/coreutils';
 
 @Component({
   selector: 'app-root',
   template: `<div class="margin"><app-form #form></app-form></div>`,
   styles: [`.margin { margin: 20px;}`]
 })
-export class AppComponent implements OnInit, AfterViewInit {
-  formReady = new PromiseDelegate<void>();
-  defaultForm = '';
-
+export class AppComponent {
   @ViewChild('form') formComponent: FormComponent;
 
   constructor(
-    private myChangeDetectorRef: ChangeDetectorRef,
     private myKernelService: KernelService
   ) { }
-
-  ngOnInit() { 
-  
-  }
-
-  ngAfterViewInit() {
-    this.setFormContents(this.defaultForm)
-    this.formComponent.formReady.promise.then(() => {
-      this.formReady.resolve(undefined);
-    })
-    this.myChangeDetectorRef.detectChanges();
-  }
 
   setFormContents(formContents: string) {
     this.formComponent.setFormContents(formContents);
@@ -54,12 +38,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.myKernelService.setPath(path);
   }
 
-  sessionConnect() {
+  sessionConnect(services: ServiceManager, path: string) {
+    this.setServices(services);
+    this.setPath(path);
     this.myKernelService.sessionConnect();
   }
 
   pathChanged(path: string) {
     this.myKernelService.pathChanged(path);
   }
-
 }

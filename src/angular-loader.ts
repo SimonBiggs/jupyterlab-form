@@ -20,7 +20,7 @@ import {
 export class AngularLoader<M> {
   private applicationRef: ApplicationRef;
   private componentFactoryResolver: ComponentFactoryResolver;
-  private ngZone: NgZone;
+  ngZone: NgZone;
   private injector: Injector;
 
   constructor( ngModuleRef: NgModuleRef<M>) {
@@ -43,6 +43,7 @@ export class AngularLoader<M> {
 
 export class AngularWidget<C,M> extends Widget {
   angularLoader: AngularLoader<M>;
+  ngZone: NgZone;
   componentRef: ComponentRef<C>;
   componentInstance: C;
   componentReady = new PromiseDelegate<void>();
@@ -52,6 +53,7 @@ export class AngularWidget<C,M> extends Widget {
     platformBrowserDynamic().bootstrapModule(ngModule)
     .then(ngModuleRef => {
       this.angularLoader = new AngularLoader(ngModuleRef);
+      this.ngZone = this.angularLoader.ngZone;
       this.componentRef = this.angularLoader.attachComponent(
         ngComponent, this.node)
       this.componentInstance = this.componentRef.instance;

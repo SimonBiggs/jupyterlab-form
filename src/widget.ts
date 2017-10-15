@@ -39,7 +39,7 @@ class FormWidget extends AngularWidget<AppComponent, AppModule> implements Docum
   private _context: DocumentRegistry.Context;
   private _services: ServiceManager;
   private _monitor: ActivityMonitor<any, any> | null = null;
-  waitingForForm = false;
+  // waitingForForm = false;
 
   constructor(options: FormWidget.IOptions) {
     super(AppComponent, AppModule);
@@ -51,38 +51,31 @@ class FormWidget extends AngularWidget<AppComponent, AppModule> implements Docum
     this._context = options.context;
     this._services = options.services;
 
-    this.componentReady.promise.then(() => {
-      this.componentInstance.setServices(this._services);
-      this.componentInstance.setPath(this._context.path);
-      this.componentInstance.sessionConnect();
-    })
-
     this.title.label = PathExt.basename(this._context.path);
     this._context.pathChanged.connect(this._onPathChanged, this);
 
-    this._context.ready.then(() => {
-      this.updateFormContents()
-      this._monitor = new ActivityMonitor({
-        signal: this._context.model.contentChanged,
-        timeout: RENDER_TIMEOUT
+    this.componentReady.promise.then(() => {
+      this.ngZone.run(() => {
+        this.componentInstance.sessionConnect(
+          this._services, this._context.path);
       });
-      this._monitor.activityStopped.connect(this.updateFormContents, this);
+
+      this._context.ready.then(() => {
+        this.updateFormContents()
+        this._monitor = new ActivityMonitor({
+          signal: this._context.model.contentChanged,
+          timeout: RENDER_TIMEOUT
+        });
+        this._monitor.activityStopped.connect(this.updateFormContents, this);
+      })
     })
   }
 
   updateFormContents() {
-    // this.formReady = false;
     let content = this._context.model.toString();
-    this.componentReady.promise.then(() => {
-      // if (!this.waitingForForm) {
-      //   this.componentRef.instance.setFormContents(content)
-      //   this.waitingForForm = true;
-      //   this.componentRef.instance.formReady.promise.then(() => {
-      //     this.waitingForForm = false;
-      //   })
-      // }
-      this.componentRef.instance.setFormContents(content);
-    })
+    this.ngZone.run(() => {
+      this.componentInstance.setFormContents(content);
+    });
   }
 
   get context(): DocumentRegistry.Context {
@@ -90,6 +83,7 @@ class FormWidget extends AngularWidget<AppComponent, AppModule> implements Docum
   }
 
   get ready() {
+    // return this.componentReady.promise;
     return Promise.resolve();
   }
 
@@ -97,7 +91,9 @@ class FormWidget extends AngularWidget<AppComponent, AppModule> implements Docum
     if (this._monitor) {
       this._monitor.dispose();
     }
-    this.componentRef.destroy();
+    this.ngZone.run(() => {
+      this.componentRef.destroy();
+    });
     super.dispose();
   }
 
@@ -108,7 +104,9 @@ class FormWidget extends AngularWidget<AppComponent, AppModule> implements Docum
 
   private _onPathChanged(): void {
     this.title.label = PathExt.basename(this._context.path);
-    this.componentInstance.pathChanged(this._context.path);
+    this.ngZone.run(() => {
+      this.componentInstance.pathChanged(this._context.path);
+    });
   }
 }
 

@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 
 import * as  MarkdownIt from 'markdown-it';
 
-import { Mode } from '@jupyterlab/codemirror';
+// import { Mode } from '@jupyterlab/codemirror';
 
 import { ScriptedFormElementsModule } from './scripted-form-elements.module';
 import { KernelService } from './kernel.service';
@@ -25,22 +25,22 @@ import {
 
 interface IRuntimeComponent {
   initialiseForm: Function;
-  formReady: PromiseDelegate<void>
+  // formReady: PromiseDelegate<void>
 }
 
 @Component({
   selector: 'app-form',
-  template: `<div #container></div>`
+  template: `<div #errorbox class="errorbox"></div><div #container></div>`
 })
 export class FormComponent implements OnInit, AfterViewInit {
   myMarkdownIt: MarkdownIt.MarkdownIt;
 
-  formReady = new PromiseDelegate<void>();
+  // formReady = new PromiseDelegate<void>();
 
-  codeMirrorLoaded: Promise<any>;
-  viewInitialised = false;
+  // codeMirrorLoaded: Promise<any>;
+  viewInitialised = new PromiseDelegate<void>();
 
-  formContents: string;
+  // formContents: string;
 
   // @ViewChild('errorbox') errorbox: ElementRef
   @ViewChild('container', { read: ViewContainerRef })
@@ -55,9 +55,9 @@ export class FormComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
-    this.codeMirrorLoaded = Mode.ensure('python').then(() => {
-        return Mode.ensure('gfm');
-      });
+    // this.codeMirrorLoaded = Mode.ensure('python').then(() => {
+    //     return Mode.ensure('gfm');
+    //   });
 
     this.myMarkdownIt = new MarkdownIt({
       html: true,
@@ -67,18 +67,13 @@ export class FormComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.viewInitialised = true;
-    if (this.formContents !== undefined) {
-      this.buildForm(this.formContents);
-    }
+    this.viewInitialised.resolve(undefined);
   }
 
   setFormContents(form: string) {
-    if (this.viewInitialised) {
+    this.viewInitialised.promise.then(() => {
       this.buildForm(form);
-    }
-
-    this.formContents = form;
+    })
   }
 
   buildForm(form: string) {
@@ -93,16 +88,22 @@ export class FormComponent implements OnInit, AfterViewInit {
     ).replace(/\[string\]/g, '<form-variable type="string">'
     ).replace(/\[\/string\]/g, '</form-variable>');
 
+    // console.log(customTags);
+
     const html = this.myMarkdownIt.render(customTags);
     const escapedHtml = html.replace(/{/g, '@~lb~@'
     ).replace(/}/g, '@~rb~@'
     ).replace(/@~lb~@/g, '{{ "{" }}'
     ).replace(/@~rb~@/g, '{{ "}" }}');
 
+    console.log('build prep complete')
+
     this.compileTemplate(escapedHtml)
   }
 
   compileTemplate(template: string) {
+    console.assert(template != null)
+    
     const metadata = {
       selector: `app-runtime`,
       template: template
@@ -110,27 +111,31 @@ export class FormComponent implements OnInit, AfterViewInit {
 
     const factory = this.createComponentFactory(
       this.compiler, metadata, null);
-
-    if (this.componentRef) {
-      this.componentRef.destroy();
-      this.componentRef = null;
-    }
-    this.componentRef = this.container.createComponent(factory);
     
-    this.componentRef.instance.formReady.promise.then(() => {
-      this.formReady.resolve(undefined);
-    })
+    if (this.componentRef) {
+      console.log('destroying previous real time component')
+      this.componentRef.destroy();
+      // this.componentRef = null;
+    }
+    console.log('real time component about to be created')
+    this.componentRef = this.container.createComponent(factory);
+
+    console.log(this.componentRef)
+    
+    // this.componentRef.instance.formReady.promise.then(() => {
+    //   this.formReady.resolve(undefined);
+    // })
   }
 
-  activateForm() {
-    return this.componentRef.instance.initialiseForm();
-  }
+  // activateForm() {
+  //   this.componentRef.instance.initialiseForm();
+  // }
 
   private createComponentFactory(compiler: Compiler, metadata: Component,
                                  componentClass: any): ComponentFactory<any> {
     @Component(metadata)
     class RuntimeComponent implements OnInit, OnDestroy, AfterViewInit {
-      formReady = new PromiseDelegate<void>();
+      // formReady = new PromiseDelegate<void>();
       formActivation = false;
 
       @ViewChildren(StartComponent) startComponents: QueryList<StartComponent>
@@ -145,6 +150,7 @@ export class FormComponent implements OnInit, AfterViewInit {
       ) { }
 
       ngOnInit() {
+        console.log('real time component initialised')
         // this.myKernelSevice.startKernel()
       }
 
@@ -156,6 +162,7 @@ export class FormComponent implements OnInit, AfterViewInit {
       }
 
       ngAfterViewInit() {
+        console.log('real time component view initialised')
         this.initialiseForm()
         // this.myChangeDetectorRef.detectChanges()
       }
@@ -165,32 +172,42 @@ export class FormComponent implements OnInit, AfterViewInit {
           // this.myKernelSevice.startKernel();
           this.formActivation = true;
 
-          // The order here forces all import components to run first.
-          // Only then will the variable component fetch the variables.
-          this.startComponents.toArray().forEach((startComponent, index) => {
-            startComponent.setId(index);
-            startComponent.runCode();
-          });
-          for (const variableComponent of this.variableComponents.toArray()) {
-            variableComponent.fetchVariable();
-          }
-          this.myKernelSevice.queue.then(() => {
-            this.liveComponents.toArray().forEach((liveComponent, index) => {
-              liveComponent.setId(index);
-              liveComponent.formReady();
-            });
+          this.myKernelSevice.sessionConnected.promise.then(runStart => {
 
+            console.log('session connected');
+            console.log(this.startComponents);
+
+            // The order here forces all import components to run first.
+            // Only then will the variable component fetch the variables.
+            this.startComponents.toArray().forEach((startComponent, index) => {
+              startComponent.setId(index);
+              if (runStart) {
+                startComponent.runCode();
+              }
+              console.log('start complete')
+            });
             for (const variableComponent of this.variableComponents.toArray()) {
-              variableComponent.formReady();
+              variableComponent.fetchVariable();
             }
+            this.myKernelSevice.queue.then(() => {
+              this.liveComponents.toArray().forEach((liveComponent, index) => {
+                liveComponent.setId(index);
+                liveComponent.formReady();
+              });
 
-            this.buttonComponents.toArray().forEach((buttonComponent, index) => {
-              buttonComponent.setId(index);
-              buttonComponent.formReady();
+              for (const variableComponent of this.variableComponents.toArray()) {
+                variableComponent.formReady();
+              }
+
+              this.buttonComponents.toArray().forEach((buttonComponent, index) => {
+                buttonComponent.setId(index);
+                buttonComponent.formReady();
+              });
+
+              // this.formReady.resolve(undefined);
             });
-
-            this.formReady.resolve(undefined);
-          });
+            
+          })
         }
       }
     };
