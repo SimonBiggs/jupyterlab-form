@@ -3,6 +3,10 @@ import {
 } from '@phosphor/widgets';
 
 import {
+  PromiseDelegate
+} from '@phosphor/coreutils';
+
+import {
   ApplicationRef, Type, Injector,
   ComponentFactoryResolver, ComponentRef, NgZone,
   NgModuleRef
@@ -37,16 +41,19 @@ export class AngularLoader {
   }
 }
 
-export class AngularWidget extends Widget {
+export class AngularWidget<C> extends Widget {
   angularLoader: AngularLoader;
+  componentRef: ComponentRef<C>;
+  componentReady = new PromiseDelegate<void>();
 
-  constructor(ngModule: Type<{}>, ngComponent: Type<{}>) {
+  constructor(ngModule: Type<{}>, ngComponent: Type<C>) {
     super();
     platformBrowserDynamic().bootstrapModule(ngModule)
     .then(ngModuleRef => {
       this.angularLoader = new AngularLoader(ngModuleRef);
-      this.angularLoader.attachComponent(
+      this.componentRef = this.angularLoader.attachComponent(
         ngComponent, this.node)
+      this.componentReady.resolve(undefined);
     });
   }
 }

@@ -1,13 +1,18 @@
 import {
-    Component, OnInit, AfterViewInit, ViewChild, ChangeDetectorRef
+    Component, OnInit, AfterViewInit, ViewChild, 
+    ChangeDetectorRef
 } from '@angular/core';
 
 // import { ScriptedFormsModule } from '../scripted-forms/scripted-forms.module';
 import { FormComponent } from '../scripted-forms/form.component';
 
+import {
+  PromiseDelegate
+} from '@phosphor/coreutils';
+
 // import { Mode } from '@jupyterlab/codemirror';
 
-import { FORMCONTENTS } from './demo-form-contents';
+// import { FORMCONTENTS } from './demo-form-contents';
 
 @Component({
   selector: 'app-demo-form',
@@ -15,8 +20,8 @@ import { FORMCONTENTS } from './demo-form-contents';
   styles: [`.margin { margin: 20px;}`]
 })
 export class DemoFormComponent implements OnInit, AfterViewInit {
-
-  defaultForm = FORMCONTENTS;
+  formReady = new PromiseDelegate<void>();
+  defaultForm = '';
 
   @ViewChild('form') formComponent: FormComponent;
 
@@ -27,8 +32,15 @@ export class DemoFormComponent implements OnInit, AfterViewInit {
   ngOnInit() { }
 
   ngAfterViewInit() {
-    this.formComponent.setFormContents(FORMCONTENTS);
+    this.setFormContents(this.defaultForm)
+    this.formComponent.formReady.promise.then(() => {
+      this.formReady.resolve(undefined);
+    })
     this.myChangeDetectorRef.detectChanges();
+  }
+
+  setFormContents(formContents: string) {
+    this.formComponent.setFormContents(formContents);
   }
 
 }

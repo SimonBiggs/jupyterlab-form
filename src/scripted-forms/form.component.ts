@@ -19,8 +19,13 @@ import { VariableComponent } from './variable.component';
 import { LiveComponent } from './live.component';
 import { ButtonComponent } from './button.component';
 
+import {
+  PromiseDelegate
+} from '@phosphor/coreutils';
+
 interface IRuntimeComponent {
   initialiseForm: Function;
+  formReady: PromiseDelegate<void>
 }
 
 @Component({
@@ -28,8 +33,9 @@ interface IRuntimeComponent {
   template: `<div #container></div>`
 })
 export class FormComponent implements OnInit, AfterViewInit {
-
   myMarkdownIt: MarkdownIt.MarkdownIt;
+
+  formReady = new PromiseDelegate<void>();
 
   codeMirrorLoaded: Promise<any>;
   viewInitialised = false;
@@ -110,18 +116,21 @@ export class FormComponent implements OnInit, AfterViewInit {
       this.componentRef = null;
     }
     this.componentRef = this.container.createComponent(factory);
-
-    // this.errorbox.nativeElement.innerHTML = ""
+    
+    this.componentRef.instance.formReady.promise.then(() => {
+      this.formReady.resolve(undefined);
+    })
   }
 
   activateForm() {
-    this.componentRef.instance.initialiseForm();
+    return this.componentRef.instance.initialiseForm();
   }
 
   private createComponentFactory(compiler: Compiler, metadata: Component,
                                  componentClass: any): ComponentFactory<any> {
     @Component(metadata)
     class RuntimeComponent implements OnInit, OnDestroy, AfterViewInit {
+      formReady = new PromiseDelegate<void>();
       formActivation = false;
 
       @ViewChildren(StartComponent) startComponents: QueryList<StartComponent>
@@ -179,9 +188,10 @@ export class FormComponent implements OnInit, AfterViewInit {
               buttonComponent.setId(index);
               buttonComponent.formReady();
             });
+
+            this.formReady.resolve(undefined);
           });
         }
-
       }
     };
 
