@@ -3,6 +3,7 @@ import {
   ViewChild, ViewContainerRef, ComponentRef,
   Compiler, ComponentFactory, NgModule,
   ModuleWithComponentFactories, ViewChildren, QueryList,
+  ElementRef
   // ChangeDetectorRef
 } from '@angular/core';
 
@@ -42,23 +43,19 @@ export class FormComponent implements OnInit, AfterViewInit {
 
   // formContents: string;
 
-  // @ViewChild('errorbox') errorbox: ElementRef
+  @ViewChild('errorbox') errorbox: ElementRef
   @ViewChild('container', { read: ViewContainerRef })
   container: ViewContainerRef;
+
+  errorboxDiv: HTMLDivElement;
 
   private componentRef: ComponentRef<IRuntimeComponent>;
 
   constructor(
-    // private componentFactoryResolver: ComponentFactoryResolver,
-    private compiler: Compiler,
-    // private myKernelSevice: KernelService,
+    private compiler: Compiler
   ) { }
 
   ngOnInit() {
-    // this.codeMirrorLoaded = Mode.ensure('python').then(() => {
-    //     return Mode.ensure('gfm');
-    //   });
-
     this.myMarkdownIt = new MarkdownIt({
       html: true,
       linkify: true,
@@ -67,6 +64,7 @@ export class FormComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.errorboxDiv = this.errorbox.nativeElement;
     this.viewInitialised.resolve(undefined);
   }
 
@@ -88,15 +86,11 @@ export class FormComponent implements OnInit, AfterViewInit {
     ).replace(/\[string\]/g, '<form-variable type="string">'
     ).replace(/\[\/string\]/g, '</form-variable>');
 
-    // console.log(customTags);
-
     const html = this.myMarkdownIt.render(customTags);
     const escapedHtml = html.replace(/{/g, '@~lb~@'
     ).replace(/}/g, '@~rb~@'
     ).replace(/@~lb~@/g, '{{ "{" }}'
     ).replace(/@~rb~@/g, '{{ "}" }}');
-
-    console.log('build prep complete')
 
     this.compileTemplate(escapedHtml)
   }
@@ -113,23 +107,13 @@ export class FormComponent implements OnInit, AfterViewInit {
       this.compiler, metadata, null);
     
     if (this.componentRef) {
-      console.log('destroying previous real time component')
       this.componentRef.destroy();
-      // this.componentRef = null;
     }
-    console.log('real time component about to be created')
+    this.errorboxDiv.innerHTML = '';
     this.componentRef = this.container.createComponent(factory);
 
     console.log(this.componentRef)
-    
-    // this.componentRef.instance.formReady.promise.then(() => {
-    //   this.formReady.resolve(undefined);
-    // })
   }
-
-  // activateForm() {
-  //   this.componentRef.instance.initialiseForm();
-  // }
 
   private createComponentFactory(compiler: Compiler, metadata: Component,
                                  componentClass: any): ComponentFactory<any> {
@@ -150,7 +134,7 @@ export class FormComponent implements OnInit, AfterViewInit {
       ) { }
 
       ngOnInit() {
-        console.log('real time component initialised')
+        // console.log('real time component initialised')
         // this.myKernelSevice.startKernel()
       }
 
@@ -162,14 +146,13 @@ export class FormComponent implements OnInit, AfterViewInit {
       }
 
       ngAfterViewInit() {
-        console.log('real time component view initialised')
+        // console.log('real time component view initialised')
         this.initialiseForm()
         // this.myChangeDetectorRef.detectChanges()
       }
 
       initialiseForm() {
         if (this.formActivation === false) {
-          // this.myKernelSevice.startKernel();
           this.formActivation = true;
 
           this.myKernelSevice.sessionConnected.promise.then(() => {
@@ -184,10 +167,9 @@ export class FormComponent implements OnInit, AfterViewInit {
               if (this.myKernelSevice.isNewSession) {
                 startComponent.runCode();
               }
-              // console.log('start complete')
             });
             this.myKernelSevice.isNewSession = false;
-            
+
             for (const variableComponent of this.variableComponents.toArray()) {
               variableComponent.fetchVariable();
             }
@@ -200,19 +182,11 @@ export class FormComponent implements OnInit, AfterViewInit {
               for (const variableComponent of this.variableComponents.toArray()) {
                 variableComponent.formReady();
               }
-
               this.buttonComponents.toArray().forEach((buttonComponent, index) => {
                 buttonComponent.setId(index);
                 buttonComponent.formReady();
               });
-
-              
-
-              // this.myKernelSevice.sessionConnected.resolve(false);
-
-              // this.formReady.resolve(undefined);
             });
-            
           })
         }
       }
