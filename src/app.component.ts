@@ -1,6 +1,7 @@
 import {
-    Component, OnInit, AfterViewInit, ViewChild, 
-    ChangeDetectorRef
+    Component, ViewChild,
+    // OnInit, AfterViewInit,
+    // ChangeDetectorRef
 } from '@angular/core';
 
 import { FormComponent } from './scripted-forms/form.component';

@@ -172,7 +172,7 @@ export class FormComponent implements OnInit, AfterViewInit {
           // this.myKernelSevice.startKernel();
           this.formActivation = true;
 
-          this.myKernelSevice.sessionConnected.promise.then(runStart => {
+          this.myKernelSevice.sessionConnected.promise.then(() => {
 
             console.log('session connected');
             console.log(this.startComponents);
@@ -181,11 +181,13 @@ export class FormComponent implements OnInit, AfterViewInit {
             // Only then will the variable component fetch the variables.
             this.startComponents.toArray().forEach((startComponent, index) => {
               startComponent.setId(index);
-              if (runStart) {
+              if (this.myKernelSevice.isNewSession) {
                 startComponent.runCode();
               }
-              console.log('start complete')
+              // console.log('start complete')
             });
+            this.myKernelSevice.isNewSession = false;
+            
             for (const variableComponent of this.variableComponents.toArray()) {
               variableComponent.fetchVariable();
             }
@@ -203,6 +205,10 @@ export class FormComponent implements OnInit, AfterViewInit {
                 buttonComponent.setId(index);
                 buttonComponent.formReady();
               });
+
+              
+
+              // this.myKernelSevice.sessionConnected.resolve(false);
 
               // this.formReady.resolve(undefined);
             });

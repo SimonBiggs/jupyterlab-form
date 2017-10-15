@@ -13,7 +13,9 @@ import {
 export class KernelService {
   services: ServiceManager;
   path: string;
-  sessionConnected = new PromiseDelegate<boolean>();
+  sessionConnected = new PromiseDelegate<void>();
+
+  isNewSession: boolean;
 
   session: Session.ISession;
   kernel: Kernel.IKernelConnection;
@@ -49,14 +51,16 @@ export class KernelService {
       Session.connectTo(model.id, settings).then(session => {
         console.log(session);
         this.sessionReady(session);
-        this.sessionConnected.resolve(false);
+        this.isNewSession = false;
+        this.sessionConnected.resolve(undefined);
         console.log('previous session ready')
       })
     }).catch(() => {
       Session.startNew(options).then(session => {
         console.log(session);
         this.sessionReady(session);
-        this.sessionConnected.resolve(true);
+        this.isNewSession = true;
+        this.sessionConnected.resolve(undefined);
         console.log('new session ready')
       })
     })
