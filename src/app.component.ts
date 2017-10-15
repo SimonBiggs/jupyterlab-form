@@ -1,7 +1,5 @@
 import {
-    Component, ViewChild,
-    // OnInit, AfterViewInit,
-    // ChangeDetectorRef
+    Component, ViewChild
 } from '@angular/core';
 
 import { FormComponent } from './scripted-forms/form.component';
@@ -10,10 +8,6 @@ import { KernelService } from './scripted-forms/kernel.service';
 import {
   ServiceManager
 } from '@jupyterlab/services';
-
-// import {
-//   PromiseDelegate
-// } from '@phosphor/coreutils';
 
 @Component({
   selector: 'app-root',

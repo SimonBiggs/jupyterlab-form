@@ -10,10 +10,6 @@ import {
   AppModule
 } from './app.module';
 
-// import {
-//   PromiseDelegate
-// } from '@phosphor/coreutils';
-
 import {
   ServiceManager
 } from '@jupyterlab/services';
@@ -39,7 +35,6 @@ class FormWidget extends AngularWidget<AppComponent, AppModule> implements Docum
   private _context: DocumentRegistry.Context;
   private _services: ServiceManager;
   private _monitor: ActivityMonitor<any, any> | null = null;
-  // waitingForForm = false;
 
   constructor(options: FormWidget.IOptions) {
     super(AppComponent, AppModule);
@@ -83,7 +78,6 @@ class FormWidget extends AngularWidget<AppComponent, AppModule> implements Docum
   }
 
   get ready() {
-    // return this.componentReady.promise;
     return Promise.resolve();
   }
 

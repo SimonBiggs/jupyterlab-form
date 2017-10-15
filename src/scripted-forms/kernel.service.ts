@@ -47,7 +47,6 @@ export class KernelService {
     };
 
     this.services.sessions.findByPath(this.path).then(model => {
-      // console.log(model);
       Session.connectTo(model.id, settings).then(session => {
         console.log(session);
         this.sessionReady(session);
@@ -79,7 +78,6 @@ export class KernelService {
     this.queueId += 1;
     const previous = this.queue;
     return this.queue = (async () => {
-      // console.log(previous);
       await previous;
       delete this.queueLog[currentQueueId];
       return asyncFunction(currentQueueId);

@@ -1,10 +1,6 @@
 import './polyfills';
 import './styles';
 
-// import {
-//   JSONExt
-// } from '@phosphor/coreutils';
-
 import {
   JupyterLab, JupyterLabPlugin, ILayoutRestorer
 } from '@jupyterlab/application';
@@ -23,10 +19,20 @@ const FACTORY = 'Form';
 
 // function activate(app: JupyterLab, palette: ICommandPalette, restorer: ILayoutRestorer) {
 function activate(app: JupyterLab, restorer: ILayoutRestorer) {  
+  app.docRegistry.addFileType({
+    name: 'form',
+    mimeTypes: ['form'],
+    extensions: ['.form.md', '.form'],
+    contentType: 'file',
+    fileFormat: 'text'
+  })
+
+
   const services = app.serviceManager;
   const factory = new FormWidgetFactory({
     name: FACTORY,
-    fileTypes: ['markdown'],
+    fileTypes: ['form'],
+    defaultFor: ['form'],
     readOnly: true,
     services: services
   });
@@ -70,7 +76,7 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer) {
   });
 
   app.docRegistry.addWidgetFactory(factory);
-  let ft = app.docRegistry.getFileType('markdown');
+  let ft = app.docRegistry.getFileType('form');
   factory.widgetCreated.connect((sender, widget) => {
     // Track the widget.
     tracker.add(widget);

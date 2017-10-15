@@ -1,17 +1,15 @@
 import {
-  Component, OnInit, AfterViewInit, OnDestroy,
+  Component, OnInit, AfterViewInit,
   ViewChild, ViewContainerRef, ComponentRef,
   Compiler, ComponentFactory, NgModule,
   ModuleWithComponentFactories, ViewChildren, QueryList,
   ElementRef
-  // ChangeDetectorRef
+  // ChangeDetectorRef, OnDestroy
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
 import * as  MarkdownIt from 'markdown-it';
-
-// import { Mode } from '@jupyterlab/codemirror';
 
 import { ScriptedFormElementsModule } from './scripted-form-elements.module';
 import { KernelService } from './kernel.service';
@@ -26,7 +24,6 @@ import {
 
 interface IRuntimeComponent {
   initialiseForm: Function;
-  // formReady: PromiseDelegate<void>
 }
 
 @Component({
@@ -35,13 +32,7 @@ interface IRuntimeComponent {
 })
 export class FormComponent implements OnInit, AfterViewInit {
   myMarkdownIt: MarkdownIt.MarkdownIt;
-
-  // formReady = new PromiseDelegate<void>();
-
-  // codeMirrorLoaded: Promise<any>;
   viewInitialised = new PromiseDelegate<void>();
-
-  // formContents: string;
 
   @ViewChild('errorbox') errorbox: ElementRef
   @ViewChild('container', { read: ViewContainerRef })
@@ -118,8 +109,7 @@ export class FormComponent implements OnInit, AfterViewInit {
   private createComponentFactory(compiler: Compiler, metadata: Component,
                                  componentClass: any): ComponentFactory<any> {
     @Component(metadata)
-    class RuntimeComponent implements OnInit, OnDestroy, AfterViewInit {
-      // formReady = new PromiseDelegate<void>();
+    class RuntimeComponent implements AfterViewInit {
       formActivation = false;
 
       @ViewChildren(StartComponent) startComponents: QueryList<StartComponent>
@@ -127,28 +117,12 @@ export class FormComponent implements OnInit, AfterViewInit {
       @ViewChildren(LiveComponent) liveComponents: QueryList<LiveComponent>
       @ViewChildren(ButtonComponent) buttonComponents: QueryList<ButtonComponent>
 
-
       constructor(
-        private myKernelSevice: KernelService,
-        // private myChangeDetectorRef: ChangeDetectorRef
+        private myKernelSevice: KernelService
       ) { }
 
-      ngOnInit() {
-        // console.log('real time component initialised')
-        // this.myKernelSevice.startKernel()
-      }
-
-      ngOnDestroy() {
-        // this.myKernelSevice.forceShutdownKernel()
-        // if (this.formActivation) {
-        //   this.myKernelSevice.shutdownKernel();
-        // }
-      }
-
       ngAfterViewInit() {
-        // console.log('real time component view initialised')
         this.initialiseForm()
-        // this.myChangeDetectorRef.detectChanges()
       }
 
       initialiseForm() {
@@ -204,11 +178,10 @@ export class FormComponent implements OnInit, AfterViewInit {
       }
     )
     class RuntimeComponentModule { }
-
+    
     const module: ModuleWithComponentFactories<any> = (
       compiler.compileModuleAndAllComponentsSync(RuntimeComponentModule));
     return module.componentFactories.find(
       f => f.componentType === RuntimeComponent);
   }
-
 }
