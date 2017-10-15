@@ -6,7 +6,6 @@ import {
 } from '@jupyterlab/application';
 
 import {
-  // ICommandPalette, 
   InstanceTracker
 } from '@jupyterlab/apputils';
 
@@ -16,8 +15,6 @@ import {
 
 const FACTORY = 'Form';
 
-
-// function activate(app: JupyterLab, palette: ICommandPalette, restorer: ILayoutRestorer) {
 function activate(app: JupyterLab, restorer: ILayoutRestorer) {  
   app.docRegistry.addFileType({
     name: 'form',
@@ -37,37 +34,9 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer) {
     services: services
   });
 
-  // let widget: FormWidget
-
   let tracker = new InstanceTracker<FormWidget>({
     namespace: '@simonbiggs/jupyterlab-form'
   });
-
-  // const demoCommand: string = 'form:demo';
-  
-  // app.commands.addCommand(demoCommand, {
-  //   label: 'Demo Form',
-  //   execute: () => {
-  //     if(!widget) {
-  //       widget = new FormWidget();
-  //     }
-  //     if(!tracker.has(widget)) {
-  //       tracker.add(widget);
-  //     }
-  //     if(!widget.isAttached) {
-  //       app.shell.addToMainArea(widget);
-  //     }
-  //     app.shell.activateById(widget.id);
-  //   }
-  // });
-
-  // palette.addItem({command: demoCommand, category: 'Form'})
-
-  // restorer.restore(tracker, {
-  //   command: demoCommand,
-  //   args: () => JSONExt.emptyObject,
-  //   name: () => 'Demo Form'
-  // })
 
   restorer.restore(tracker, {
     command: 'docmanager:open',
@@ -94,7 +63,6 @@ const extension: JupyterLabPlugin<void> = {
   id: '@simonbiggs/jupyterlab-form',
   autoStart: true,
   requires: [
-    // ICommandPalette, 
     ILayoutRestorer
   ],
   activate: activate

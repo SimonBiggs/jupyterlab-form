@@ -35,6 +35,7 @@ export class KernelService {
 
   pathChanged(path: string) {
     this.setPath(path);
+    this.session.setPath(path);
   }
 
   sessionConnect() {
