@@ -3,23 +3,18 @@ import {
     ChangeDetectorRef
 } from '@angular/core';
 
-// import { ScriptedFormsModule } from '../scripted-forms/scripted-forms.module';
-import { FormComponent } from '../scripted-forms/form.component';
+import { FormComponent } from './scripted-forms/form.component';
 
 import {
   PromiseDelegate
 } from '@phosphor/coreutils';
 
-// import { Mode } from '@jupyterlab/codemirror';
-
-// import { FORMCONTENTS } from './demo-form-contents';
-
 @Component({
-  selector: 'app-demo-form',
+  selector: 'app-root',
   template: `<div class="margin"><app-form #form></app-form></div>`,
   styles: [`.margin { margin: 20px;}`]
 })
-export class DemoFormComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit {
   formReady = new PromiseDelegate<void>();
   defaultForm = '';
 

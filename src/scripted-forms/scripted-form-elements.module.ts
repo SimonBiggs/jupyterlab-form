@@ -8,6 +8,8 @@ import {
   // MatButtonModule, MatInputModule, MatIconModule, 
   // MatIconRegistry
 } from '@angular/material'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 // import { DomSanitizer } from '@angular/platform-browser';
 
@@ -24,6 +26,7 @@ import { VariableComponent } from './variable.component';
     CommonModule,
     MaterialModule,
     // MatButtonModule, MatInputModule, MatIconModule,
+    BrowserAnimationsModule,
     FormsModule
   ],
   declarations: [

@@ -3,12 +3,12 @@ import {
 } from './angular-loader';
 
 import {
-  DemoFormComponent
-} from './demo-form/demo-form.component';
+  AppComponent
+} from './app.component';
   
 import {
-  DemoFormModule
-} from './demo-form.module';
+  AppModule
+} from './app.module';
 
 // import {
 //   PromiseDelegate
@@ -31,13 +31,13 @@ const RENDER_TIMEOUT = 1000;
 
 
 export
-class FormWidget extends AngularWidget<DemoFormComponent> implements DocumentRegistry.IReadyWidget {
+class FormWidget extends AngularWidget<AppComponent> implements DocumentRegistry.IReadyWidget {
   private _context: DocumentRegistry.Context;
   private _monitor: ActivityMonitor<any, any> | null = null;
   waitingForForm = false;
 
   constructor(options: FormWidget.IOptions) {
-    super(DemoFormModule, DemoFormComponent);
+    super(AppModule, AppComponent);
     this.id = '@simonbiggs/jupyterlab-form';
     this.title.closable = true;
     this.addClass('jp-scriptedFormWidget');
@@ -58,15 +58,16 @@ class FormWidget extends AngularWidget<DemoFormComponent> implements DocumentReg
 
   updateFormContents() {
     // this.formReady = false;
-    let content = this._context.model.toString()
+    let content = this._context.model.toString();
     this.componentReady.promise.then(() => {
-      if (!this.waitingForForm) {
-        this.componentRef.instance.setFormContents(content)
-        this.waitingForForm = true;
-        this.componentRef.instance.formReady.promise.then(() => {
-          this.waitingForForm = false;
-        })
-      }
+      // if (!this.waitingForForm) {
+      //   this.componentRef.instance.setFormContents(content)
+      //   this.waitingForForm = true;
+      //   this.componentRef.instance.formReady.promise.then(() => {
+      //     this.waitingForForm = false;
+      //   })
+      // }
+      this.componentRef.instance.setFormContents(content);
     })
   }
 

@@ -8,27 +8,26 @@ import { HttpModule } from '@angular/http';
 // } from '@angular/material'
 
 // import { DomSanitizer } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ScriptedFormsModule } from './scripted-forms/scripted-forms.module';
 
-import { DemoFormComponent } from './demo-form/demo-form.component';
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
-    DemoFormComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     // MaterialModule,
-    BrowserAnimationsModule,
+    // BrowserAnimationsModule,
     ScriptedFormsModule
   ],
-  entryComponents: [DemoFormComponent]
+  entryComponents: [AppComponent]
 })
-export class DemoFormModule {
+export class AppModule {
   // constructor(mdIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
   //   mdIconRegistry.addSvgIconSet(
   //     domSanitizer.bypassSecurityTrustResourceUrl('./mdi.svg'));
