@@ -13,9 +13,13 @@ import {
   FormWidget, FormWidgetFactory
 } from './widget';
 
+import {
+  ILauncher
+} from '@jupyterlab/launcher';
+
 const FACTORY = 'Form';
 
-function activate(app: JupyterLab, restorer: ILayoutRestorer) {  
+function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILauncher | null) {  
   app.docRegistry.addFileType({
     name: 'form',
     mimeTypes: ['form'],
@@ -23,7 +27,6 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer) {
     contentType: 'file',
     fileFormat: 'text'
   })
-
 
   const services = app.serviceManager;
   const factory = new FormWidgetFactory({
@@ -45,6 +48,16 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer) {
   });
 
   app.docRegistry.addWidgetFactory(factory);
+  let registry = app.docRegistry;
+  registry.addModelFactory(new NotebookModelFactory({}));
+  registry.addWidgetFactory(factory);
+  registry.addCreator({
+    name: 'form',
+    fileType: 'form',
+    widgetName: 'form'
+  });
+
+
   let ft = app.docRegistry.getFileType('form');
   factory.widgetCreated.connect((sender, widget) => {
     // Track the widget.
@@ -57,6 +70,24 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer) {
       widget.title.iconLabel = ft.iconLabel;
     }
   });
+
+  let callback = (cwd: string, name: string) => {
+    return app.commands.execute(
+      'docmanager:new-untitled', { path: cwd, type: 'form' }
+    ).then(model => {
+      console.log(model)
+      return app.commands.execute('docmanager:open', {
+        path: model.path, factory: FACTORY
+      });
+    });
+  };
+
+  if (launcher) {
+    launcher.add({
+      displayName: 'Form',
+      callback: callback
+    })
+  }
 }
 
 const extension: JupyterLabPlugin<void> = {
@@ -64,6 +95,9 @@ const extension: JupyterLabPlugin<void> = {
   autoStart: true,
   requires: [
     ILayoutRestorer
+  ],
+  optional: [
+    ILauncher
   ],
   activate: activate
 };
