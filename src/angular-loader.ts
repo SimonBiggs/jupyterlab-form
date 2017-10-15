@@ -17,13 +17,13 @@ import {
 } from '@angular/platform-browser-dynamic';
 
 
-export class AngularLoader {
+export class AngularLoader<M> {
   private applicationRef: ApplicationRef;
   private componentFactoryResolver: ComponentFactoryResolver;
   private ngZone: NgZone;
   private injector: Injector;
 
-  constructor( ngModuleRef: NgModuleRef<{}>) {
+  constructor( ngModuleRef: NgModuleRef<M>) {
     this.injector = ngModuleRef.injector;
     this.applicationRef = this.injector.get(ApplicationRef);
     this.ngZone = this.injector.get(NgZone);
@@ -41,18 +41,20 @@ export class AngularLoader {
   }
 }
 
-export class AngularWidget<C> extends Widget {
-  angularLoader: AngularLoader;
+export class AngularWidget<C,M> extends Widget {
+  angularLoader: AngularLoader<M>;
   componentRef: ComponentRef<C>;
+  componentInstance: C;
   componentReady = new PromiseDelegate<void>();
 
-  constructor(ngModule: Type<{}>, ngComponent: Type<C>) {
+  constructor(ngComponent: Type<C>, ngModule: Type<M>) {
     super();
     platformBrowserDynamic().bootstrapModule(ngModule)
     .then(ngModuleRef => {
       this.angularLoader = new AngularLoader(ngModuleRef);
       this.componentRef = this.angularLoader.attachComponent(
         ngComponent, this.node)
+      this.componentInstance = this.componentRef.instance;
       this.componentReady.resolve(undefined);
     });
   }

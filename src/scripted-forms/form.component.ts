@@ -145,14 +145,14 @@ export class FormComponent implements OnInit, AfterViewInit {
       ) { }
 
       ngOnInit() {
-        this.myKernelSevice.startKernel()
+        // this.myKernelSevice.startKernel()
       }
 
       ngOnDestroy() {
         // this.myKernelSevice.forceShutdownKernel()
-        if (this.formActivation) {
-          this.myKernelSevice.shutdownKernel();
-        }
+        // if (this.formActivation) {
+        //   this.myKernelSevice.shutdownKernel();
+        // }
       }
 
       ngAfterViewInit() {

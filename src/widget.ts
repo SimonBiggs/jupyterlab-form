@@ -15,6 +15,10 @@ import {
 // } from '@phosphor/coreutils';
 
 import {
+  ServiceManager
+} from '@jupyterlab/services';
+
+import {
   ActivityMonitor, 
   PathExt
 } from '@jupyterlab/coreutils';
@@ -31,18 +35,28 @@ const RENDER_TIMEOUT = 1000;
 
 
 export
-class FormWidget extends AngularWidget<AppComponent> implements DocumentRegistry.IReadyWidget {
+class FormWidget extends AngularWidget<AppComponent, AppModule> implements DocumentRegistry.IReadyWidget {
   private _context: DocumentRegistry.Context;
+  private _services: ServiceManager;
   private _monitor: ActivityMonitor<any, any> | null = null;
   waitingForForm = false;
 
   constructor(options: FormWidget.IOptions) {
-    super(AppModule, AppComponent);
+    super(AppComponent, AppModule);
+
     this.id = '@simonbiggs/jupyterlab-form';
     this.title.closable = true;
     this.addClass('jp-scriptedFormWidget');
 
     this._context = options.context;
+    this._services = options.services;
+
+    this.componentReady.promise.then(() => {
+      this.componentInstance.setServices(this._services);
+      this.componentInstance.setPath(this._context.path);
+      this.componentInstance.sessionConnect();
+    })
+
     this.title.label = PathExt.basename(this._context.path);
     this._context.pathChanged.connect(this._onPathChanged, this);
 
@@ -76,7 +90,7 @@ class FormWidget extends AngularWidget<AppComponent> implements DocumentRegistry
   }
 
   get ready() {
-    return this.componentReady.promise;
+    return Promise.resolve();
   }
 
   dispose(): void {
@@ -94,6 +108,7 @@ class FormWidget extends AngularWidget<AppComponent> implements DocumentRegistry
 
   private _onPathChanged(): void {
     this.title.label = PathExt.basename(this._context.path);
+    this.componentInstance.pathChanged(this._context.path);
   }
 }
 
@@ -101,13 +116,32 @@ export
 namespace FormWidget {
   export
   interface IOptions {
-    context: DocumentRegistry.Context;
+    context: DocumentRegistry.Context,
+    services: ServiceManager
+  }
+}
+
+export
+namespace FormWidgetFactory {
+  export
+  interface IOptions extends DocumentRegistry.IWidgetFactoryOptions {
+    services: ServiceManager
   }
 }
 
 export
 class FormWidgetFactory extends ABCWidgetFactory<FormWidget, DocumentRegistry.IModel> {
+  services: ServiceManager
+
+  constructor(options: FormWidgetFactory.IOptions) {
+    super(options);
+    this.services = options.services;
+  }
+
   protected createNewWidget(context: DocumentRegistry.Context): FormWidget {
-    return new FormWidget({ context });
+    return new FormWidget({
+      context: context, 
+      services: this.services 
+    });
   }
 }

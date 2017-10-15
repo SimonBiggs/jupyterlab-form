@@ -23,10 +23,12 @@ const FACTORY = 'Form';
 
 // function activate(app: JupyterLab, palette: ICommandPalette, restorer: ILayoutRestorer) {
 function activate(app: JupyterLab, restorer: ILayoutRestorer) {  
+  const services = app.serviceManager;
   const factory = new FormWidgetFactory({
     name: FACTORY,
     fileTypes: ['markdown'],
-    readOnly: true
+    readOnly: true,
+    services: services
   });
 
   // let widget: FormWidget
