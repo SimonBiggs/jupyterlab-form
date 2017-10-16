@@ -18,6 +18,7 @@ import {
 } from '@jupyterlab/launcher';
 
 const FACTORY = 'Form';
+const EDITORFACTORY = 'Editor';
 
 function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILauncher | null) {  
   app.docRegistry.addFileType({
@@ -76,6 +77,9 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
       'docmanager:new-untitled', { path: cwd, type: 'file', ext: 'form.md' }
     ).then(model => {
       console.log(model)
+      app.commands.execute('docmanager:open', {
+        path: model.path, factory: EDITORFACTORY
+      });
       return app.commands.execute('docmanager:open', {
         path: model.path, factory: FACTORY
       });

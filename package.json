@@ -37,6 +37,7 @@
     "@angular/platform-browser": "4.4.5",
     "@angular/platform-browser-dynamic": "4.4.5",
     "@jupyterlab/application": "0.11.1",
+    "@jupyterlab/fileeditor-extension": "^0.11.1",
     "@jupyterlab/launcher": "0.11.1",
     "@jupyterlab/outputarea": "0.11.1",
     "@jupyterlab/rendermime": "0.11.1",
