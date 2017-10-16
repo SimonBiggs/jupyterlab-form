@@ -1,31 +1,14 @@
-# jupyterlab_form
+# Jupyterlab Form
 
-Interactive forms.
-
-
-## Prerequisites
-
-* JupyterLab
-
-## Installation
+To install and use `jupyterlab-form` do the following:
 
 ```bash
-jupyter labextension install jupyterlab_form
-```
-
-## Development
-
-For a development install (requires npm version 4 or later), do the following in the repository directory:
-
-```bash
+conda install nodejs jupyterlab git -c conda-forge
+git clone https://github.com/SimonBiggs/jupyterlab-form
+cd jupyterlab-form
 npm install
-jupyter labextension link .
+jupyter labextension install
+jupyter lab
 ```
 
-To rebuild the package and the JupyterLab app:
-
-```bash
-npm run build
-jupyter lab build
-```
-
+Then within the `launcher` tab press the `Form` button.
