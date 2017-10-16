@@ -1,10 +1,12 @@
-# Jupyterlab Form
+# JupyterLab Form
 
-To install and use `jupyterlab-form` do the following:
+An extension for jupyterlab to create scripted forms.
+
+## Requirements
 
 Aquire Python, JupyterLab, Node, npm, and git.
 
-One way to get these it to download miniconda from https://conda.io/miniconda.html and then run the following:
+One way to get these is to download miniconda from https://conda.io/miniconda.html, install it, and then run the following:
 
 ```bash
 conda install nodejs jupyterlab git -c conda-forge
@@ -15,6 +17,8 @@ Alternatively node and npm can by installed via nvm (https://github.com/creation
 ```bash
 pip install jupyterlab
 ```
+
+## Installation
 
 Once you have those requirements download and install jupyrerlab-forms by running the following:
 
