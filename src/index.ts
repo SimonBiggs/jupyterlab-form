@@ -17,6 +17,22 @@ import {
   ILauncher
 } from '@jupyterlab/launcher';
 
+import {
+  FileEditor
+} from '@jupyterlab/fileeditor';
+
+import {
+  DockPanel
+} from '@phosphor/widgets'
+
+// import {
+//   DocumentManager
+// } from '@jupyterlab/docmanager';
+
+// import {
+//   Contents
+// } from '@jupyterlab/services';
+
 const FACTORY = 'Form';
 const EDITORFACTORY = 'Editor';
 
@@ -79,7 +95,16 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
       console.log(model)
       app.commands.execute('docmanager:open', {
         path: model.path, factory: EDITORFACTORY
-      });
+      }).then((editor: FileEditor) => {
+        let panelAny: any = editor.parent;
+        let panel: DockPanel = panelAny;
+
+        panel.layout.removeWidget(editor)
+
+        panel.addWidget(editor, {
+          mode: 'split-left'
+        })
+      }) 
       return app.commands.execute('docmanager:open', {
         path: model.path, factory: FACTORY
       });
