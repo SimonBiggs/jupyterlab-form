@@ -25,6 +25,14 @@ import {
   DockPanel
 } from '@phosphor/widgets'
 
+import {
+  CodeMirrorEditor
+} from '@jupyterlab/codemirror';
+
+import {
+  defaultFormContents
+} from './default-form-contents';
+
 // import {
 //   DocumentManager
 // } from '@jupyterlab/docmanager';
@@ -93,7 +101,7 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
       'docmanager:new-untitled', { path: cwd, type: 'file', ext: 'form.md' }
     ).then(model => {
       console.log(model)
-      app.commands.execute('docmanager:open', {
+      return app.commands.execute('docmanager:open', {
         path: model.path, factory: EDITORFACTORY
       }).then((editor: FileEditor) => {
         let panelAny: any = editor.parent;
@@ -104,9 +112,21 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
         panel.addWidget(editor, {
           mode: 'split-left'
         })
+
+
+        let codeMirrorAny: any = editor.editor;
+        let codeMirror: CodeMirrorEditor = codeMirrorAny;
+
+        
+        return editor.ready.then(() => {
+          codeMirror.doc.setValue(defaultFormContents)
+        })
+
       }) 
-      return app.commands.execute('docmanager:open', {
-        path: model.path, factory: FACTORY
+      .then(() => {
+        return app.commands.execute('docmanager:open', {
+          path: model.path, factory: FACTORY
+        })
       });
     });
   };
