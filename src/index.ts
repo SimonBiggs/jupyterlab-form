@@ -47,14 +47,14 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
     name: widget => widget.context.path
   });
 
-  app.docRegistry.addWidgetFactory(factory);
+  // app.docRegistry.addWidgetFactory(factory);
   let registry = app.docRegistry;
-  registry.addModelFactory(new NotebookModelFactory({}));
+  // registry.addModelFactory(new NotebookModelFactory({}));
   registry.addWidgetFactory(factory);
   registry.addCreator({
     name: 'form',
-    fileType: 'form',
-    widgetName: 'form'
+    fileType: 'text'
+    // widgetName: 'form'
   });
 
 
@@ -73,7 +73,7 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
 
   let callback = (cwd: string, name: string) => {
     return app.commands.execute(
-      'docmanager:new-untitled', { path: cwd, type: 'form' }
+      'docmanager:new-untitled', { path: cwd, type: 'file', ext: 'form.md' }
     ).then(model => {
       console.log(model)
       return app.commands.execute('docmanager:open', {
