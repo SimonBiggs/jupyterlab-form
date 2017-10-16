@@ -4,15 +4,15 @@ An extension for jupyterlab to create scripted forms.
 
 ## Requirements
 
-Aquire Python, JupyterLab, Node, npm, and git.
+Aquire Python3, JupyterLab, Node, npm, and git.
 
-One way to get these is to download miniconda from https://conda.io/miniconda.html, install it, and then run the following:
+One way to get these, which is simple and platform independent, is to download miniconda from https://conda.io/miniconda.html, install it, and then run the following:
 
 ```bash
 conda install nodejs jupyterlab git -c conda-forge
 ```
 
-Alternatively node and npm can by installed via nvm (https://github.com/creationix/nvm) and jupyterlab can be installed via pip as so:
+I personally use Ubuntu and install node and npm via nvm (https://github.com/creationix/nvm), python3 with pyenv (https://github.com/pyenv/pyenv), and jupyterlab simply via pip as so:
 
 ```bash
 pip install jupyterlab
