@@ -108,16 +108,13 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
         let panel: DockPanel = panelAny;
 
         panel.layout.removeWidget(editor)
-
         panel.addWidget(editor, {
           mode: 'split-left'
         })
 
-
         let codeMirrorAny: any = editor.editor;
         let codeMirror: CodeMirrorEditor = codeMirrorAny;
 
-        
         return editor.ready.then(() => {
           codeMirror.doc.setValue(defaultFormContents)
         })
