@@ -1,31 +1,33 @@
-# jupyterlab_form
+# JupyterLab Form
 
-Interactive forms.
+An extension for jupyterlab to create scripted forms.
 
+## Requirements
 
-## Prerequisites
+Aquire Python3, JupyterLab, Node, npm, and git.
 
-* JupyterLab
+One way to get these, which is simple and platform independent, is to download miniconda from https://conda.io/miniconda.html, install it, and then run the following:
+
+```bash
+conda install nodejs jupyterlab git -c conda-forge
+```
+
+I personally use Ubuntu and install node and npm via nvm (https://github.com/creationix/nvm), python3 with pyenv (https://github.com/pyenv/pyenv), and jupyterlab simply via pip as so:
+
+```bash
+pip install jupyterlab
+```
 
 ## Installation
 
-```bash
-jupyter labextension install jupyterlab_form
-```
-
-## Development
-
-For a development install (requires npm version 4 or later), do the following in the repository directory:
+Once you have those requirements download and install jupyrerlab-forms by running the following:
 
 ```bash
+git clone https://github.com/SimonBiggs/jupyterlab-form
+cd jupyterlab-form
 npm install
-jupyter labextension link .
+jupyter labextension install
+jupyter lab
 ```
 
-To rebuild the package and the JupyterLab app:
-
-```bash
-npm run build
-jupyter lab build
-```
-
+Then within the `launcher` tab press the `Form` button.
