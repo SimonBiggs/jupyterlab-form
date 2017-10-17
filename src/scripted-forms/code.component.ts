@@ -1,5 +1,5 @@
 import {
-  Component, OnInit, AfterViewInit, ViewChild, ElementRef
+  Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy
 } from '@angular/core';
 
 import { RenderMime, defaultRendererFactories } from '@jupyterlab/rendermime';
@@ -11,6 +11,7 @@ import {
 } from '@jupyterlab/codemirror';
 
 import { KernelService } from './kernel.service';
+import { OutputService } from './output.service';
 
 @Component({
   selector: 'code',
@@ -18,8 +19,9 @@ import { KernelService } from './kernel.service';
 <span #outputcontainer></span>
 <span #codecontainer *ngIf="future === undefined"><ng-content></ng-content></span>`
 })
-export class CodeComponent implements OnInit, AfterViewInit {
+export class CodeComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  name: string;
   renderMimeOptions: RenderMime.IOptions
   renderMime: RenderMime
   model: OutputAreaModel
@@ -35,6 +37,7 @@ export class CodeComponent implements OnInit, AfterViewInit {
 
   constructor(
     private myKernelSevice: KernelService,
+    private myOutputService: OutputService,
     private _eRef: ElementRef
   ) { }
 
@@ -63,10 +66,23 @@ export class CodeComponent implements OnInit, AfterViewInit {
     }
 
     this.outputArea = new OutputArea(this.outputAreaOptions)
+
+    this.outputArea.model.changed.connect(() => {
+      JSON.stringify(this.outputArea.model.toJSON())
+      this.myOutputService.setOutput(this.name, this.outputArea.model)
+    })
   }
 
-  runCode(name: string) {
-    this.promise = this.myKernelSevice.runCode(this.code, name)
+  ngOnDestroy() {
+    this.outputArea.dispose()
+  }
+
+  setName(name: string) {
+    this.name = name;
+  }
+
+  runCode() {
+    this.promise = this.myKernelSevice.runCode(this.code, this.name)
     this.promise.then(future => {
       if (future) {
         this.future = future

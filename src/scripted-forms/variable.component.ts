@@ -6,6 +6,7 @@ import {
 // import { Kernel } from '@jupyterlab/services';
 
 import { KernelService } from './kernel.service';
+import { VariableService } from './variable.service';
 
 @Component({
   selector: 'form-variable',
@@ -49,12 +50,13 @@ export class VariableComponent implements OnInit, AfterViewInit {
   @ViewChild('variablecontainer') variablecontainer: ElementRef
 
   variableName: string
-  oldVariableValue: any = null
-  variableValue: any
+  oldVariableValue: string | number = null;
+  variableValue: string | number;
 
   constructor(
     private myChangeDetectorRef: ChangeDetectorRef,
-    private myKernelSevice: KernelService
+    private myKernelSevice: KernelService,
+    private myVariableService: VariableService
   ) { }
 
   ngOnInit() {
@@ -66,17 +68,17 @@ export class VariableComponent implements OnInit, AfterViewInit {
 //     }
   }
 
-  variableChanged(value: any) {
+  variableChanged(value: string | number) {
     // this.myChangeDetectorRef.detectChanges()
     // console.log('variable change')
     if (this.inputType.match('string')) {
+      this.variableValue = String(this.variableValue);
       let escapedQuotes = this.variableValue.replace(/\"/g, '\\"')
       this.setCode = `${this.variableName} = "${escapedQuotes}"`
     }
     if (this.inputType.match('number')) {
       this.setCode = `${this.variableName} = ${this.variableValue}`
     }
-
 
     if (this.variableValue != this.oldVariableValue) {
       this.myKernelSevice.runCode(
@@ -92,6 +94,11 @@ export class VariableComponent implements OnInit, AfterViewInit {
       }).then((status) => {
         if (status != 'ignore') {
           this.variableChange.emit(this.variableName)
+
+          this.myVariableService.setVariable(this.variableName, this.variableValue)
+
+          // temp
+          // this.myKernelSevice.fetchVariable(this.variableName);
         }
       })
       this.oldVariableValue = this.variableValue
@@ -105,21 +112,28 @@ export class VariableComponent implements OnInit, AfterViewInit {
     
     this.fetchCode = `
 try:
-    print(${this.variableName})
+    print('{{ "defined": true, "value": "{}" }}'.format(${this.variableName}))
 except:
-    print('')
+    print('{"defined": false}')
 `
   }
 
   fetchVariable() {
+    // this.myKernelSevice.fetchVariable(this.variableName);
+
     this.myKernelSevice.runCode(this.fetchCode, '"fetch"_"' + this.variableName + '"').then(future => {
       future.onIOPub = ((msg: any) => {
         if (msg.content.name == "stdout") {
-          if (this.inputType.match('string')) {
-            this.variableValue = String(msg.content.text)
-          }
-          if (this.inputType.match('number')) {
-            this.variableValue = Number(msg.content.text)
+          // console.log(msg.content.text)
+          let result = JSON.parse(msg.content.text);
+          if (result.defined) {
+            if (this.inputType.match('string')) {
+              this.variableValue = String(result.value)
+            }
+            if (this.inputType.match('number')) {
+              this.variableValue = Number(result.value)
+            }
+            this.myVariableService.setVariable(this.variableName, this.variableValue)
           }
         }
       })

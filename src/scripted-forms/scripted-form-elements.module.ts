@@ -16,6 +16,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CodeComponent } from './code.component';
 
 import { KernelService } from './kernel.service';
+import { VariableService } from './variable.service';
+import { OutputService } from './output.service';
+
 import { StartComponent } from './start.component';
 import { LiveComponent } from './live.component';
 import { ButtonComponent } from './button.component';
@@ -37,7 +40,9 @@ import { VariableComponent } from './variable.component';
     VariableComponent
   ],
   providers: [
-    KernelService
+    KernelService,
+    VariableService,
+    OutputService
   ],
   exports: [
     CodeComponent,

@@ -24,12 +24,16 @@ export class StartComponent implements OnInit, AfterViewInit {
 
   runCode() {
     this.codeComponents.toArray().forEach((codeComponent, index) => {
-      codeComponent.runCode(
-        '"start"_' + String(this.startId) + '_' + String(index))
+      codeComponent.runCode()
     })
   }
 
   setId(id: number) {
     this.startId = id
+    this.codeComponents.toArray().forEach((codeComponent, index) => {
+      codeComponent.setName(
+        '"start"_' + String(this.startId) + '_' + String(index))
+    })
+
   }
 }

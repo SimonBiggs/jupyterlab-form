@@ -45,8 +45,7 @@ export class ButtonComponent implements OnInit, AfterViewInit {
   runCode() {
     if (this.afterViewInit && this.isFormReady) {
       this.codeComponents.toArray().forEach((codeComponent, index) => {
-        codeComponent.runCode(
-          '"button"_' + String(this.buttonId) + '_' + String(index))
+        codeComponent.runCode();
       })
       this.codeRunning = true
       this.myKernelSevice.queue.then(() => {
@@ -61,6 +60,10 @@ export class ButtonComponent implements OnInit, AfterViewInit {
 
   setId(id: number) {
     this.buttonId = id
+    this.codeComponents.toArray().forEach((codeComponent, index) => {
+      codeComponent.setName(
+        '"button"_' + String(this.buttonId) + '_' + String(index))
+    })
   }
 
 }

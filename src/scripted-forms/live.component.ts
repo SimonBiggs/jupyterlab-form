@@ -38,8 +38,7 @@ export class LiveComponent implements OnInit, AfterViewInit {
   variableChanged(variableName: string) {
     if (this.afterViewInit && this.isFormReady) {
       this.codeComponents.toArray().forEach((codeComponent, index) => {
-        codeComponent.runCode(
-          '"live"_' + String(this.liveId) + '_' + String(index))
+        codeComponent.runCode();
       })
     }
   }
@@ -50,5 +49,10 @@ export class LiveComponent implements OnInit, AfterViewInit {
 
   setId(id: number) {
     this.liveId = id
+
+    this.codeComponents.toArray().forEach((codeComponent, index) => {
+      codeComponent.setName(
+        '"live"_' + String(this.liveId) + '_' + String(index))
+    })
   }
 }

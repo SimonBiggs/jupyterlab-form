@@ -107,7 +107,7 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
         let panelAny: any = editor.parent;
         let panel: DockPanel = panelAny;
 
-        panel.layout.removeWidget(editor)
+        // panel.layout.removeWidget(editor)
         panel.addWidget(editor, {
           mode: 'split-left'
         })
