@@ -17,7 +17,7 @@ import {
 // }
 
 export
-namespace FormModel {
+namespace FormResultsModel {
   /**
    * An options object for initializing a notebook model.
    */
@@ -38,12 +38,12 @@ namespace FormModel {
 }
 
 export
-class FormModel extends DocumentModel {
+class FormResultsModel extends DocumentModel {
 
-  constructor(options: FormModel.IOptions) {
+  constructor(options: FormResultsModel.IOptions) {
     super(options.languagePreference, options.modelDB);
     // this.modelDB.setValue('formPath', options.formPath);
-    this.modelDB.setValue('formPath', 'untitled.form.md');
+    this.modelDB.createString('formPath').insert(0, 'testing.form.md')
   }
 
   /**
@@ -89,7 +89,7 @@ class FormModel extends DocumentModel {
 
 
 export
-namespace FormModelFactory {
+namespace FormResultsModelFactory {
   export
   interface IOptions {
     // formPath: string
@@ -97,11 +97,11 @@ namespace FormModelFactory {
 }
 
 export
-class FormModelFactory implements DocumentRegistry.IModelFactory<DocumentRegistry.IModel> {
+class FormResultsModelFactory implements DocumentRegistry.IModelFactory<DocumentRegistry.IModel> {
   private _disposed = false;
   // formPath: string;
 
-  constructor(options: FormModelFactory.IOptions) { 
+  constructor(options: FormResultsModelFactory.IOptions) { 
     // this.formPath = options.formPath;
   }
 
@@ -109,7 +109,7 @@ class FormModelFactory implements DocumentRegistry.IModelFactory<DocumentRegistr
    * The name of the model.
    */
   get name(): string {
-    return 'form';
+    return 'form-results';
   }
 
   /**
@@ -123,7 +123,8 @@ class FormModelFactory implements DocumentRegistry.IModelFactory<DocumentRegistr
    * The format of the file.
    */
   get fileFormat(): Contents.FileFormat {
-    return 'json';
+    // not sure why I can't put 'json' here
+    return 'text';
   }
 
   /**
@@ -149,7 +150,7 @@ class FormModelFactory implements DocumentRegistry.IModelFactory<DocumentRegistr
    */
   createNew(languagePreference?: string, modelDB?: IModelDB): DocumentRegistry.IModel {
     // let formPath = this.formPath;
-    return new FormModel({ languagePreference, modelDB });
+    return new FormResultsModel({ languagePreference, modelDB });
   }
 
   /**

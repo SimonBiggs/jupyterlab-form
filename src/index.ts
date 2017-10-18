@@ -14,14 +14,14 @@ import {
 } from '@jupyterlab/apputils';
 
 import {
-  FormWidget, FormWidgetFactory,
-  // FormResultsWidget, 
+  FormTemplateWidget, FormTemplateWidgetFactory,
+  FormResultsWidget, 
   FormResultsWidgetFactory
 } from './widget';
 
 import {
   // FormResultsModel, 
-  FormModelFactory
+  FormResultsModelFactory
 } from './model';
 
 import {
@@ -56,20 +56,22 @@ import {
 //   Contents
 // } from '@jupyterlab/services';
 
-const FORMFACTORY = 'Form';
-const FORMRESULTSFACTORY = 'FormResults'
-const EDITORFACTORY = 'Editor';
+const formTemplateFactoryName = 'Form Template';
+const formResultsFactoryName = 'Form Results'
+const editorFactoryName = 'Editor';
 
-const FORM_EXTENSION = '.form.md';
-const RESULT_EXTENSION = '.form.json'
+const formTemplateFileExt = '.form.md';
+const formResutsFileExt = '.form.json'
 
 function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocumentManager, launcher: ILauncher | null) {  
   const services = app.serviceManager;
+  let registry = app.docRegistry;
 
+  // Add new file types
   app.docRegistry.addFileType({
-    name: 'form',
+    name: 'form-template',
     mimeTypes: ['text/markdown'],
-    extensions: [FORM_EXTENSION],
+    extensions: [formTemplateFileExt],
     contentType: 'file',
     fileFormat: 'text'
   })
@@ -77,73 +79,77 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
   app.docRegistry.addFileType({
     name: 'form-results',
     mimeTypes: ['application/x-form+json'],
-    extensions: [RESULT_EXTENSION],
+    extensions: [formResutsFileExt],
     contentType: 'file',
     fileFormat: 'json'
   })
   
-  const formWidgetFactory = new FormWidgetFactory({
-    name: FORMFACTORY,
-    fileTypes: ['form'],
-    defaultFor: ['form'],
+  // Define the widget factories
+  const formTemplateWidgetFactory = new FormTemplateWidgetFactory({
+    name: formTemplateFactoryName,
+    fileTypes: ['form-template'],
+    defaultFor: ['form-template'],
     readOnly: true,
     services: services
   });
 
   const formResultsWidgetFactory = new FormResultsWidgetFactory({
-    name: FORMRESULTSFACTORY,
+    name: formResultsFactoryName,
     modelName: 'form-results',
     fileTypes: ['form-results'],
     defaultFor: ['form-results'],
-    // readOnly: true,
     services: services,
     docManager: docManager
   })
 
-  // console.log(app.commands);
+  // Register factories
+  registry.addModelFactory(new FormResultsModelFactory({}));
+  registry.addWidgetFactory(formTemplateWidgetFactory);
+  registry.addWidgetFactory(formResultsWidgetFactory);
 
-  let tracker = new InstanceTracker<FormWidget>({
-    namespace: '@simonbiggs/jupyterlab-form'
+  // Set up the trackers
+  let formTemplateTracker = new InstanceTracker<FormTemplateWidget>({
+    namespace: '@simonbiggs/jupyterlab-form/template'
   });
 
-  restorer.restore(tracker, {
+  let formResultsTracker = new InstanceTracker<FormResultsWidget>({
+    namespace: '@simonbiggs/jupyterlab-form/results'
+  });
+
+  // Set up state restorers
+  restorer.restore(formTemplateTracker, {
     command: 'docmanager:open',
-    args: widget => ({ path: widget.context.path, factory: FORMFACTORY }),
+    args: widget => ({ path: widget.context.path, factory: formTemplateFactoryName }),
     name: widget => widget.context.path
   });
 
-  // app.docRegistry.addWidgetFactory(factory);
-  let registry = app.docRegistry;
-  registry.addModelFactory(new FormModelFactory({}));
-
-  registry.addWidgetFactory(formWidgetFactory);
-  registry.addWidgetFactory(formResultsWidgetFactory);
-  // registry.addCreator({
-  //   name: 'form',
-  //   fileType: 'form'
-  //   // widgetName: 'form'
-  // });
-
-  let ft = app.docRegistry.getFileType('form');
-  formWidgetFactory.widgetCreated.connect((sender, widget) => {
-    // Track the widget.
-    tracker.add(widget);
-    // Notify the instance tracker if restore data needs to update.
-    widget.context.pathChanged.connect(() => { tracker.save(widget); });
-
-    if (ft) {
-      widget.title.iconClass = ft.iconClass;
-      widget.title.iconLabel = ft.iconLabel;
-    }
+  restorer.restore(formResultsTracker, {
+    command: 'docmanager:open',
+    args: widget => ({ path: widget.context.path, factory: formResultsFactoryName }),
+    name: widget => widget.context.path
   });
 
+  // Connect the trackers
+  formTemplateWidgetFactory.widgetCreated.connect((sender, widget) => {
+    formTemplateTracker.add(widget);
+    widget.context.pathChanged.connect(() => { formTemplateTracker.save(widget); });
+  });
+
+  formResultsWidgetFactory.widgetCreated.connect((sender, widget) => {
+    formResultsTracker.add(widget);
+    widget.context.pathChanged.connect(() => { formResultsTracker.save(widget); });
+  });
+
+  
+
+  // Launcher
   let callback = (cwd: string, name: string) => {
     return app.commands.execute(
-      'docmanager:new-untitled', { path: cwd, type: 'file', ext: FORM_EXTENSION }
+      'docmanager:new-untitled', { path: cwd, type: 'file', ext: formTemplateFileExt }
     ).then((formModel: Contents.IModel) => {
       // console.log(formModel)
       return app.commands.execute('docmanager:open', {
-        path: formModel.path, factory: EDITORFACTORY
+        path: formModel.path, factory: editorFactoryName
       }).then((editor: FileEditor) => {
         let panelAny: any = editor.parent;
         let panel: DockPanel = panelAny;
@@ -165,7 +171,7 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
       }) 
       .then(() => {
         return app.commands.execute('docmanager:open', {
-          path: formModel.path, factory: FORMFACTORY
+          path: formModel.path, factory: formTemplateFactoryName
         })
 
         // The \d is a workaround for https://github.com/jupyterlab/jupyterlab/issues/3113
@@ -213,8 +219,6 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
     })
   }
 }
-
-
 
 const extension: JupyterLabPlugin<void> = {
   id: '@simonbiggs/jupyterlab-form',
