@@ -85,7 +85,7 @@ It is the aim to have it so that the results of these forms can be
 saved in \`[formname]-[timestamp].results.json\` files. 
 Whenever a set of results are saved
 a hashed copy of the template is saved to the path
-\`.fronzen-forms/[formname]-[hash].form.md\`. 
+\`.frozen-forms/[formname]-[hash].form.md\`. 
 That way whenever the \`[formname]-[timestamp].results.json\` 
 file is viewed it will be displayed using the form template 
 as it was at the time of filling the form out.

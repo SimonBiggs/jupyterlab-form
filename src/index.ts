@@ -10,7 +10,9 @@ import {
 } from '@jupyterlab/apputils';
 
 import {
-  FormWidget, FormWidgetFactory
+  FormWidget, FormWidgetFactory,
+  // FormResultsWidget, 
+  FormResultsWidgetFactory
 } from './widget';
 
 import {
@@ -47,7 +49,7 @@ import {
 // } from '@jupyterlab/services';
 
 const FORMFACTORY = 'Form';
-// const FORMRESULTSFACTORY = 'FormResults'
+const FORMRESULTSFACTORY = 'FormResults'
 const EDITORFACTORY = 'Editor';
 
 function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILauncher | null) {  
@@ -77,14 +79,14 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
     services: services
   });
 
-  // const formResultsWidgetFactory = new formResultsWidgetFactory({
-  //   name: FORMRESULTSFACTORY,
-  //   modelName: 'form-results',
-  //   fileTypes: ['form-results'],
-  //   defaultFor: ['form-results'],
-  //   // readOnly: true,
-  //   services: services 
-  // })
+  const formResultsWidgetFactory = new FormResultsWidgetFactory({
+    name: FORMRESULTSFACTORY,
+    modelName: 'form-results',
+    fileTypes: ['form-results'],
+    defaultFor: ['form-results'],
+    // readOnly: true,
+    services: services 
+  })
 
   let tracker = new InstanceTracker<FormWidget>({
     namespace: '@simonbiggs/jupyterlab-form'
@@ -101,6 +103,7 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
   registry.addModelFactory(new FormResultsModelFactory({}));
 
   registry.addWidgetFactory(formWidgetFactory);
+  registry.addWidgetFactory(formResultsWidgetFactory);
   // registry.addCreator({
   //   name: 'form',
   //   fileType: 'form'

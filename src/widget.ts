@@ -82,9 +82,6 @@ class BaseFormWidget extends AngularWidget<AppComponent, AppModule> implements D
   }
 }
 
-
-
-
 export
 class FormWidget extends BaseFormWidget {
   private _monitor: ActivityMonitor<any, any> | null = null;
@@ -121,6 +118,33 @@ class FormWidget extends BaseFormWidget {
   }
 }
 
+export 
+class FormResultsWidget extends BaseFormWidget {
+    constructor(options: FormWidget.IOptions) {
+      super(options);
+  
+      this.id = '@simonbiggs/jupyterlab-form-results';
+  
+      this.componentReady.promise.then(() => {
+        this._context.ready.then(() => {
+          this.setFormContents()
+        })
+      })
+    }
+  
+    setFormContents() {
+      // Need to get the content from the frozen form
+
+      // let content = ...
+      // let results = this._context.model
+      // this.ngZone.run(() => {
+      //   this.componentInstance.setFormContents(content);
+        // this.componentInstance.setFormResults(results);
+      // });
+    }
+};
+
+
 export
 namespace FormWidget {
   export
@@ -150,6 +174,26 @@ class FormWidgetFactory extends ABCWidgetFactory<FormWidget, DocumentRegistry.IM
 
   protected createNewWidget(context: DocumentRegistry.Context): FormWidget {
     return new FormWidget({
+      context: context, 
+      services: this.services 
+    });
+  }
+}
+
+
+
+export
+class FormResultsWidgetFactory extends ABCWidgetFactory<FormResultsWidget, DocumentRegistry.IModel> {
+  services: ServiceManager
+
+  constructor(options: FormWidgetFactory.IOptions) {
+    super(options);
+    this.services = options.services;
+    // options.modelName
+  }
+
+  protected createNewWidget(context: DocumentRegistry.Context): FormResultsWidget {
+    return new FormResultsWidget({
       context: context, 
       services: this.services 
     });
