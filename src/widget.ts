@@ -29,19 +29,16 @@ import {
 
 const RENDER_TIMEOUT = 1000;
 
-
 export
-class FormWidget extends AngularWidget<AppComponent, AppModule> implements DocumentRegistry.IReadyWidget {
-  private _context: DocumentRegistry.Context;
-  private _services: ServiceManager;
-  private _monitor: ActivityMonitor<any, any> | null = null;
+class BaseFormWidget extends AngularWidget<AppComponent, AppModule> implements DocumentRegistry.IReadyWidget {
+  _context: DocumentRegistry.Context;
+  _services: ServiceManager;
 
   constructor(options: FormWidget.IOptions) {
     super(AppComponent, AppModule);
 
-    this.id = '@simonbiggs/jupyterlab-form';
     this.title.closable = true;
-    this.addClass('jp-scriptedFormWidget');
+    this.addClass('jp-formWidgets');
 
     this._context = options.context;
     this._services = options.services;
@@ -54,27 +51,7 @@ class FormWidget extends AngularWidget<AppComponent, AppModule> implements Docum
         this.componentInstance.sessionConnect(
           this._services, this._context.path);
       });
-
-      this._context.ready.then(() => {
-        this.updateFormContents()
-        this._monitor = new ActivityMonitor({
-          signal: this._context.model.contentChanged,
-          timeout: RENDER_TIMEOUT
-        });
-        this._monitor.activityStopped.connect(this.updateFormContents, this);
-      })
     })
-  }
-
-  updateFormContents() {
-    let content = this._context.model.toString();
-    this.ngZone.run(() => {
-      this.componentInstance.setFormContents(content);
-    });
-  }
-
-  get context(): DocumentRegistry.Context {
-    return this._context;
   }
 
   get ready() {
@@ -82,18 +59,14 @@ class FormWidget extends AngularWidget<AppComponent, AppModule> implements Docum
   }
 
   dispose(): void {
-    if (this._monitor) {
-      this._monitor.dispose();
-    }
     this.ngZone.run(() => {
       this.componentRef.destroy();
     });
     super.dispose();
   }
 
-  protected onActivateRequest(msg: Message): void {
-    this.node.tabIndex = -1;
-    this.node.focus();
+  get context(): DocumentRegistry.Context {
+    return this._context;
   }
 
   private _onPathChanged(): void {
@@ -101,6 +74,50 @@ class FormWidget extends AngularWidget<AppComponent, AppModule> implements Docum
     this.ngZone.run(() => {
       this.componentInstance.pathChanged(this._context.path);
     });
+  }
+
+  protected onActivateRequest(msg: Message): void {
+    this.node.tabIndex = -1;
+    this.node.focus();
+  }
+}
+
+
+
+
+export
+class FormWidget extends BaseFormWidget {
+  private _monitor: ActivityMonitor<any, any> | null = null;
+
+  constructor(options: FormWidget.IOptions) {
+    super(options);
+
+    this.id = '@simonbiggs/jupyterlab-form';
+
+    this.componentReady.promise.then(() => {
+      this._context.ready.then(() => {
+        this.setFormContents()
+        this._monitor = new ActivityMonitor({
+          signal: this._context.model.contentChanged,
+          timeout: RENDER_TIMEOUT
+        });
+        this._monitor.activityStopped.connect(this.setFormContents, this);
+      })
+    })
+  }
+
+  setFormContents() {
+    let content = this._context.model.toString();
+    this.ngZone.run(() => {
+      this.componentInstance.setFormContents(content);
+    });
+  }
+
+  dispose(): void {
+    if (this._monitor) {
+      this._monitor.dispose();
+    }
+    super.dispose();
   }
 }
 
@@ -128,6 +145,7 @@ class FormWidgetFactory extends ABCWidgetFactory<FormWidget, DocumentRegistry.IM
   constructor(options: FormWidgetFactory.IOptions) {
     super(options);
     this.services = options.services;
+    // options.modelName
   }
 
   protected createNewWidget(context: DocumentRegistry.Context): FormWidget {

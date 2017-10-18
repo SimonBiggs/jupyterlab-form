@@ -14,6 +14,11 @@ import {
 } from './widget';
 
 import {
+  // FormResultsModel, 
+  FormResultsModelFactory
+} from './model';
+
+import {
   ILauncher
 } from '@jupyterlab/launcher';
 
@@ -41,26 +46,45 @@ import {
 //   Contents
 // } from '@jupyterlab/services';
 
-const FACTORY = 'Form';
+const FORMFACTORY = 'Form';
+// const FORMRESULTSFACTORY = 'FormResults'
 const EDITORFACTORY = 'Editor';
 
 function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILauncher | null) {  
+  const services = app.serviceManager;
+
   app.docRegistry.addFileType({
     name: 'form',
-    mimeTypes: ['form'],
-    extensions: ['.form.md', '.form'],
+    mimeTypes: ['text/markdown', 'text/form'],
+    extensions: ['.form.md'],
     contentType: 'file',
     fileFormat: 'text'
   })
 
-  const services = app.serviceManager;
-  const factory = new FormWidgetFactory({
-    name: FACTORY,
+  app.docRegistry.addFileType({
+    name: 'form-results',
+    mimeTypes: ['json/form-results'],
+    extensions: ['.results.json'],
+    contentType: 'file',
+    fileFormat: 'json'
+  })
+  
+  const formWidgetFactory = new FormWidgetFactory({
+    name: FORMFACTORY,
     fileTypes: ['form'],
     defaultFor: ['form'],
     readOnly: true,
     services: services
   });
+
+  // const formResultsWidgetFactory = new formResultsWidgetFactory({
+  //   name: FORMRESULTSFACTORY,
+  //   modelName: 'form-results',
+  //   fileTypes: ['form-results'],
+  //   defaultFor: ['form-results'],
+  //   // readOnly: true,
+  //   services: services 
+  // })
 
   let tracker = new InstanceTracker<FormWidget>({
     namespace: '@simonbiggs/jupyterlab-form'
@@ -68,23 +92,24 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
 
   restorer.restore(tracker, {
     command: 'docmanager:open',
-    args: widget => ({ path: widget.context.path, factory: FACTORY }),
+    args: widget => ({ path: widget.context.path, factory: FORMFACTORY }),
     name: widget => widget.context.path
   });
 
   // app.docRegistry.addWidgetFactory(factory);
   let registry = app.docRegistry;
-  // registry.addModelFactory(new NotebookModelFactory({}));
-  registry.addWidgetFactory(factory);
-  registry.addCreator({
-    name: 'form',
-    fileType: 'text'
-    // widgetName: 'form'
-  });
+  registry.addModelFactory(new FormResultsModelFactory({}));
+
+  registry.addWidgetFactory(formWidgetFactory);
+  // registry.addCreator({
+  //   name: 'form',
+  //   fileType: 'form'
+  //   // widgetName: 'form'
+  // });
 
 
   let ft = app.docRegistry.getFileType('form');
-  factory.widgetCreated.connect((sender, widget) => {
+  formWidgetFactory.widgetCreated.connect((sender, widget) => {
     // Track the widget.
     tracker.add(widget);
     // Notify the instance tracker if restore data needs to update.
@@ -121,9 +146,15 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
 
       }) 
       .then(() => {
-        return app.commands.execute('docmanager:open', {
-          path: model.path, factory: FACTORY
+        let formDisplayPromise = app.commands.execute('docmanager:open', {
+          path: model.path, factory: FORMFACTORY
         })
+
+        formDisplayPromise.then(() => {
+
+        })
+
+        return formDisplayPromise
       });
     });
   };

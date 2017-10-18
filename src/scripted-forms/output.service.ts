@@ -6,8 +6,8 @@ import { IOutputAreaModel } from '@jupyterlab/outputarea';
 export class OutputService {
   outputStore: { [key:string]: IOutputAreaModel } = {};
 
-  setOutput(outputName: string, outputJSON: IOutputAreaModel) {
-    this.outputStore[outputName] = outputJSON;
+  setOutput(outputName: string, outputModel: IOutputAreaModel) {
+    this.outputStore[outputName] = outputModel;
     // console.log(this.outputStore);
   }
 }
