@@ -11,10 +11,13 @@ import {
 } from '@jupyterlab/services';
 
 
-
+// export
+// interface IFormModel extends DocumentRegistry.IModel {
+//   readonly formPath: string;
+// }
 
 export
-namespace FormResultsModel {
+namespace FormModel {
   /**
    * An options object for initializing a notebook model.
    */
@@ -29,14 +32,18 @@ namespace FormResultsModel {
      * A modelDB for storing notebook data.
      */
     modelDB?: IModelDB;
+
+    // formPath: string;
   }
 }
 
 export
-class FormResultsModel extends DocumentModel {
+class FormModel extends DocumentModel {
 
-  constructor(options: FormResultsModel.IOptions = {}) {
+  constructor(options: FormModel.IOptions) {
     super(options.languagePreference, options.modelDB);
+    // this.modelDB.setValue('formPath', options.formPath);
+    this.modelDB.setValue('formPath', 'untitled.form.md');
   }
 
   /**
@@ -82,24 +89,27 @@ class FormResultsModel extends DocumentModel {
 
 
 export
-namespace FormResultsModelFactory {
+namespace FormModelFactory {
   export
   interface IOptions {
-
+    // formPath: string
   }
 }
 
 export
-class FormResultsModelFactory implements DocumentRegistry.IModelFactory<DocumentRegistry.IModel> {
+class FormModelFactory implements DocumentRegistry.IModelFactory<DocumentRegistry.IModel> {
   private _disposed = false;
+  // formPath: string;
 
-  constructor(options: FormResultsModelFactory.IOptions) { }
+  constructor(options: FormModelFactory.IOptions) { 
+    // this.formPath = options.formPath;
+  }
 
   /**
    * The name of the model.
    */
   get name(): string {
-    return 'form-results';
+    return 'form';
   }
 
   /**
@@ -113,7 +123,7 @@ class FormResultsModelFactory implements DocumentRegistry.IModelFactory<Document
    * The format of the file.
    */
   get fileFormat(): Contents.FileFormat {
-    return 'text';
+    return 'json';
   }
 
   /**
@@ -138,7 +148,8 @@ class FormResultsModelFactory implements DocumentRegistry.IModelFactory<Document
    * @returns A new document model.
    */
   createNew(languagePreference?: string, modelDB?: IModelDB): DocumentRegistry.IModel {
-    return new FormResultsModel({ languagePreference, modelDB });
+    // let formPath = this.formPath;
+    return new FormModel({ languagePreference, modelDB });
   }
 
   /**

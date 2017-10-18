@@ -6,6 +6,10 @@ import {
 } from '@jupyterlab/application';
 
 import {
+  Contents
+} from '@jupyterlab/services';
+
+import {
   InstanceTracker
 } from '@jupyterlab/apputils';
 
@@ -17,7 +21,7 @@ import {
 
 import {
   // FormResultsModel, 
-  FormResultsModelFactory
+  FormModelFactory
 } from './model';
 
 import {
@@ -27,6 +31,10 @@ import {
 import {
   FileEditor
 } from '@jupyterlab/fileeditor';
+
+import {
+  IDocumentManager
+} from '@jupyterlab/docmanager';
 
 import {
   DockPanel
@@ -52,21 +60,24 @@ const FORMFACTORY = 'Form';
 const FORMRESULTSFACTORY = 'FormResults'
 const EDITORFACTORY = 'Editor';
 
-function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILauncher | null) {  
+const FORM_EXTENSION = '.form.md';
+const RESULT_EXTENSION = '.form.json'
+
+function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocumentManager, launcher: ILauncher | null) {  
   const services = app.serviceManager;
 
   app.docRegistry.addFileType({
     name: 'form',
-    mimeTypes: ['text/markdown', 'text/form'],
-    extensions: ['.form.md'],
+    mimeTypes: ['text/markdown'],
+    extensions: [FORM_EXTENSION],
     contentType: 'file',
     fileFormat: 'text'
   })
 
   app.docRegistry.addFileType({
     name: 'form-results',
-    mimeTypes: ['json/form-results'],
-    extensions: ['.results.json'],
+    mimeTypes: ['application/x-form+json'],
+    extensions: [RESULT_EXTENSION],
     contentType: 'file',
     fileFormat: 'json'
   })
@@ -85,8 +96,11 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
     fileTypes: ['form-results'],
     defaultFor: ['form-results'],
     // readOnly: true,
-    services: services 
+    services: services,
+    docManager: docManager
   })
+
+  // console.log(app.commands);
 
   let tracker = new InstanceTracker<FormWidget>({
     namespace: '@simonbiggs/jupyterlab-form'
@@ -100,7 +114,7 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
 
   // app.docRegistry.addWidgetFactory(factory);
   let registry = app.docRegistry;
-  registry.addModelFactory(new FormResultsModelFactory({}));
+  registry.addModelFactory(new FormModelFactory({}));
 
   registry.addWidgetFactory(formWidgetFactory);
   registry.addWidgetFactory(formResultsWidgetFactory);
@@ -109,7 +123,6 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
   //   fileType: 'form'
   //   // widgetName: 'form'
   // });
-
 
   let ft = app.docRegistry.getFileType('form');
   formWidgetFactory.widgetCreated.connect((sender, widget) => {
@@ -126,14 +139,16 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
 
   let callback = (cwd: string, name: string) => {
     return app.commands.execute(
-      'docmanager:new-untitled', { path: cwd, type: 'file', ext: 'form.md' }
-    ).then(model => {
-      console.log(model)
+      'docmanager:new-untitled', { path: cwd, type: 'file', ext: FORM_EXTENSION }
+    ).then((formModel: Contents.IModel) => {
+      // console.log(formModel)
       return app.commands.execute('docmanager:open', {
-        path: model.path, factory: EDITORFACTORY
+        path: formModel.path, factory: EDITORFACTORY
       }).then((editor: FileEditor) => {
         let panelAny: any = editor.parent;
         let panel: DockPanel = panelAny;
+
+        // console.log(formModel.path)
 
         // panel.layout.removeWidget(editor)
         panel.addWidget(editor, {
@@ -149,15 +164,44 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
 
       }) 
       .then(() => {
-        let formDisplayPromise = app.commands.execute('docmanager:open', {
-          path: model.path, factory: FORMFACTORY
+        return app.commands.execute('docmanager:open', {
+          path: formModel.path, factory: FORMFACTORY
         })
 
-        formDisplayPromise.then(() => {
+        // The \d is a workaround for https://github.com/jupyterlab/jupyterlab/issues/3113
+        // let baseName = formModel.path.match(/^(.*)\.form\d*\.md$/)[1]
+        // let extensionMatch = formModel.path.match(/^(.*)\.form*\.md$/)
 
-        })
+        // if (extensionMatch === null) {
+        //   throw RangeError("The created form does not have the extension '.form.md'")
+        // }
 
-        return formDisplayPromise
+        // let baseName = formModel.path.match(/^(.*)\.form*\.md$/)[1]
+        // let resultsName = baseName.concat(RESULT_EXTENSION)
+
+        // // docManager.createNew(resultsName, FORMRESULTSFACTORY)
+        // let getResultsFilePromise = docManager.services.contents.get(resultsName, { content: false })
+        
+        
+        // getResultsFilePromise.then((resultsModel: Contents.IModel) => {
+        //   return app.commands.execute('docmanager:open', {
+        //     path: resultsModel.path, factory: FORMRESULTSFACTORY
+        //   })
+        // })
+
+        // getResultsFilePromise.catch(() => {
+        //   docManager.services.contents.newUntitled({
+        //     path: cwd,
+        //     ext: RESULT_EXTENSION,
+        //     type: 'file'
+        //   })
+        //   .then((resultsModel: Contents.IModel) => {
+        //     return app.commands.execute('docmanager:open', {
+        //       path: resultsModel.path, factory: FORMRESULTSFACTORY
+        //     })
+        //   })
+        // })
+
       });
     });
   };
@@ -170,11 +214,14 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, launcher: ILaunche
   }
 }
 
+
+
 const extension: JupyterLabPlugin<void> = {
   id: '@simonbiggs/jupyterlab-form',
   autoStart: true,
   requires: [
-    ILayoutRestorer
+    ILayoutRestorer,
+    IDocumentManager
   ],
   optional: [
     ILauncher

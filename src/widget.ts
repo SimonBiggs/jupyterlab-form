@@ -11,7 +11,7 @@ import {
 } from './app.module';
 
 import {
-  ServiceManager
+  ServiceManager, ContentsManager, Contents
 } from '@jupyterlab/services';
 
 import {
@@ -26,6 +26,10 @@ import {
 import {
   Message
 } from '@phosphor/messaging';
+
+import {
+  IDocumentManager
+} from '@jupyterlab/docmanager';
 
 const RENDER_TIMEOUT = 1000;
 
@@ -120,28 +124,47 @@ class FormWidget extends BaseFormWidget {
 
 export 
 class FormResultsWidget extends BaseFormWidget {
-    constructor(options: FormWidget.IOptions) {
-      super(options);
+  private _docManager: IDocumentManager
+  contentsManager = new ContentsManager()
+
+  constructor(options: FormResultsWidget.IOptions) {
+    super(options);
+
+    this._docManager = options.docManager;
+
+    this.id = '@simonbiggs/jupyterlab-form-results';
+
+    this.componentReady.promise.then(() => {
+      this._context.ready.then(() => {
+        this.setFormContents()
+      })
+    })
+  }
   
-      this.id = '@simonbiggs/jupyterlab-form-results';
-  
-      this.componentReady.promise.then(() => {
-        this._context.ready.then(() => {
-          this.setFormContents()
-        })
+  setFormContents() {
+    // Need to get the content from the frozen form
+
+    let formPath = this._context.model.modelDB.getValue('formPath')
+    
+    if (typeof formPath === "string") {
+      this.contentsManager.get(formPath)
+      .then((templateModel: Contents.IModel) => {
+        console.log(templateModel.content)
       })
     }
-  
-    setFormContents() {
-      // Need to get the content from the frozen form
-
-      // let content = ...
-      // let results = this._context.model
-      // this.ngZone.run(() => {
-      //   this.componentInstance.setFormContents(content);
-        // this.componentInstance.setFormResults(results);
-      // });
+    else {
+      throw "formPath is not a string"
     }
+    
+
+
+    // let content = ...
+    // let results = this._context.model
+    // this.ngZone.run(() => {
+    //   this.componentInstance.setFormContents(content);
+      // this.componentInstance.setFormResults(results);
+    // });
+  }
 };
 
 
@@ -159,6 +182,25 @@ namespace FormWidgetFactory {
   export
   interface IOptions extends DocumentRegistry.IWidgetFactoryOptions {
     services: ServiceManager
+  }
+}
+
+export
+namespace FormResultsWidgetFactory {
+  export
+  interface IOptions extends DocumentRegistry.IWidgetFactoryOptions {
+    services: ServiceManager,
+    docManager: IDocumentManager
+  }
+}
+
+export
+namespace FormResultsWidget {
+  export
+  interface IOptions {
+    context: DocumentRegistry.Context,
+    services: ServiceManager,
+    docManager: IDocumentManager
   }
 }
 
@@ -185,17 +227,20 @@ class FormWidgetFactory extends ABCWidgetFactory<FormWidget, DocumentRegistry.IM
 export
 class FormResultsWidgetFactory extends ABCWidgetFactory<FormResultsWidget, DocumentRegistry.IModel> {
   services: ServiceManager
+  docManager: IDocumentManager
 
-  constructor(options: FormWidgetFactory.IOptions) {
+  constructor(options: FormResultsWidgetFactory.IOptions) {
     super(options);
     this.services = options.services;
+    this.docManager = options.docManager
     // options.modelName
   }
 
   protected createNewWidget(context: DocumentRegistry.Context): FormResultsWidget {
     return new FormResultsWidget({
       context: context, 
-      services: this.services 
+      services: this.services,
+      docManager: this.docManager
     });
   }
 }
