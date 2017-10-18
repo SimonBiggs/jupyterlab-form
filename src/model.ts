@@ -43,7 +43,7 @@ class FormResultsModel extends DocumentModel {
   constructor(options: FormResultsModel.IOptions) {
     super(options.languagePreference, options.modelDB);
     // this.modelDB.setValue('formPath', options.formPath);
-    this.modelDB.createString('formPath').insert(0, 'testing.form.md')
+    this.modelDB.createString('formPath').insert(0, './testing.form.md')
   }
 
   /**
