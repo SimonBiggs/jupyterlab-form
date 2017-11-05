@@ -2,8 +2,8 @@ import {
   Component, OnInit, ContentChildren, QueryList, AfterViewInit
 } from '@angular/core';
 
-import { CodeComponent } from './code.component'
-import { KernelService } from './kernel.service'
+import { CodeComponent } from './code.component';
+import { KernelService } from './kernel.service';
 
 @Component({
   selector: 'form-button',
@@ -29,7 +29,7 @@ export class ButtonComponent implements OnInit, AfterViewInit {
 
   codeRunning = false;
 
-  @ContentChildren(CodeComponent) codeComponents: QueryList<CodeComponent>
+  @ContentChildren(CodeComponent) codeComponents: QueryList<CodeComponent>;
 
   constructor(
     private myKernelSevice: KernelService
@@ -39,7 +39,7 @@ export class ButtonComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.afterViewInit = true
+    this.afterViewInit = true;
   }
 
   runCode() {
@@ -47,23 +47,23 @@ export class ButtonComponent implements OnInit, AfterViewInit {
       this.codeComponents.toArray().forEach((codeComponent, index) => {
         codeComponent.runCode();
       })
-      this.codeRunning = true
+      this.codeRunning = true;
       this.myKernelSevice.queue.then(() => {
-        this.codeRunning = false
+        this.codeRunning = false;
       })
     }
   }
 
   formReady() {
-    this.isFormReady = true
+    this.isFormReady = true;
   }
 
   setId(id: number) {
-    this.buttonId = id
+    this.buttonId = id;
     this.codeComponents.toArray().forEach((codeComponent, index) => {
       codeComponent.setName(
         '"button"_' + String(this.buttonId) + '_' + String(index))
-    })
+    });
   }
 
 }

@@ -42,8 +42,8 @@ export
 namespace BaseFormWidget {
   export
   interface IOptions {
-    context: DocumentRegistry.Context,
-    services: ServiceManager
+    context: DocumentRegistry.Context;
+    services: ServiceManager;
   }
 }
 
@@ -113,14 +113,14 @@ class FormTemplateWidget extends BaseFormWidget {
 
     this.componentReady.promise.then(() => {
       this._context.ready.then(() => {
-        this.setFormContents()
+        this.setFormContents();
         this._monitor = new ActivityMonitor({
           signal: this._context.model.contentChanged,
           timeout: RENDER_TIMEOUT
         });
         this._monitor.activityStopped.connect(this.setFormContents, this);
-      })
-    })
+      });
+    });
   }
 
   setFormContents() {
@@ -143,15 +143,15 @@ export
 namespace FormResultsWidget {
   export
   interface IOptions {
-    context: DocumentRegistry.Context,
-    services: ServiceManager,
-    docManager: IDocumentManager
+    context: DocumentRegistry.Context;
+    services: ServiceManager;
+    docManager: IDocumentManager;
   }
 }
 
 export
 class FormResultsWidget extends BaseFormWidget {
-  private _docManager: IDocumentManager
+  private _docManager: IDocumentManager;
   contentsManager = new ContentsManager()
 
   constructor(options: FormResultsWidget.IOptions) {
@@ -163,15 +163,15 @@ class FormResultsWidget extends BaseFormWidget {
 
     this.componentReady.promise.then(() => {
       this._context.ready.then(() => {
-        this.setFormContents()
-      })
-    })
+        this.setFormContents();
+      });
+    });
   }
 
   setFormContents() {
     // Need to get the content from the frozen form
 
-    const formPath = this._context.model.modelDB.get('formPath') as IObservableString
+    const formPath = this._context.model.modelDB.get('formPath') as IObservableString;
     // let results = this._context.model
 
     this.contentsManager.get(formPath.text)
@@ -190,13 +190,13 @@ export
 namespace FormTemplateWidgetFactory {
   export
   interface IOptions extends DocumentRegistry.IWidgetFactoryOptions {
-    services: ServiceManager
+    services: ServiceManager;
   }
 }
 
 export
 class FormTemplateWidgetFactory extends ABCWidgetFactory<FormTemplateWidget, DocumentRegistry.IModel> {
-  services: ServiceManager
+  services: ServiceManager;
 
   constructor(options: FormTemplateWidgetFactory.IOptions) {
     super(options);
@@ -217,21 +217,21 @@ export
 namespace FormResultsWidgetFactory {
   export
   interface IOptions extends DocumentRegistry.IWidgetFactoryOptions {
-    services: ServiceManager,
-    docManager: IDocumentManager
+    services: ServiceManager;
+    docManager: IDocumentManager;
   }
 }
 
 
 export
 class FormResultsWidgetFactory extends ABCWidgetFactory<FormResultsWidget, DocumentRegistry.IModel> {
-  services: ServiceManager
-  docManager: IDocumentManager
+  services: ServiceManager;
+  docManager: IDocumentManager;
 
   constructor(options: FormResultsWidgetFactory.IOptions) {
     super(options);
     this.services = options.services;
-    this.docManager = options.docManager
+    this.docManager = options.docManager;
     // options.modelName
   }
 
