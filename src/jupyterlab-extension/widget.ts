@@ -1,3 +1,13 @@
+/*
+The jupyterlab-form widget.
+
+Currently there are two exported widgets. A results widget and a template
+widget. The thought is that eventually I will collapse this into one. As in
+the form widget will always be the 'results' widget. I imagine this will become
+clearer as I sort out the data model.
+*/
+
+
 import {
   AngularWidget
 } from './angular-loader';

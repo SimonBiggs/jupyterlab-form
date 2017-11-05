@@ -1,3 +1,10 @@
+/*
+The root form component.
+
+Passes the jupyterlab session into the kernel service and connects. Passes
+through the `setFormContents` function.
+*/
+
 import {
     Component, ViewChild
 } from '@angular/core';

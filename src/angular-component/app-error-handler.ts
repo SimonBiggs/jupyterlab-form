@@ -1,3 +1,13 @@
+/*
+Handler to print error messages at the top of the form.
+
+If the user makes an error within the form template at least the user will be
+presented with some form of error message.
+
+In the future the display of this message could integrate better with
+jupyterlab.
+*/
+
 import { ErrorHandler } from '@angular/core';
 
 export class AppErrorHandler extends ErrorHandler {

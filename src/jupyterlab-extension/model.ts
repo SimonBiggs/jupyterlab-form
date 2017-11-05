@@ -1,3 +1,10 @@
+/*
+The data model of the form results files.
+
+Not yet implemented.
+*/
+
+
 import {
   DocumentModel, DocumentRegistry
 } from '@jupyterlab/docregistry';

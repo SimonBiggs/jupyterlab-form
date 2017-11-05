@@ -1,3 +1,7 @@
+/*
+The root app module.
+*/
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ApplicationRef, ErrorHandler } from '@angular/core';
 import { FormsModule } from '@angular/forms';

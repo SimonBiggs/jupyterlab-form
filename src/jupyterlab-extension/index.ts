@@ -1,3 +1,8 @@
+/*
+The JupyterLab extension entry point.
+*/
+
+
 import '../angular-component/polyfills';
 import './styles';
 
@@ -100,7 +105,7 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
     defaultFor: ['form-results'],
     services: services,
     docManager: docManager
-  })
+  });
 
   // Register factories
   registry.addModelFactory(new FormResultsModelFactory({}));

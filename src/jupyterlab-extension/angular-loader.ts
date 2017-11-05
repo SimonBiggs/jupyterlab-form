@@ -1,3 +1,14 @@
+/*
+Bootstraps a root Angular component into a JupyterLab Widget.
+
+Key properties on the AngularWidget are `componentInstance` and
+`componentReady`.
+
+Once the componentReady promise resolves then the Angular component is
+accessible as componentInstance.
+*/
+
+
 import {
   Widget
 } from '@phosphor/widgets';
@@ -55,7 +66,7 @@ export class AngularWidget<C, M> extends Widget {
       this.angularLoader = new AngularLoader(ngModuleRef);
       this.ngZone = this.angularLoader.ngZone;
       this.componentRef = this.angularLoader.attachComponent(
-        ngComponent, this.node)
+        ngComponent, this.node);
       this.componentInstance = this.componentRef.instance;
       this.componentReady.resolve(undefined);
     });

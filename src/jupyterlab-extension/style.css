@@ -1,3 +1,7 @@
+/*
+The extension style.
+*/
+
 .jp-formWidgets {
     display: flex;
     flex-direction: column;

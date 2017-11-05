@@ -1,3 +1,7 @@
+/*
+A default markdown form.
+*/
+
 export const defaultFormContents = `# A Demo Form
 
 ## Description
@@ -15,7 +19,7 @@ There are three kinds of sections:
  * \`start\`,
  * \`live\`,
  * and \`button\`.
- 
+
 Code which is written inside of these defined sections is run
 as python code according to specific rules.
 
@@ -24,7 +28,7 @@ There are two kinds of variable inputs:
 
  * \`number\`,
  * and \`string\`.
- 
+
 These are attached to a specific python variable which update on
 user input.
 
@@ -81,30 +85,30 @@ They will not run until their respective button is pressed.
 
 ## Future work
 
-It is the aim to have it so that the results of these forms can be 
-saved in \`[formname]-[timestamp].results.json\` files. 
+It is the aim to have it so that the results of these forms can be
+saved in \`[formname]-[timestamp].results.json\` files.
 Whenever a set of results are saved
 a hashed copy of the template is saved to the path
-\`.frozen-forms/[formname]-[hash].form.md\`. 
-That way whenever the \`[formname]-[timestamp].results.json\` 
-file is viewed it will be displayed using the form template 
+\`.frozen-forms/[formname]-[hash].form.md\`.
+That way whenever the \`[formname]-[timestamp].results.json\`
+file is viewed it will be displayed using the form template
 as it was at the time of filling the form out.
 
 All variable inputs will also record the timestamp representing the
 time at which that input was last changed.
 
-Templates will also have the option of referencing a \`.config.json\` 
+Templates will also have the option of referencing a \`.config.json\`
 file which will be hashed and frozen in the same way as above to provide
 abstracted metadata which can be changed independently of the forms.
 
-It might prove useful to create a separate extension which then provides 
+It might prove useful to create a separate extension which then provides
 interactive trending of the form results files over time.
 
 Another extension of value would be a scheduling and overview extension
 which defines a set of tasks. Each task can contain multiple forms.
 There would also be targets, tasks can be assigned to multiple targets
 and assigned tasks can be schuduled to be completed over defined intervals.
-This would present an overview of all targets, their corresponding tasks, 
+This would present an overview of all targets, their corresponding tasks,
 when the scheduled tasks were last completed, when they are next due by.
 
 Beyond the big picture goals provided above there is a need for
