@@ -1,13 +1,17 @@
+/*
+A module containing the form elements.
+*/
+
 import { NgModule } from '@angular/core';
 // import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { 
+import {
   MaterialModule,
-  // MatButtonModule, MatInputModule, MatIconModule, 
+  // MatButtonModule, MatInputModule, MatIconModule,
   // MatIconRegistry
-} from '@angular/material'
+} from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 

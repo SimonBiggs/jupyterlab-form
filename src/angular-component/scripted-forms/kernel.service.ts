@@ -1,3 +1,11 @@
+/*
+This service handles all communication to the Python Kernel.
+
+It defines a queue with the aim to only ever send one request to the kernel
+at a time and in a well defined order. This queue also handles dropping repeat
+requests if the kernel is busy.
+*/
+
 import { Injectable } from '@angular/core';
 
 import {
@@ -40,9 +48,9 @@ export class KernelService {
   }
 
   sessionConnect() {
-    let settings = ServerConnection.makeSettings({});
-    
-    let options = {
+    const settings = ServerConnection.makeSettings({});
+
+    const options = {
       kernelName: 'python3',
       serverSettings: settings,
       path: this.path
@@ -54,18 +62,18 @@ export class KernelService {
         this.sessionReady(session);
         this.isNewSession = false;
         this.sessionConnected.resolve(undefined);
-        console.log('previous session ready')
-      })
+        console.log('previous session ready');
+      });
     }).catch(() => {
       Session.startNew(options).then(session => {
         console.log(session);
         this.sessionReady(session);
         this.isNewSession = true;
         this.sessionConnected.resolve(undefined);
-        console.log('new session ready')
-      })
-    })
-    
+        console.log('new session ready');
+      });
+    });
+
   }
 
   sessionReady(session: Session.ISession) {
@@ -93,7 +101,7 @@ export class KernelService {
   //     detail_level: 0
   //   }
   //   this.kernel.requestInspect(content).then(msg => {
-      
+
   //     console.log(msg.content.data);
   //   })
 

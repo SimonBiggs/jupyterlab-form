@@ -1,3 +1,16 @@
+/*
+This file has two components within it. The FormComponent and the
+RuntimeComponent.
+
+The Form Component has a function `setFormContents` which is callable on this
+component with a string input. Once this function is called the form rebuilds
+with the provided contents.
+
+The RuntimeComponent is a the component which live builds depending on the
+contents of the provided markdown to the form. The logic defining the order
+which each section's code is called is defined within this component.
+*/
+
 import {
   Component, OnInit, AfterViewInit,
   ViewChild, ViewContainerRef, ComponentRef,
@@ -34,7 +47,7 @@ export class FormComponent implements OnInit, AfterViewInit {
   myMarkdownIt: MarkdownIt.MarkdownIt;
   viewInitialised = new PromiseDelegate<void>();
 
-  @ViewChild('errorbox') errorbox: ElementRef
+  @ViewChild('errorbox') errorbox: ElementRef;
   @ViewChild('container', { read: ViewContainerRef })
   container: ViewContainerRef;
 
@@ -62,20 +75,20 @@ export class FormComponent implements OnInit, AfterViewInit {
   setFormContents(form: string) {
     this.viewInitialised.promise.then(() => {
       this.buildForm(form);
-    })
+    });
   }
 
   buildForm(form: string) {
-    const customTags = form.replace(/\[start\]/g, '\n<form-start>\n'
-    ).replace(/\[\/start\]/g, '\n</form-start>\n'
-    ).replace(/\[live\]/g, '\n<form-live>\n'
-    ).replace(/\[\/live\]/g, '\n</form-live>\n'
-    ).replace(/\[button\]/g, '\n<form-button>\n'
-    ).replace(/\[\/button\]/g, '\n</form-button>\n'
-    ).replace(/\[number\]/g, '<form-variable type="number">'
-    ).replace(/\[\/number\]/g, '</form-variable>'
-    ).replace(/\[string\]/g, '<form-variable type="string">'
-    ).replace(/\[\/string\]/g, '</form-variable>');
+    const customTags = form.replace(/\[start\]/g, '\n<app-start>\n'
+    ).replace(/\[\/start\]/g, '\n</app-start>\n'
+    ).replace(/\[live\]/g, '\n<app-live>\n'
+    ).replace(/\[\/live\]/g, '\n</app-live>\n'
+    ).replace(/\[button\]/g, '\n<app-button>\n'
+    ).replace(/\[\/button\]/g, '\n</app-button>\n'
+    ).replace(/\[number\]/g, '<app-variable type="number">'
+    ).replace(/\[\/number\]/g, '</app-variable>'
+    ).replace(/\[string\]/g, '<app-variable type="string">'
+    ).replace(/\[\/string\]/g, '</app-variable>');
 
     const html = this.myMarkdownIt.render(customTags);
     const escapedHtml = html.replace(/{/g, '@~lb~@'
@@ -83,12 +96,12 @@ export class FormComponent implements OnInit, AfterViewInit {
     ).replace(/@~lb~@/g, '{{ "{" }}'
     ).replace(/@~rb~@/g, '{{ "}" }}');
 
-    this.compileTemplate(escapedHtml)
+    this.compileTemplate(escapedHtml);
   }
 
   compileTemplate(template: string) {
-    console.assert(template != null)
-    
+    console.assert(template != null);
+
     const metadata = {
       selector: `app-runtime`,
       template: template
@@ -96,14 +109,14 @@ export class FormComponent implements OnInit, AfterViewInit {
 
     const factory = this.createComponentFactory(
       this.compiler, metadata, null);
-    
+
     if (this.componentRef) {
       this.componentRef.destroy();
     }
     this.errorboxDiv.innerHTML = '';
     this.componentRef = this.container.createComponent(factory);
 
-    console.log(this.componentRef)
+    console.log(this.componentRef);
   }
 
   private createComponentFactory(compiler: Compiler, metadata: Component,
@@ -112,17 +125,17 @@ export class FormComponent implements OnInit, AfterViewInit {
     class RuntimeComponent implements AfterViewInit {
       formActivation = false;
 
-      @ViewChildren(StartComponent) startComponents: QueryList<StartComponent>
-      @ViewChildren(VariableComponent) variableComponents: QueryList<VariableComponent>
-      @ViewChildren(LiveComponent) liveComponents: QueryList<LiveComponent>
-      @ViewChildren(ButtonComponent) buttonComponents: QueryList<ButtonComponent>
+      @ViewChildren(StartComponent) startComponents: QueryList<StartComponent>;
+      @ViewChildren(VariableComponent) variableComponents: QueryList<VariableComponent>;
+      @ViewChildren(LiveComponent) liveComponents: QueryList<LiveComponent>;
+      @ViewChildren(ButtonComponent) buttonComponents: QueryList<ButtonComponent>;
 
       constructor(
         private myKernelSevice: KernelService
       ) { }
 
       ngAfterViewInit() {
-        this.initialiseForm()
+        this.initialiseForm();
       }
 
       initialiseForm() {
@@ -161,10 +174,10 @@ export class FormComponent implements OnInit, AfterViewInit {
                 buttonComponent.formReady();
               });
             });
-          })
+          });
         }
       }
-    };
+    }
 
     @NgModule(
       {
@@ -178,7 +191,7 @@ export class FormComponent implements OnInit, AfterViewInit {
       }
     )
     class RuntimeComponentModule { }
-    
+
     const module: ModuleWithComponentFactories<any> = (
       compiler.compileModuleAndAllComponentsSync(RuntimeComponentModule));
     return module.componentFactories.find(

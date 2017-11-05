@@ -1,3 +1,14 @@
+/*
+Creates the [button] section.
+
+A section that runs all code within it whenever the user presses the provided
+button.
+
+By calling the function `runCode` on this component all code components within
+this section will be iteratively run. The button is set to call the runCode
+function on click.
+*/
+
 import {
   Component, OnInit, ContentChildren, QueryList, AfterViewInit
 } from '@angular/core';
@@ -6,7 +17,7 @@ import { CodeComponent } from './code.component';
 import { KernelService } from './kernel.service';
 
 @Component({
-  selector: 'form-button',
+  selector: 'app-button',
   template: `
 <div>
   <ng-content></ng-content>
@@ -46,11 +57,11 @@ export class ButtonComponent implements OnInit, AfterViewInit {
     if (this.afterViewInit && this.isFormReady) {
       this.codeComponents.toArray().forEach((codeComponent, index) => {
         codeComponent.runCode();
-      })
+      });
       this.codeRunning = true;
       this.myKernelSevice.queue.then(() => {
         this.codeRunning = false;
-      })
+      });
     }
   }
 
