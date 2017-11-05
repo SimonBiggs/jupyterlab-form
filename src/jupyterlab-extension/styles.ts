@@ -1,7 +1,7 @@
 import './style.css';
-import './theme.css';
+import '../angular-component/theme.css';
 
-let link = document.createElement('link');
+const link = document.createElement('link');
 link.rel = 'stylesheet';
 link.href = 'https://fonts.googleapis.com/icon?family=Material+Icons';
 link.setAttribute('async', '');

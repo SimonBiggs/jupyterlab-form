@@ -1,17 +1,17 @@
-import { ErrorHandler } from '@angular/core'
+import { ErrorHandler } from '@angular/core';
 
 export class AppErrorHandler extends ErrorHandler {
- 
- constructor() { 
+
+ constructor() {
    // The true paramter tells Angular to rethrow exceptions, so operations like 'bootstrap' will result in an error
    // when an error happens. If we do not rethrow, bootstrap will always succeed.
    super(true);
  }
- 
+
   handleError(error: any) {
-   let errorbox = document.getElementsByClassName("errorbox");
+   const errorbox = document.getElementsByClassName('errorbox');
    if (errorbox.length > 0) {
-    errorbox[0].innerHTML = `<h2>Error</h2> 
+    errorbox[0].innerHTML = `<h2>Error</h2>
 <p>
   You appear to have typed your form incorrectly. Fix your form template and
   try pressing \`Ctrl + Enter\` again.
@@ -20,12 +20,12 @@ export class AppErrorHandler extends ErrorHandler {
   If it is helpful to you the Angular Compiler error is printed below:
 </p>
 <pre style="white-space: pre-wrap;">
-  ` + error + '</pre>'
+  ` + error + '</pre>';
    }
 
   //  console.log('Hello')
-   
+
    // delegate to the default handler
-   super.handleError(error); 
+   super.handleError(error);
   }
 }

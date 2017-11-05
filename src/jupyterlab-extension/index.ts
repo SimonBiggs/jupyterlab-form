@@ -1,4 +1,4 @@
-import './polyfills';
+import '../angular-component/polyfills';
 import './styles';
 
 import {
@@ -15,12 +15,12 @@ import {
 
 import {
   FormTemplateWidget, FormTemplateWidgetFactory,
-  FormResultsWidget, 
+  FormResultsWidget,
   FormResultsWidgetFactory
 } from './widget';
 
 import {
-  // FormResultsModel, 
+  // FormResultsModel,
   FormResultsModelFactory
 } from './model';
 
@@ -38,7 +38,7 @@ import {
 
 import {
   DockPanel
-} from '@phosphor/widgets'
+} from '@phosphor/widgets';
 
 import {
   CodeMirrorEditor
@@ -57,15 +57,15 @@ import {
 // } from '@jupyterlab/services';
 
 const formTemplateFactoryName = 'Form Template';
-const formResultsFactoryName = 'Form Results'
+const formResultsFactoryName = 'Form Results';
 const editorFactoryName = 'Editor';
 
 const formTemplateFileExt = '.form.md';
-const formResutsFileExt = '.form.json'
+const formResutsFileExt = '.form.json';
 
 function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocumentManager, launcher: ILauncher | null) {  
   const services = app.serviceManager;
-  let registry = app.docRegistry;
+  const registry = app.docRegistry;
 
   // Add new file types
   app.docRegistry.addFileType({
@@ -74,7 +74,7 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
     extensions: [formTemplateFileExt],
     contentType: 'file',
     fileFormat: 'text'
-  })
+  });
 
   app.docRegistry.addFileType({
     name: 'form-results',
@@ -82,8 +82,8 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
     extensions: [formResutsFileExt],
     contentType: 'file',
     fileFormat: 'json'
-  })
-  
+  });
+
   // Define the widget factories
   const formTemplateWidgetFactory = new FormTemplateWidgetFactory({
     name: formTemplateFactoryName,
@@ -108,11 +108,11 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
   registry.addWidgetFactory(formResultsWidgetFactory);
 
   // Set up the trackers
-  let formTemplateTracker = new InstanceTracker<FormTemplateWidget>({
+  const formTemplateTracker = new InstanceTracker<FormTemplateWidget>({
     namespace: '@simonbiggs/jupyterlab-form/template'
   });
 
-  let formResultsTracker = new InstanceTracker<FormResultsWidget>({
+  const formResultsTracker = new InstanceTracker<FormResultsWidget>({
     namespace: '@simonbiggs/jupyterlab-form/results'
   });
 
@@ -140,10 +140,10 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
     widget.context.pathChanged.connect(() => { formResultsTracker.save(widget); });
   });
 
-  
+
 
   // Launcher
-  let callback = (cwd: string, name: string) => {
+  const callback = (cwd: string, name: string) => {
     return app.commands.execute(
       'docmanager:new-untitled', { path: cwd, type: 'file', ext: formTemplateFileExt }
     ).then((formModel: Contents.IModel) => {
@@ -151,28 +151,28 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
       return app.commands.execute('docmanager:open', {
         path: formModel.path, factory: editorFactoryName
       }).then((editor: FileEditor) => {
-        let panelAny: any = editor.parent;
-        let panel: DockPanel = panelAny;
+        const panelAny: any = editor.parent;
+        const panel: DockPanel = panelAny;
 
         // console.log(formModel.path)
 
         // panel.layout.removeWidget(editor)
         panel.addWidget(editor, {
           mode: 'split-left'
-        })
+        });
 
-        let codeMirrorAny: any = editor.editor;
-        let codeMirror: CodeMirrorEditor = codeMirrorAny;
+        const codeMirrorAny: any = editor.editor;
+        const codeMirror: CodeMirrorEditor = codeMirrorAny;
 
         return editor.ready.then(() => {
-          codeMirror.doc.setValue(defaultFormContents)
-        })
+          codeMirror.doc.setValue(defaultFormContents);
+        });
 
-      }) 
+      })
       .then(() => {
         return app.commands.execute('docmanager:open', {
           path: formModel.path, factory: formTemplateFactoryName
-        })
+        });
 
         // The \d is a workaround for https://github.com/jupyterlab/jupyterlab/issues/3113
         // let baseName = formModel.path.match(/^(.*)\.form\d*\.md$/)[1]
@@ -187,8 +187,7 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
 
         // // docManager.createNew(resultsName, FORMRESULTSFACTORY)
         // let getResultsFilePromise = docManager.services.contents.get(resultsName, { content: false })
-        
-        
+
         // getResultsFilePromise.then((resultsModel: Contents.IModel) => {
         //   return app.commands.execute('docmanager:open', {
         //     path: resultsModel.path, factory: FORMRESULTSFACTORY
@@ -216,7 +215,7 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
     launcher.add({
       displayName: 'Form',
       callback: callback
-    })
+    });
   }
 }
 

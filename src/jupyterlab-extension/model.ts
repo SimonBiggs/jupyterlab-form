@@ -82,7 +82,7 @@ class FormResultsModel extends DocumentModel {
    * Deserialize the model from JSON.
    */
   fromJSON(value: any): void {
-  
+
   }
 }
 
@@ -101,7 +101,7 @@ class FormResultsModelFactory implements DocumentRegistry.IModelFactory<Document
   private _disposed = false;
   // formPath: string;
 
-  constructor(options: FormResultsModelFactory.IOptions) { 
+  constructor(options: FormResultsModelFactory.IOptions) {
     // this.formPath = options.formPath;
   }
 

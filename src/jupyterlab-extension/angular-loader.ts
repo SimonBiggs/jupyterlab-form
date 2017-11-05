@@ -11,9 +11,9 @@ import {
   ComponentFactoryResolver, ComponentRef, NgZone,
   NgModuleRef
 } from '@angular/core';
-  
-import { 
-  platformBrowserDynamic 
+
+import {
+  platformBrowserDynamic
 } from '@angular/platform-browser-dynamic';
 
 
@@ -30,10 +30,10 @@ export class AngularLoader<M> {
     this.componentFactoryResolver = this.injector.get(ComponentFactoryResolver);
   }
 
-  attachComponent<T>(ngComponent:Type<T>, dom:Element): ComponentRef<T> {
+  attachComponent<T>(ngComponent: Type<T>, dom: Element): ComponentRef<T> {
     let componentRef: ComponentRef<T>;
     this.ngZone.run(() => {
-      let componentFactory = this.componentFactoryResolver.resolveComponentFactory(ngComponent);
+      const componentFactory = this.componentFactoryResolver.resolveComponentFactory(ngComponent);
       componentRef = componentFactory.create(this.injector, [], dom);
       this.applicationRef.attachView(componentRef.hostView);
     });
@@ -41,7 +41,7 @@ export class AngularLoader<M> {
   }
 }
 
-export class AngularWidget<C,M> extends Widget {
+export class AngularWidget<C, M> extends Widget {
   angularLoader: AngularLoader<M>;
   ngZone: NgZone;
   componentRef: ComponentRef<C>;

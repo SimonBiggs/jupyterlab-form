@@ -4,11 +4,11 @@ import {
 
 import {
   AppComponent
-} from './app.component';
-  
+} from '../angular-component/app.component';
+
 import {
   AppModule
-} from './app.module';
+} from '../angular-component/app.module';
 
 import {
   IObservableString
@@ -19,7 +19,7 @@ import {
 } from '@jupyterlab/services';
 
 import {
-  ActivityMonitor, 
+  ActivityMonitor,
   PathExt
 } from '@jupyterlab/coreutils';
 
@@ -124,7 +124,7 @@ class FormTemplateWidget extends BaseFormWidget {
   }
 
   setFormContents() {
-    let content = this._context.model.toString();
+    const content = this._context.model.toString();
     this.ngZone.run(() => {
       this.componentInstance.setFormContents(content);
     });
@@ -149,7 +149,7 @@ namespace FormResultsWidget {
   }
 }
 
-export 
+export
 class FormResultsWidget extends BaseFormWidget {
   private _docManager: IDocumentManager
   contentsManager = new ContentsManager()
@@ -167,14 +167,14 @@ class FormResultsWidget extends BaseFormWidget {
       })
     })
   }
-  
+
   setFormContents() {
     // Need to get the content from the frozen form
 
-    let formPath = this._context.model.modelDB.get('formPath') as IObservableString
+    const formPath = this._context.model.modelDB.get('formPath') as IObservableString
     // let results = this._context.model
 
-    this.contentsManager.get(formPath.text)      
+    this.contentsManager.get(formPath.text)
     .then((templateModel: Contents.IModel) => {
       this.ngZone.run(() => {
         this.componentInstance.setFormContents(templateModel.content);
@@ -206,8 +206,8 @@ class FormTemplateWidgetFactory extends ABCWidgetFactory<FormTemplateWidget, Doc
 
   protected createNewWidget(context: DocumentRegistry.Context): FormTemplateWidget {
     return new FormTemplateWidget({
-      context: context, 
-      services: this.services 
+      context: context,
+      services: this.services
     });
   }
 }
@@ -237,7 +237,7 @@ class FormResultsWidgetFactory extends ABCWidgetFactory<FormResultsWidget, Docum
 
   protected createNewWidget(context: DocumentRegistry.Context): FormResultsWidget {
     return new FormResultsWidget({
-      context: context, 
+      context: context,
       services: this.services,
       docManager: this.docManager
     });

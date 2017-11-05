@@ -37,4 +37,4 @@ export class AppModule {
   //     domSanitizer.bypassSecurityTrustResourceUrl('./mdi.svg'));
   // }
   ngDoBootstrap(app: ApplicationRef) {}
-};
+}

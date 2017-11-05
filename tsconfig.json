@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "declaration": true,
+    "sourceMap": true,
+    "declaration": false,
     "noImplicitAny": true,
     "noEmitOnError": true,
     "experimentalDecorators": true,
@@ -10,8 +11,13 @@
     "moduleResolution": "node",
     "target": "es5",
     "outDir": "./lib",
-    "lib": ["es2016", "dom"],
-    "types": []
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "typeRoots": [
+      "node_modules/@types"
+    ]
   },
-  "include": ["src/*"]
+  "include": ["src/angular-component/*", "src/jupyterlab-extension/*"]
 }
