@@ -14,10 +14,10 @@
     "jupyterlab"
   ],
   "scripts": {
-    "build": "npm run clean && cp -r ./src ./lib && tsc && node-sass ./src/theme.scss ./lib/theme.css",
+    "build": "cp -r ./src ./lib && tsc && node-sass ./src/theme.scss ./lib/theme.css",
     "watch": "tsc -w",
     "clean": "rimraf lib",
-    "prepublish": "npm run build"
+    "prepack": "npm run clean && npm run build"
   },
   "files": [
     "lib/**/*.{d.ts,eot,gif,html,css,jpg,js,js.map,json,png,svg,woff2,ttf}"
@@ -26,16 +26,16 @@
     "extension": true
   },
   "dependencies": {
-    "@angular/animations": "4.4.5",
+    "@angular/animations": "4.4.6",
     "@angular/cdk": "2.0.0-beta.8",
-    "@angular/common": "4.4.5",
-    "@angular/compiler": "4.4.5",
-    "@angular/core": "4.4.5",
-    "@angular/forms": "4.4.5",
-    "@angular/http": "4.4.5",
+    "@angular/common": "4.4.6",
+    "@angular/compiler": "4.4.6",
+    "@angular/core": "4.4.6",
+    "@angular/forms": "4.4.6",
+    "@angular/http": "4.4.6",
     "@angular/material": "2.0.0-beta.8",
-    "@angular/platform-browser": "4.4.5",
-    "@angular/platform-browser-dynamic": "4.4.5",
+    "@angular/platform-browser": "4.4.6",
+    "@angular/platform-browser-dynamic": "4.4.6",
     "@jupyterlab/application": "0.11.1",
     "@jupyterlab/docmanager": "^0.11.1",
     "@jupyterlab/fileeditor-extension": "^0.11.1",
@@ -48,7 +48,7 @@
     "@types/markdown-it": "0.0.4",
     "core-js": "^2.5.1",
     "markdown-it": "^8.4.0",
-    "rxjs": "^5.4.3",
+    "rxjs": "^5.5.2",
     "zone.js": "^0.8.18"
   },
   "devDependencies": {
@@ -56,6 +56,6 @@
     "node-sass": "^4.5.3",
     "rimraf": "^2.6.1",
     "tslint": "^5.7.0",
-    "typescript": "~2.4.0"
+    "typescript": "2.4.2"
   }
 }
