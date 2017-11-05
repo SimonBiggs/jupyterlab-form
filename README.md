@@ -1,5 +1,7 @@
 # JupyterLab Form
 
+[![Gitter chat](https://badges.gitter.im/simonbiggs/jupyterlab-form.png)](https://gitter.im/simonbiggs/jupyterlab-form)
+
 An extension for jupyterlab to create scripted forms.
 
 ## Requirements
