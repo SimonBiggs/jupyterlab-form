@@ -33,3 +33,49 @@ jupyter lab
 ```
 
 Then within the `launcher` tab press the `Form` button.
+
+
+## Development suggestions
+
+The following code snippets are intended to be run within the jupyterlab-form directory.
+
+
+### Once off dev set up
+
+To link the package to jupyterlab so that changes to the form extension are built
+with code changes run the following:
+
+```bash
+jupyter labextension link
+```
+
+Verify the link by running
+
+```bash
+jupyter labextension list
+```
+
+### Run each development session
+
+To have the extension auto compile the typescript when changes are made run the 
+following:
+
+```bash
+npm run watch
+```
+
+Then to have jupyterlab automatically update whenever changes are detected run
+jupyterlab in watch mode in a directory of your choosing:
+
+```bash
+jupyter lab --watch
+```
+
+### Environment suggestions
+
+To work on the typescript code base I highly recommend https://code.visualstudio.com/.
+
+I also recommend the following extensions:
+
+ * Git Lens (Eric Amodio)
+ * Angular Essentials (by John Papa)
