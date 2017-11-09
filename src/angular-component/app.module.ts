@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 // import {
-//   MaterialModule
+//   MatIconRegistry
 // } from '@angular/material'
 
 // import { DomSanitizer } from '@angular/platform-browser';

@@ -23,10 +23,10 @@ import { KernelService } from './kernel.service';
   <ng-content></ng-content>
   <div align="right">
     <button
-    md-mini-fab
+    mat-mini-fab
     (click)="runCode()"
     [disabled]="!isFormReady || codeRunning">
-      <md-icon>keyboard_return</md-icon>
+      <mat-icon>keyboard_return</mat-icon>
     </button>
   </div>
 </div>

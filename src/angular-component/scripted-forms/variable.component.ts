@@ -25,25 +25,25 @@ import { VariableService } from './variable.service';
   // ng-content. White space would be sent through to python.
   template: `<span #variablecontainer *ngIf="variableName === undefined"><ng-content></ng-content></span>
 
-<md-input-container *ngIf="variableName">
-    <input
-        *ngIf="type=='string'"
-        mdInput
-        [disabled]="!isFormReady"
-        [placeholder]="variableName"
-        [(ngModel)]="variableValue"
-        (ngModelChange)="variableChanged($event)"
-        type="text" class="variableString">
+<mat-input-container *ngIf="variableName && type=='string'">
+  <input
+      matInput
+      [disabled]="!isFormReady"
+      [placeholder]="variableName"
+      [(ngModel)]="variableValue"
+      (ngModelChange)="variableChanged($event)"
+      type="text" class="variableString">
+</mat-input-container>
 
-    <input
-        *ngIf="type=='number'"
-        mdInput
-        [disabled]="!isFormReady"
-        [placeholder]="variableName"
-        [(ngModel)]="variableValue"
-        (ngModelChange)="variableChanged($event)"
-        type="number" class="variableNumber">
-</md-input-container>`,
+<mat-input-container class="variableNumber" *ngIf="variableName && type=='number'" >
+  <input
+      matInput
+      [disabled]="!isFormReady"
+      [placeholder]="variableName"
+      [(ngModel)]="variableValue"
+      (ngModelChange)="variableChanged($event)"
+      type="number">
+</mat-input-container>`,
   styles: [
     `.variableNumber {
     width: 80px;
