@@ -14,7 +14,7 @@ to the Python kernel.
 */
 
 import {
-  Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy
+  Component, AfterViewInit, ViewChild, ElementRef, OnDestroy
 } from '@angular/core';
 
 import { RenderMime, defaultRendererFactories } from '@jupyterlab/rendermime';
@@ -29,12 +29,13 @@ import { KernelService } from './kernel.service';
 import { OutputService } from './output.service';
 
 @Component({
+  // By using the selector 'code' this overwrites the standard <code> html tag.
   selector: 'code',
   template: `
 <span #outputcontainer></span>
 <span #codecontainer *ngIf="future === undefined"><ng-content></ng-content></span>`
 })
-export class CodeComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CodeComponent implements AfterViewInit, OnDestroy {
 
   name: string;
   renderMimeOptions: RenderMime.IOptions;
@@ -56,11 +57,11 @@ export class CodeComponent implements OnInit, AfterViewInit, OnDestroy {
     private _eRef: ElementRef
   ) { }
 
-  ngOnInit() {
-  }
-
   ngAfterViewInit() {
+    // Assign the text within <code> to the this.code variable
     this.code = this.codecontainer.nativeElement.innerText;
+
+    // Apply python syntax highlighting to every code block
     Mode.ensure('python').then((spec) => {
       const el = document.createElement('div');
       Mode.run(this.code, spec.mime, el);
@@ -69,6 +70,7 @@ export class CodeComponent implements OnInit, AfterViewInit, OnDestroy {
       this._eRef.nativeElement.classList.add('language-python');
     });
 
+    // Initialise a JupyterLab output area
     this.model = new OutputAreaModel();
     this.renderMime = new RenderMime({
       initialFactories: defaultRendererFactories
@@ -81,7 +83,10 @@ export class CodeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.outputArea = new OutputArea(this.outputAreaOptions);
 
+    // Make any output area changes send a message to the Output Service
+    // for the purpose of saving the output to the model
     this.outputArea.model.changed.connect(() => {
+      // when model is implemented shouldn't actually change to json, no need.
       JSON.stringify(this.outputArea.model.toJSON());
       this.myOutputService.setOutput(this.name, this.outputArea.model);
     });
@@ -91,10 +96,21 @@ export class CodeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.outputArea.dispose();
   }
 
+  /**
+   * Each runnable code component on the form has a unique name. This is defined by
+   * it's parent section. The name is used to detect repeat submissions for the purpose
+   * of only running the most recent submission.
+   *  
+   * @param name A unique name for the code component
+   */
   setName(name: string) {
     this.name = name;
   }
 
+  /**
+   * Run the code within the code component. Update the output area with the results of the 
+   * code.
+   */
   runCode() {
     this.promise = this.myKernelSevice.runCode(this.code, this.name);
     this.promise.then(future => {

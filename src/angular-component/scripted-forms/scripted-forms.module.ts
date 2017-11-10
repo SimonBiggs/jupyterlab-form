@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { ScriptedFormElementsModule } from './scripted-form-elements.module';
 
 import { KernelService } from './kernel.service';
-import { FormComponent } from './form.component';
+import { FormBuilderComponent } from './form-builder.component';
 
 @NgModule({
   imports: [
@@ -18,13 +18,13 @@ import { FormComponent } from './form.component';
     ScriptedFormElementsModule
   ],
   declarations: [
-    FormComponent
+    FormBuilderComponent
   ],
   providers: [
     KernelService
   ],
   exports: [
-    FormComponent
+    FormBuilderComponent
   ]
 })
 export class ScriptedFormsModule { }

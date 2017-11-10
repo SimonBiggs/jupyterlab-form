@@ -10,7 +10,7 @@ function on click.
 */
 
 import {
-  Component, OnInit, ContentChildren, QueryList, AfterViewInit
+  Component, ContentChildren, QueryList, AfterViewInit
 } from '@angular/core';
 
 import { CodeComponent } from './code.component';
@@ -32,7 +32,7 @@ import { KernelService } from './kernel.service';
 </div>
 `
 })
-export class ButtonComponent implements OnInit, AfterViewInit {
+export class ButtonComponent implements AfterViewInit {
 
   buttonId: number;
   afterViewInit = false;
@@ -46,13 +46,13 @@ export class ButtonComponent implements OnInit, AfterViewInit {
     private myKernelSevice: KernelService
   ) { }
 
-  ngOnInit() {
-  }
-
   ngAfterViewInit() {
     this.afterViewInit = true;
   }
 
+  /**
+   * Run the code of all child CodeComponents
+   */
   runCode() {
     if (this.afterViewInit && this.isFormReady) {
       this.codeComponents.toArray().forEach((codeComponent, index) => {
@@ -65,10 +65,21 @@ export class ButtonComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Buttons are only active once the form is ready. Call this function
+   * to declare that the form is ready for user interaction.
+   */
   formReady() {
     this.isFormReady = true;
   }
 
+  /**
+   * Provide a unique id for the purpose of detecting repeat submissions.
+   * In practice this isn't an issue for button sections as the button itself
+   * is disabled while the submission is in progress.
+   * 
+   * @param id A unique id among the buttons on the form
+   */
   setId(id: number) {
     this.buttonId = id;
     this.codeComponents.toArray().forEach((codeComponent, index) => {

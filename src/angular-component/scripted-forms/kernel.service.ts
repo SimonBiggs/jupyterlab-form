@@ -10,7 +10,6 @@ import { Injectable } from '@angular/core';
 
 import {
   Kernel, Session, ServerConnection, ServiceManager
-  // KernelMessage
 } from '@jupyterlab/services';
 
 import {
@@ -93,20 +92,6 @@ export class KernelService {
       return asyncFunction(currentQueueId);
     })();
   }
-
-  // fetchVariable(variableName: string) {
-  //   let content: KernelMessage.IInspectRequest = {
-  //     code: variableName,
-  //     cursor_pos: 0,
-  //     detail_level: 0
-  //   }
-  //   this.kernel.requestInspect(content).then(msg => {
-
-  //     console.log(msg.content.data);
-  //   })
-
-  //   // KernelMessage.
-  // }
 
   runCode(code: string, name: string): Promise<any> {
     let future: Kernel.IFuture;

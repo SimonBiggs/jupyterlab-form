@@ -9,7 +9,7 @@ import {
     Component, ViewChild
 } from '@angular/core';
 
-import { FormComponent } from './scripted-forms/form.component';
+import { FormBuilderComponent } from './scripted-forms/form-builder.component';
 import { KernelService } from './scripted-forms/kernel.service';
 
 import {
@@ -22,31 +22,40 @@ import {
   styles: [`.margin { margin: 20px;}`]
 })
 export class AppComponent {
-  @ViewChild('form') formComponent: FormComponent;
+  @ViewChild('form') formBuilderComponent: FormBuilderComponent;
 
   constructor(
     private myKernelService: KernelService
   ) { }
 
-  setFormContents(formContents: string) {
-    this.formComponent.setFormContents(formContents);
+  /**
+   * Set or update the template of the form.
+   * 
+   * @param formContents: The template to set the form with
+   */
+  public setFormContents(formContents: string) {
+    this.formBuilderComponent.setFormContents(formContents);
   }
 
-  setServices(services: ServiceManager) {
+  /**
+   * Given a Jupyterlab session manager either reconnect to existing kernel
+   * or start a new kernel at the provided path.
+   * 
+   * @param services: The jupyterlab service manager.
+   * @param path: The kernel session filepath.
+   */
+  public sessionConnect(services: ServiceManager, path: string) {
     this.myKernelService.setServices(services);
-  }
-
-  setPath(path: string) {
     this.myKernelService.setPath(path);
-  }
-
-  sessionConnect(services: ServiceManager, path: string) {
-    this.setServices(services);
-    this.setPath(path);
     this.myKernelService.sessionConnect();
   }
 
-  pathChanged(path: string) {
+  /**
+   * Inform the kernel service that its path has changed.
+   * 
+   * @param path: The kernel session filepath.
+   */
+  public pathChanged(path: string) {
     this.myKernelService.pathChanged(path);
   }
 }
