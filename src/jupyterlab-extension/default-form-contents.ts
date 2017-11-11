@@ -38,14 +38,14 @@ A \`start\` section is defined as following:
 
 [start]
 \`\`\`
-import numpy as np
-import matplotlib.pyplot as plt
-%matplotlib inline
-
 data = np.ones(3) * np.nan
 data[0] = 5
+
+table = pd.DataFrame(data=[1,2,3])
 \`\`\`
 [/start]
+
+[table]table[/table]
 
 Whenever a jupyterlab services session is started
 code within the start sections is run first.

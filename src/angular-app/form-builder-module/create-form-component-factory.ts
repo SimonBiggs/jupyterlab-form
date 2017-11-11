@@ -29,7 +29,9 @@ import { LiveComponent } from '../sections-module/live.component';
 import { ButtonComponent } from '../sections-module/button.component';
 
 import { VariablesModule } from '../variables-module/variables.module';
-import { VariableComponent } from '../variables-module/variable.component';
+import { NumberComponent } from '../variables-module/number.component';
+import { StringComponent } from '../variables-module/string.component';
+import { TableComponent } from '../variables-module/table.component';
 
 import { CodeModule } from '../code-module/code.module';
 
@@ -50,9 +52,12 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
   @Component(metadata)
   class FormComponent {   
     @ViewChildren(StartComponent) startComponents: QueryList<StartComponent>;
-    @ViewChildren(VariableComponent) variableComponents: QueryList<VariableComponent>;
     @ViewChildren(LiveComponent) liveComponents: QueryList<LiveComponent>;
     @ViewChildren(ButtonComponent) buttonComponents: QueryList<ButtonComponent>;
+
+    @ViewChildren(NumberComponent) numberComponents: QueryList<NumberComponent>;
+    @ViewChildren(StringComponent) stringComponents: QueryList<StringComponent>;
+    @ViewChildren(TableComponent) tableComponents: QueryList<TableComponent>;
   
     constructor(
       private myKernelSevice: KernelService
@@ -88,8 +93,14 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
         this.myKernelSevice.isNewSession = false;
 
         // Variable components are initialised second
-        for (const variableComponent of this.variableComponents.toArray()) {
-          variableComponent.fetchVariable();
+        for (const numberComponent of this.numberComponents.toArray()) {
+          numberComponent.pullNumber();
+        }
+        for (const stringComponent of this.stringComponents.toArray()) {
+          stringComponent.pullString();
+        }
+        for (const tableComponent of this.tableComponents.toArray()) {
+          tableComponent.pullTable();
         }
 
         // Wait until the code queue is complete before declaring form ready to
@@ -102,8 +113,14 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
           });
 
           // Tell the variable components that the form is ready
-          for (const variableComponent of this.variableComponents.toArray()) {
-            variableComponent.formReady();
+          for (const numberComponent of this.numberComponents.toArray()) {
+            numberComponent.formReady();
+          }
+          for (const stringComponent of this.stringComponents.toArray()) {
+            stringComponent.formReady();
+          }
+          for (const tableComponent of this.tableComponents.toArray()) {
+            tableComponent.formReady();
           }
 
           // Tell the button components that the form is ready

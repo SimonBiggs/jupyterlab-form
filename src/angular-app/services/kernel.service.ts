@@ -28,6 +28,13 @@ export class KernelService {
   session: Session.ISession;
   kernel: Kernel.IKernelConnection;
 
+  sessionStartCode = `
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib inline
+`
+
   queueId = 0;
   queueLog: any = {};
 
@@ -69,6 +76,7 @@ export class KernelService {
         this.sessionReady(session);
         this.isNewSession = true;
         this.sessionConnected.resolve(undefined);
+        this.runCode(this.sessionStartCode, 'session_start_code')
         // console.log('new session ready');
       });
     });

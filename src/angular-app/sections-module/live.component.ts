@@ -13,7 +13,10 @@ import {
   Component, ContentChildren, QueryList, AfterViewInit
 } from '@angular/core';
 
-import { VariableComponent } from '../variables-module/variable.component';
+import { NumberComponent } from '../variables-module/number.component';
+import { StringComponent } from '../variables-module/string.component';
+import { TableComponent } from '../variables-module/table.component';
+
 import { CodeComponent } from '../code-module/code.component';
 
 @Component({
@@ -26,23 +29,34 @@ export class LiveComponent implements AfterViewInit {
   afterViewInit = false;
   isFormReady = false;
 
-  @ContentChildren(VariableComponent) variableComponents: QueryList<VariableComponent>;
-  @ContentChildren(CodeComponent) codeComponents: QueryList<CodeComponent>;
+  @ContentChildren(NumberComponent) numberComponents: QueryList<NumberComponent>;
+  @ContentChildren(StringComponent) stringComponents: QueryList<StringComponent>;
+  @ContentChildren(TableComponent) tableComponents: QueryList<TableComponent>;
 
-  constructor(
-      // private myChangeDetectorRef: ChangeDetectorRef
-  ) { }
+  @ContentChildren(CodeComponent) codeComponents: QueryList<CodeComponent>;
 
   ngAfterViewInit() {
     this.afterViewInit = true;
-    for (const variableComponent of this.variableComponents.toArray()) {
-      variableComponent.variableChange.asObservable().subscribe(
+    for (const numberComponent of this.numberComponents.toArray()) {
+      numberComponent.variableChange.asObservable().subscribe(
+        value => this.variableChanged(value)
+      );
+    }
+    for (const stringComponent of this.stringComponents.toArray()) {
+      stringComponent.variableChange.asObservable().subscribe(
+        value => this.variableChanged(value)
+      );
+    }
+    for (const tableComponent of this.tableComponents.toArray()) {
+      tableComponent.variableChange.asObservable().subscribe(
         value => this.variableChanged(value)
       );
     }
   }
 
   variableChanged(variableName: string) {
+    // This would be better done with a promise. It should always run, just
+    // delayed until read and initialised.
     if (this.afterViewInit && this.isFormReady) {
       this.codeComponents.toArray().forEach((codeComponent, index) => {
         codeComponent.runCode();

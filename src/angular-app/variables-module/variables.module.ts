@@ -10,7 +10,9 @@ import {
   MatInputModule
 } from '@angular/material';
 
-import { VariableComponent } from './variable.component';
+import { NumberComponent } from './number.component';
+import { StringComponent } from './string.component';
+import { TableComponent } from './table.component';
 
 @NgModule({
   imports: [
@@ -19,10 +21,14 @@ import { VariableComponent } from './variable.component';
     FormsModule
   ],
   declarations: [
-    VariableComponent
+    NumberComponent,
+    StringComponent,
+    TableComponent
   ],
   exports: [
-    VariableComponent
+    NumberComponent,
+    StringComponent,
+    TableComponent
   ]
 })
 export class VariablesModule { }

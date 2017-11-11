@@ -84,10 +84,12 @@ export class FormBuilderComponent implements OnInit, AfterViewInit {
     ).replace(/\[\/live\]/g, '\n</app-live>\n'
     ).replace(/\[button\]/g, '\n<app-button>\n'
     ).replace(/\[\/button\]/g, '\n</app-button>\n'
-    ).replace(/\[number\]/g, '<app-variable type="number">'
-    ).replace(/\[\/number\]/g, '</app-variable>'
-    ).replace(/\[string\]/g, '<app-variable type="string">'
-    ).replace(/\[\/string\]/g, '</app-variable>');
+    ).replace(/\[number\]/g, '<app-number>'
+    ).replace(/\[\/number\]/g, '</app-number>'
+    ).replace(/\[string\]/g, '<app-string>'
+    ).replace(/\[\/string\]/g, '</app-string>'
+    ).replace(/\[table\]/g, '<app-table>'
+    ).replace(/\[\/table\]/g, '</app-table>');
 
     // Render the markdown to html
     const html = this.myMarkdownIt.render(customTags);
