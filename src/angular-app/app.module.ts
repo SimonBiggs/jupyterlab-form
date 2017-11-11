@@ -2,7 +2,7 @@
 The root app module.
 */
 
-import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ApplicationRef, ErrorHandler } from '@angular/core';
 
 import {
@@ -25,7 +25,7 @@ import { AppComponent } from './app.component';
     AppComponent
   ],
   imports: [
-    CommonModule,
+    BrowserModule,
     MatButtonModule,
     MatIconModule,
     MatInputModule,

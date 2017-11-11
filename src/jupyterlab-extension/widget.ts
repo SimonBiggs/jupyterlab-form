@@ -87,12 +87,12 @@ class BaseFormWidget extends AngularWidget<AppComponent, AppModule> implements D
     return Promise.resolve();
   }
 
-  dispose(): void {
-    this.ngZone.run(() => {
-      this.componentRef.destroy();
-    });
-    super.dispose();
-  }
+  // dispose(): void {
+  //   this.ngZone.run(() => {
+  //     this.componentRef.destroy();
+  //   });
+  //   super.dispose();
+  // }
 
   get context(): DocumentRegistry.Context {
     return this._context;

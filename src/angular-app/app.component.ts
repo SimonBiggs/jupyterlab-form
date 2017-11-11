@@ -6,7 +6,7 @@ through the `setFormContents` function.
 */
 
 import {
-    Component, ViewChild
+  Component, ViewChild
 } from '@angular/core';
 
 import { FormBuilderComponent } from './form-builder-module/form-builder.component';
