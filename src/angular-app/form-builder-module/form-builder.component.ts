@@ -20,7 +20,7 @@ import {
 } from '@phosphor/coreutils';
 
 @Component({
-  selector: 'app-form',
+  selector: 'app-form-builder',
   template: `<div #errorbox class="errorbox"></div><div #container></div>`
 })
 export class FormBuilderComponent implements OnInit, AfterViewInit {

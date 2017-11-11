@@ -18,7 +18,7 @@ import {
 
 @Component({
   selector: 'app-root',
-  template: `<div class="margin"><app-form #form></app-form></div>`,
+  template: `<div class="margin"><app-form-builder #form></app-form-builder></div>`,
   styles: [`.margin { margin: 20px;}`]
 })
 export class AppComponent {

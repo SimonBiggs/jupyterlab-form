@@ -10,7 +10,7 @@ clearer as I sort out the data model.
 
 import {
   AngularWidget
-} from './angular-loader';
+} from '@simonbiggs/phosphor-angular-loader';
 
 import {
   AppComponent

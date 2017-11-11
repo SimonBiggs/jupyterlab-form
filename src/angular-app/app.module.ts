@@ -2,9 +2,8 @@
 The root app module.
 */
 
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { NgModule, ApplicationRef, ErrorHandler } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
 
 import {
   MatButtonModule, MatInputModule, MatIconModule
@@ -26,8 +25,7 @@ import { AppComponent } from './app.component';
     AppComponent
   ],
   imports: [
-    BrowserModule,
-    HttpClientModule,
+    CommonModule,
     MatButtonModule,
     MatIconModule,
     MatInputModule,

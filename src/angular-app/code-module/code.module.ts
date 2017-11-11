@@ -7,8 +7,6 @@ import { CommonModule } from '@angular/common';
 
 import { CodeComponent } from './code.component';
 
-import { KernelService } from '../services/kernel.service';
-import { OutputService } from '../services/output.service';
 
 @NgModule({
   imports: [
@@ -16,10 +14,6 @@ import { OutputService } from '../services/output.service';
   ],
   declarations: [
     CodeComponent
-  ],
-  providers: [
-    KernelService,
-    OutputService
   ],
   exports: [
     CodeComponent,

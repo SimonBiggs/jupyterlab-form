@@ -125,9 +125,6 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
         VariablesModule,
         CodeModule
       ],  
-      providers: [
-        KernelService
-      ],
       declarations: [
         FormComponent
       ]
