@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import {
-  MatInputModule
+  MatInputModule, MatTableModule
 } from '@angular/material';
 
 import { NumberComponent } from './number.component';
@@ -18,6 +18,7 @@ import { TableComponent } from './table.component';
   imports: [
     CommonModule,
     MatInputModule,
+    MatTableModule,
     FormsModule
   ],
   declarations: [

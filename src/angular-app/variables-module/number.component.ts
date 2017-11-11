@@ -6,7 +6,10 @@ import {
 
 @Component({
   selector: 'app-number',
-  template: `<span #variablecontainer *ngIf="variableName === undefined"><ng-content></ng-content></span>
+  template: `
+<span #variablecontainer *ngIf="variableName === undefined">
+  <ng-content></ng-content>
+</span>
 
 <mat-input-container class="variableNumber" *ngIf="variableName" >
   <input

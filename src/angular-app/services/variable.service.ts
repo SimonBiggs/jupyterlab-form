@@ -13,13 +13,13 @@ import { KernelService } from './kernel.service';
 
 @Injectable()
 export class VariableService {
-  variableStore: { [key: string]: string | number | JSON } = {};
+  variableStore: { [key: string]: string | number | {}[] } = {};
 
   constructor(
     private myKernelSevice: KernelService
   ) { }
 
-  setVariable(variableName: string, variableContents: string | number | JSON) {
+  setVariable(variableName: string, variableContents: string | number | {}[]) {
     this.variableStore[variableName] = variableContents;
     // console.log(this.variableStore);
   }
@@ -29,7 +29,7 @@ export class VariableService {
     let pythonFormatSection: string
 
     if (isPandas) {
-      variableReference = variableName.concat(".to_json(orient='split')")
+      variableReference = variableName.concat(".to_json(orient='records')")
       pythonFormatSection = '{}'
       
     } else {
@@ -65,11 +65,11 @@ except:
     return this.myKernelSevice.runCode(fetchCode, '"pull"_"' + variableName + '"')
   }
 
-  pythonPushVariable(variableName: string, variableValue: string | number | JSON, isPandas = false) {
+  pythonPushVariable(variableName: string, variableValue: string | number | {}[], isPandas = false) {
     let valueReference: string
 
     if (isPandas) {
-      valueReference = `pd.read_json(${String(variableValue)}, orient='split')`
+      valueReference = `pd.read_json(${String(variableValue)}, orient='records')`
     } else if (typeof(variableValue) === 'string') {
       variableValue = variableValue.replace(/\"/g, '\\"')
       valueReference = `"${String(variableValue)}"`
@@ -86,7 +86,7 @@ except:
     return this.pushVariable(variableName, variableValue, pushCode)
   }
 
-  pushVariable(variableName: string, variableValue: string | number | JSON, pushCode: string) {
+  pushVariable(variableName: string, variableValue: string | number | {}[], pushCode: string) {
     return this.myKernelSevice.runCode(
       pushCode, '"push"_"' + variableName + '"'
     ).then(future => {

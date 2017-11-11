@@ -23,8 +23,8 @@ export class VariableBaseComponent implements AfterViewInit {
   @ViewChild('variablecontainer') variablecontainer: ElementRef;
 
   variableName: string;
-  oldVariableValue: string | number | JSON = null;
-  variableValue: string | number | JSON;
+  oldVariableValue: string | number | {}[] = null;
+  variableValue: string | number | {}[];
 
   constructor(
     public myChangeDetectorRef: ChangeDetectorRef,
@@ -64,7 +64,7 @@ export class VariableBaseComponent implements AfterViewInit {
     })
   }
 
-  updateVariableView(result: string | number | JSON) {}
+  updateVariableView(result: string | number | {}[]) {}
 
   formReady() {
     this.isFormReady = true;

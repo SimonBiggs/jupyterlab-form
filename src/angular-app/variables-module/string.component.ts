@@ -6,9 +6,12 @@ import {
 
 @Component({
   selector: 'app-string',
-  template: `<span #variablecontainer *ngIf="variableName === undefined"><ng-content></ng-content></span>
+  template: `
+<span #variablecontainer *ngIf="variableName === undefined">
+  <ng-content></ng-content>
+</span>
 
-  <mat-input-container *ngIf="variableName">
+<mat-input-container *ngIf="variableName">
   <input
     matInput
     [disabled]="!isFormReady"

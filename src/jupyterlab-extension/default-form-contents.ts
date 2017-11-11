@@ -41,7 +41,7 @@ A \`start\` section is defined as following:
 data = np.ones(3) * np.nan
 data[0] = 5
 
-table = pd.DataFrame(data=[1,2,3])
+table = pd.DataFrame(data=[[1,2,3],[4,5,6]])
 \`\`\`
 [/start]
 
