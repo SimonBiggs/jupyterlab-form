@@ -18,6 +18,7 @@ import { VariableService } from '../services/variable.service';
 @Component({})
 export class VariableBaseComponent implements AfterViewInit {
   isFormReady = false;
+  isPandas = false;
 
   @Output() variableChange = new EventEmitter<any>();
   @ViewChild('variablecontainer') variablecontainer: ElementRef;
@@ -48,8 +49,8 @@ export class VariableBaseComponent implements AfterViewInit {
     this.myChangeDetectorRef.detectChanges();
   }
 
-  pullVariable(isPandas = false) {
-    this.myVariableService.pythonPullVariable(this.variableName, isPandas)
+  pullVariable() {
+    this.myVariableService.pythonPullVariable(this.variableName, this.isPandas)
     .then(future => {
       future.onIOPub = ((msg: any) => {
         if (msg.content.name === 'stdout') {
@@ -64,7 +65,9 @@ export class VariableBaseComponent implements AfterViewInit {
     })
   }
 
-  updateVariableView(result: string | number | {}[]) {}
+  updateVariableView(value: string | number | {}[]) {
+    this.variableValue = value
+  }
 
   formReady() {
     this.isFormReady = true;

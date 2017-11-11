@@ -94,13 +94,13 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
 
         // Variable components are initialised second
         for (const numberComponent of this.numberComponents.toArray()) {
-          numberComponent.pullNumber();
+          numberComponent.pullVariable();
         }
         for (const stringComponent of this.stringComponents.toArray()) {
-          stringComponent.pullString();
+          stringComponent.pullVariable();
         }
         for (const tableComponent of this.tableComponents.toArray()) {
-          tableComponent.pullTable();
+          tableComponent.pullVariable();
         }
 
         // Wait until the code queue is complete before declaring form ready to

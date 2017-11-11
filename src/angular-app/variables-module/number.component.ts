@@ -26,12 +26,4 @@ import {
   }
   `]
 })
-export class NumberComponent extends VariableBaseComponent {
-  pullNumber() {
-    this.pullVariable()
-  }
-
-  updateVariableView(value: number) {
-    this.variableValue = value
-  }
-}
+export class NumberComponent extends VariableBaseComponent { }

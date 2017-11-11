@@ -39,10 +39,7 @@ export class TableComponent extends VariableBaseComponent {
   displayedColumns = ['0', '1', '2']
   dataSource: MatTableDataSource<{}>
   variableValue: {}[]
-
-  pullTable() {
-    this.pullVariable(true)
-  }
+  isPandas = true
 
   updateVariableView(value: {}[]) {
     this.variableValue = value;
