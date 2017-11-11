@@ -25,8 +25,8 @@ import {
   Mode
 } from '@jupyterlab/codemirror';
 
-import { KernelService } from './kernel.service';
-import { OutputService } from './output.service';
+import { KernelService } from '../services/kernel.service';
+import { OutputService } from '../services/output.service';
 
 @Component({
   // By using the selector 'code' this overwrites the standard <code> html tag.

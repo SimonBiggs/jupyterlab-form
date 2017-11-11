@@ -20,13 +20,18 @@ import {
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { ScriptedFormElementsModule } from './scripted-form-elements.module';
 
-import { KernelService } from './kernel.service';
-import { StartComponent } from './start.component';
-import { VariableComponent } from './variable.component';
-import { LiveComponent } from './live.component';
-import { ButtonComponent } from './button.component';
+import { KernelService } from '../services/kernel.service';
+
+import { SectionsModule } from '../sections-module/sections.module';
+import { StartComponent } from '../sections-module/start.component';
+import { LiveComponent } from '../sections-module/live.component';
+import { ButtonComponent } from '../sections-module/button.component';
+
+import { VariablesModule } from '../variables-module/variables.module';
+import { VariableComponent } from '../variables-module/variable.component';
+
+import { CodeModule } from '../code-module/code.module';
 
 
 /**
@@ -116,7 +121,12 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
     {
       imports: [
         CommonModule,
-        ScriptedFormElementsModule
+        SectionsModule,
+        VariablesModule,
+        CodeModule
+      ],  
+      providers: [
+        KernelService
       ],
       declarations: [
         FormComponent

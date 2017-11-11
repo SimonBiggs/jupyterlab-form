@@ -14,11 +14,11 @@ import {
 
 import {
   AppComponent
-} from '../angular-component/app.component';
+} from '../angular-app/app.component';
 
 import {
   AppModule
-} from '../angular-component/app.module';
+} from '../angular-app/app.module';
 
 import {
   IObservableString

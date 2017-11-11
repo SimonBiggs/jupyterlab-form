@@ -9,8 +9,8 @@ import {
     Component, ViewChild
 } from '@angular/core';
 
-import { FormBuilderComponent } from './scripted-forms/form-builder.component';
-import { KernelService } from './scripted-forms/kernel.service';
+import { FormBuilderComponent } from './form-builder-module/form-builder.component';
+import { KernelService } from './services/kernel.service';
 
 import {
   ServiceManager

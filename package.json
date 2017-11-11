@@ -16,7 +16,7 @@
   "scripts": {
     "build": "npm run clean && npm run copy && tsc && npm run sass",
     "copy": "cp -r ./src ./lib ",
-    "sass": "node-sass ./src/angular-component/theme.scss ./lib/angular-component/theme.css",
+    "sass": "node-sass ./src/angular-app/theme.scss ./lib/angular-app/theme.css",
     "watch": "tsc -w",
     "clean": "rimraf lib",
     "prepack": "npm run build"

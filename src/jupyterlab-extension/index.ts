@@ -3,7 +3,7 @@ The JupyterLab extension entry point.
 */
 
 
-import '../angular-component/polyfills';
+import '../angular-app/polyfills';
 import './styles';
 
 import {

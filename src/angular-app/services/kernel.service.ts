@@ -57,19 +57,19 @@ export class KernelService {
 
     this.services.sessions.findByPath(this.path).then(model => {
       Session.connectTo(model.id, settings).then(session => {
-        console.log(session);
+        // console.log(session);
         this.sessionReady(session);
         this.isNewSession = false;
         this.sessionConnected.resolve(undefined);
-        console.log('previous session ready');
+        // console.log('previous session ready');
       });
     }).catch(() => {
       Session.startNew(options).then(session => {
-        console.log(session);
+        // console.log(session);
         this.sessionReady(session);
         this.isNewSession = true;
         this.sessionConnected.resolve(undefined);
-        console.log('new session ready');
+        // console.log('new session ready');
       });
     });
 

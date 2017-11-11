@@ -10,17 +10,17 @@ variable component are subscribed to and `variableChanged` function is called.
 */
 
 import {
-  Component, OnInit, ContentChildren, QueryList, AfterViewInit
+  Component, ContentChildren, QueryList, AfterViewInit
 } from '@angular/core';
 
-import { VariableComponent } from './variable.component';
-import { CodeComponent } from './code.component';
+import { VariableComponent } from '../variables-module/variable.component';
+import { CodeComponent } from '../code-module/code.component';
 
 @Component({
   selector: 'app-live',
   template: `<ng-content></ng-content>`
 })
-export class LiveComponent implements OnInit, AfterViewInit {
+export class LiveComponent implements AfterViewInit {
 
   liveId: number;
   afterViewInit = false;
@@ -32,10 +32,6 @@ export class LiveComponent implements OnInit, AfterViewInit {
   constructor(
       // private myChangeDetectorRef: ChangeDetectorRef
   ) { }
-
-  ngOnInit() {
-
-  }
 
   ngAfterViewInit() {
     this.afterViewInit = true;

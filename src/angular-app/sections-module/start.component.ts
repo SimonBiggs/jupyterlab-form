@@ -14,7 +14,7 @@ import {
   Component, OnInit, ContentChildren, QueryList, AfterViewInit
 } from '@angular/core';
 
-import { CodeComponent } from './code.component';
+import { CodeComponent } from '../code-module/code.component';
 
 @Component({
   selector: 'app-start',

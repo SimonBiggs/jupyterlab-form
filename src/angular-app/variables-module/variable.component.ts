@@ -8,16 +8,13 @@ The VariableComponent calls Python code to derive its value initially. Each
 time the value is changed it then recalls Python code to update the value.
 */
 
-
 import {
-  Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit,
+  Component, Input, ViewChild, ElementRef, AfterViewInit,
   ChangeDetectorRef, EventEmitter, Output
 } from '@angular/core';
 
-// import { Kernel } from '@jupyterlab/services';
-
-import { KernelService } from './kernel.service';
-import { VariableService } from './variable.service';
+import { KernelService } from '../services/kernel.service';
+import { VariableService } from '../services/variable.service';
 
 @Component({
   selector: 'app-variable',
@@ -50,7 +47,7 @@ import { VariableService } from './variable.service';
   }
   `]
 })
-export class VariableComponent implements OnInit, AfterViewInit {
+export class VariableComponent implements AfterViewInit {
   fetchCode: string;
   setCode: string;
   isFormReady = false;
@@ -70,18 +67,7 @@ export class VariableComponent implements OnInit, AfterViewInit {
     private myVariableService: VariableService
   ) { }
 
-  ngOnInit() {
-//     this.myChangeDetectorRef.detectChanges()
-//     if (!this.inputType.match('string') && !this.inputType.match('number')) {
-//       throw new RangeError(`When creating a variable must declare the type as either 'string' or 'number'
-// eg: &lt;variable type="string"&gt;name&lt;/variable&gt; or
-//     &lt;variable type="number"&gt;name&lt;/variable&gt;`)
-//     }
-  }
-
   variableChanged(value: string | number) {
-    // this.myChangeDetectorRef.detectChanges()
-    // console.log('variable change')
     if (this.type.match('string')) {
       this.variableValue = String(this.variableValue);
       const escapedQuotes = this.variableValue.replace(/\"/g, '\\"');
@@ -106,9 +92,6 @@ export class VariableComponent implements OnInit, AfterViewInit {
           this.variableChange.emit(this.variableName);
 
           this.myVariableService.setVariable(this.variableName, this.variableValue);
-
-          // temp
-          // this.myKernelSevice.fetchVariable(this.variableName);
         }
       });
       this.oldVariableValue = this.variableValue;
@@ -129,12 +112,9 @@ except:
   }
 
   fetchVariable() {
-    // this.myKernelSevice.fetchVariable(this.variableName);
-
     this.myKernelSevice.runCode(this.fetchCode, '"fetch"_"' + this.variableName + '"').then(future => {
       future.onIOPub = ((msg: any) => {
         if (msg.content.name === 'stdout') {
-          // console.log(msg.content.text)
           const result = JSON.parse(msg.content.text);
           if (result.defined) {
             if (this.type.match('string')) {

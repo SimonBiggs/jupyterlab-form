@@ -13,8 +13,8 @@ import {
   Component, ContentChildren, QueryList, AfterViewInit
 } from '@angular/core';
 
-import { CodeComponent } from './code.component';
-import { KernelService } from './kernel.service';
+import { CodeComponent } from '../code-module/code.component';
+import { KernelService } from '../services/kernel.service';
 
 @Component({
   selector: 'app-button',

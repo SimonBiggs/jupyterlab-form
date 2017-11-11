@@ -3,7 +3,7 @@ Import the required styles.
 */
 
 import './style.css';
-import '../angular-component/theme.css';
+import '../angular-app/theme.css';
 
 /*
 This currently loads up the material design icons via the web. The later
