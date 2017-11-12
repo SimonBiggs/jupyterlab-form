@@ -14,8 +14,13 @@ to the Python kernel.
 */
 
 import {
-  Component, AfterViewInit, ViewChild, ElementRef, OnDestroy
+  Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, EventEmitter,
+  Output
 } from '@angular/core';
+
+// import {
+//   Observable
+// } from 'rxjs/Observable';
 
 import { RenderMime, defaultRendererFactories } from '@jupyterlab/rendermime';
 import { OutputArea, OutputAreaModel } from '@jupyterlab/outputarea';
@@ -36,7 +41,6 @@ import { OutputService } from '../services/output.service';
 <span #codecontainer *ngIf="future === undefined"><ng-content></ng-content></span>`
 })
 export class CodeComponent implements AfterViewInit, OnDestroy {
-
   name: string;
   renderMimeOptions: RenderMime.IOptions;
   renderMime: RenderMime;
@@ -46,6 +50,8 @@ export class CodeComponent implements AfterViewInit, OnDestroy {
 
   promise: Promise<Kernel.IFuture>;
   future: Kernel.IFuture;
+
+  @Output() aCodeRunCompleted = new EventEmitter();
 
   code: string;
   @ViewChild('codecontainer') codecontainer: ElementRef;
@@ -118,6 +124,7 @@ export class CodeComponent implements AfterViewInit, OnDestroy {
         this.future = future;
         this.outputArea.future = this.future;
         this.outputcontainer.nativeElement.appendChild(this.outputArea.node);
+        this.aCodeRunCompleted.emit();
       }
     });
   }

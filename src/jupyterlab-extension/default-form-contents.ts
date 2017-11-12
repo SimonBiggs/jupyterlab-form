@@ -41,11 +41,12 @@ A \`start\` section is defined as following:
 data = np.ones(3) * np.nan
 data[0] = 5
 
-table = pd.DataFrame(data=[[1,2,3],[4,5,6]])
+table = pd.DataFrame(
+  columns=['Meas1', 'Meas2', 'Meas3', 'Avg'],
+  # index=['6MV', '10MV'],
+  data=[[1,2,3,None],[4,5,6,None]])
 \`\`\`
 [/start]
-
-[table]table[/table]
 
 Whenever a jupyterlab services session is started
 code within the start sections is run first.
@@ -67,6 +68,11 @@ A \`live\` section is made as following:
 It is designed to contain both code and variable inputs. Whenever
 the user changes any variable within the live section all code within
 that live section is subsequently run.
+
+[button]
+[table]table[/table]
+\`table.loc[:,3] = np.average(table.loc[:,0:2])\`
+[/button]
 
 ### Button sections
 

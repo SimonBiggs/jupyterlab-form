@@ -19,6 +19,7 @@ import { VariableService } from '../services/variable.service';
 export class VariableBaseComponent implements AfterViewInit {
   isFormReady = false;
   isPandas = false;
+  isFocus = false;
 
   @Output() variableChange = new EventEmitter<any>();
   @ViewChild('variablecontainer') variablecontainer: ElementRef;
@@ -31,6 +32,14 @@ export class VariableBaseComponent implements AfterViewInit {
     public myChangeDetectorRef: ChangeDetectorRef,
     public myVariableService: VariableService
   ) { }
+
+  onBlur(tableCoords?: [number, number]) {
+    this.isFocus = false;
+  }
+
+  onFocus(tableCoords?: [number, number]) {
+    this.isFocus = true;
+  }
 
   variableChanged(value: string | number) { 
     if (this.variableValue !== this.oldVariableValue) {
@@ -57,7 +66,7 @@ export class VariableBaseComponent implements AfterViewInit {
           console.log(msg.content.text)
     
           const result = JSON.parse(msg.content.text);
-          if (result.defined) {
+          if (result.defined && !this.isFocus) {
             this.updateVariableView(result.value);
           }
         }

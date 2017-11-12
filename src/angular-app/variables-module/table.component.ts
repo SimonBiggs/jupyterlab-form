@@ -15,17 +15,15 @@ import { VariableBaseComponent } from './variable-base.component';
   <ng-content></ng-content>
 </span>
 
-
-
-
-
 <mat-table #table [dataSource]="dataSource" *ngIf="variableValue">
-  <ng-container [matColumnDef]="column" *ngFor="let column of dynamicColumnDefs">
+  <ng-container [matColumnDef]="column" *ngFor="let column of dynamicColumnDefs; let i = index">
     <mat-header-cell *matHeaderCellDef> {{column}} </mat-header-cell>
-    <mat-cell *matCellDef="let row">
+    <mat-cell *matCellDef="let row; let j = index">
       <mat-input-container>
         <input
           matInput
+          (blur)="onBlur([i, j])" 
+          (focus)="onFocus([i, j])"
           [disabled]="!isFormReady"
           value="{{row[column]}}">
       </mat-input-container>

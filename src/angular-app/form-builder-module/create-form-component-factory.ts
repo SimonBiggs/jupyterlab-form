@@ -34,6 +34,7 @@ import { StringComponent } from '../variables-module/string.component';
 import { TableComponent } from '../variables-module/table.component';
 
 import { CodeModule } from '../code-module/code.module';
+import { CodeComponent } from '../code-module/code.component';
 
 
 /**
@@ -58,6 +59,8 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
     @ViewChildren(NumberComponent) numberComponents: QueryList<NumberComponent>;
     @ViewChildren(StringComponent) stringComponents: QueryList<StringComponent>;
     @ViewChildren(TableComponent) tableComponents: QueryList<TableComponent>;
+
+    @ViewChildren(CodeComponent) codeComponents: QueryList<CodeComponent>;
   
     constructor(
       private myKernelSevice: KernelService
@@ -65,6 +68,21 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
   
     ngAfterViewInit() {
       this.initialiseForm();
+    }
+
+    /**
+     * Update all variable components from their python counterparts
+     */
+    pullAllVariables() {
+      for (const numberComponent of this.numberComponents.toArray()) {
+        numberComponent.pullVariable();
+      }
+      for (const stringComponent of this.stringComponents.toArray()) {
+        stringComponent.pullVariable();
+      }
+      for (const tableComponent of this.tableComponents.toArray()) {
+        tableComponent.pullVariable();
+      }
     }
   
     /**
@@ -93,19 +111,20 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
         this.myKernelSevice.isNewSession = false;
 
         // Variable components are initialised second
-        for (const numberComponent of this.numberComponents.toArray()) {
-          numberComponent.pullVariable();
-        }
-        for (const stringComponent of this.stringComponents.toArray()) {
-          stringComponent.pullVariable();
-        }
-        for (const tableComponent of this.tableComponents.toArray()) {
-          tableComponent.pullVariable();
-        }
+        this.pullAllVariables()
 
         // Wait until the code queue is complete before declaring form ready to
         // the various components.
         this.myKernelSevice.queue.then(() => {
+          
+          // Make all variables update whenever a code component finishes
+          // running.
+          for (const codeComponent of this.codeComponents.toArray()) {
+            codeComponent.aCodeRunCompleted.subscribe(() => {
+              this.pullAllVariables()
+            });
+          }
+
           // Tell the live components that the form is ready
           this.liveComponents.toArray().forEach((liveComponent, index) => {
             liveComponent.setId(index);

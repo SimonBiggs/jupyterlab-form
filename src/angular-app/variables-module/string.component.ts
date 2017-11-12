@@ -18,6 +18,8 @@ import {
     [placeholder]="variableName"
     [(ngModel)]="variableValue"
     (ngModelChange)="variableChanged($event)"
+    (blur)="onBlur()" 
+    (focus)="onFocus()"
     type="text" class="variableString">
 </mat-input-container>`,
 })
