@@ -94,7 +94,14 @@ export class TableComponent extends VariableBaseComponent {
   }
 
   variableChanged(value: string | number | PandasTable) {
-    this.variableValue.data = this.dataSource.data
+    this.dataSource.data.forEach((row, i) => {
+      const keys = Object.keys(row)
+      keys.forEach((key, j) => {
+        if (key != this.variableValue.schema.primaryKey) {
+          this.variableValue.data[i][key] = row[key];
+        }
+      })
+    })
     super.variableChanged(value);
   }
 

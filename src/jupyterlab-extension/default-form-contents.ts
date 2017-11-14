@@ -44,7 +44,7 @@ data[0] = 5
 table = pd.DataFrame(
   columns=['Meas1', 'Meas2', 'Meas3', 'Avg'],
   index=['6MV', '10MV'],
-  data=[[1,2,3,None],[4,5,6,None]])
+  data=[[1,np.nan,np.nan,np.nan],[4,5,np.nan,np.nan]])
 \`\`\`
 [/start]
 
@@ -72,8 +72,8 @@ that live section is subsequently run.
 [live]
 [table]table[/table]
 \`\`\`
-table.iloc[0,3] = np.average(table.iloc[0,0:3])
-table.iloc[1,3] = np.average(table.iloc[1,0:3])
+table.iloc[0,3] = np.nanmean(table.iloc[0,0:3])
+table.iloc[1,3] = np.nanmean(table.iloc[1,0:3])
 table
 \`\`\`
 [/live]
