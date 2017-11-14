@@ -17,6 +17,7 @@ import { VariableService } from '../services/variable.service';
 
 import { PandasTable } from '../interfaces/pandas-table'
 
+
 @Component({})
 export class VariableBaseComponent implements AfterViewInit {
   isFormReady = false;
@@ -44,8 +45,9 @@ export class VariableBaseComponent implements AfterViewInit {
   }
 
   variableChanged(value: string | number | PandasTable) { 
-    // This if statement may be always false ... worth investigating
-    if (this.variableValue !== this.oldVariableValue) {
+
+
+    if (this.variableValue != this.oldVariableValue) {
       this.myVariableService.pythonPushVariable(this.variableName, this.variableValue, this.isPandas)
       .then((status) => {
         if (status !== 'ignore') {
@@ -84,5 +86,7 @@ export class VariableBaseComponent implements AfterViewInit {
   formReady() {
     this.isFormReady = true;
   }
+
+
 
 }
