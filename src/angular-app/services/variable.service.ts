@@ -11,15 +11,17 @@ import {
 import { Injectable } from '@angular/core';
 import { KernelService } from './kernel.service';
 
+import { PandasTable } from '../interfaces/pandas-table'
+
 @Injectable()
 export class VariableService {
-  variableStore: { [key: string]: string | number | {}[] } = {};
+  variableStore: { [key: string]: string | number | PandasTable } = {};
 
   constructor(
     private myKernelSevice: KernelService
   ) { }
 
-  setVariable(variableName: string, variableContents: string | number | {}[]) {
+  setVariable(variableName: string, variableContents: string | number | PandasTable) {
     this.variableStore[variableName] = variableContents;
     // console.log(this.variableStore);
   }
@@ -29,7 +31,7 @@ export class VariableService {
     let pythonFormatSection: string
 
     if (isPandas) {
-      variableReference = variableName.concat(".to_json(orient='records')")
+      variableReference = variableName.concat(".to_json(orient='table')")
       pythonFormatSection = '{}'
       
     } else {
@@ -43,13 +45,13 @@ try:
 except:
     print('{"defined": false}')
 `;
-    console.log(fetchCode)
+    // console.log(fetchCode)
 
     let futurePromise = this.pullVariable(variableName, fetchCode);
     futurePromise.then(future => {
       future.onIOPub = ((msg: any) => {
         if (msg.content.name === 'stdout') {
-          console.log(msg.content.text)
+          // console.log(msg.content.text)
           const result = JSON.parse(msg.content.text);
           if (result.defined) {
             this.setVariable(variableName, result.value);
@@ -65,11 +67,13 @@ except:
     return this.myKernelSevice.runCode(fetchCode, '"pull"_"' + variableName + '"')
   }
 
-  pythonPushVariable(variableName: string, variableValue: string | number | {}[], isPandas = false) {
+  pythonPushVariable(variableName: string, variableValue: string | number | PandasTable, isPandas = false) {
     let valueReference: string
 
     if (isPandas) {
-      valueReference = `pd.read_json(${String(variableValue)}, orient='records')`
+      // valueReference = `pd.read_json('${JSON.stringify(variableValue)}', orient='table')`
+      valueReference = `json_table_to_df('${JSON.stringify(variableValue)}')`
+      
     } else if (typeof(variableValue) === 'string') {
       variableValue = variableValue.replace(/\"/g, '\\"')
       valueReference = `"${String(variableValue)}"`
@@ -81,15 +85,16 @@ except:
 
     let pushCode = `${variableName} = ${valueReference}`
 
-    console.log(valueReference)
+    console.log(pushCode)
 
     return this.pushVariable(variableName, variableValue, pushCode)
   }
 
-  pushVariable(variableName: string, variableValue: string | number | {}[], pushCode: string) {
+  pushVariable(variableName: string, variableValue: string | number | PandasTable, pushCode: string) {
     return this.myKernelSevice.runCode(
       pushCode, '"push"_"' + variableName + '"'
     ).then(future => {
+      // console.log(future)
       if (future) {
         this.setVariable(variableName, variableValue);
         return future.done;

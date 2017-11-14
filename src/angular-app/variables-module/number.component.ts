@@ -28,4 +28,8 @@ import {
   }
   `]
 })
-export class NumberComponent extends VariableBaseComponent { }
+export class NumberComponent extends VariableBaseComponent { 
+  updateVariableView(value: number) {
+    this.variableValue = Number(value);
+  }
+}

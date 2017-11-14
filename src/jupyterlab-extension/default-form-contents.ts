@@ -43,7 +43,7 @@ data[0] = 5
 
 table = pd.DataFrame(
   columns=['Meas1', 'Meas2', 'Meas3', 'Avg'],
-  # index=['6MV', '10MV'],
+  index=['6MV', '10MV'],
   data=[[1,2,3,None],[4,5,6,None]])
 \`\`\`
 [/start]
@@ -69,10 +69,14 @@ It is designed to contain both code and variable inputs. Whenever
 the user changes any variable within the live section all code within
 that live section is subsequently run.
 
-[button]
+[live]
 [table]table[/table]
-\`table.loc[:,3] = np.average(table.loc[:,0:2])\`
-[/button]
+\`\`\`
+table.iloc[0,3] = np.average(table.iloc[0,0:3])
+table.iloc[1,3] = np.average(table.iloc[1,0:3])
+table
+\`\`\`
+[/live]
 
 ### Button sections
 

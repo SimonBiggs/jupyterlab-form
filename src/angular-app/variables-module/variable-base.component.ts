@@ -15,6 +15,8 @@ import {
 
 import { VariableService } from '../services/variable.service';
 
+import { PandasTable } from '../interfaces/pandas-table'
+
 @Component({})
 export class VariableBaseComponent implements AfterViewInit {
   isFormReady = false;
@@ -25,25 +27,25 @@ export class VariableBaseComponent implements AfterViewInit {
   @ViewChild('variablecontainer') variablecontainer: ElementRef;
 
   variableName: string;
-  oldVariableValue: string | number | {}[] = null;
-  variableValue: string | number | {}[];
+  oldVariableValue: string | number | PandasTable = null;
+  variableValue: string | number | PandasTable;
 
   constructor(
     public myChangeDetectorRef: ChangeDetectorRef,
     public myVariableService: VariableService
   ) { }
 
-  onBlur(tableCoords?: [number, number]) {
+  onBlur(tableCoords?: [number, string]) {
     this.isFocus = false;
   }
 
-  onFocus(tableCoords?: [number, number]) {
+  onFocus(tableCoords?: [number, string]) {
     this.isFocus = true;
   }
 
-  variableChanged(value: string | number) { 
+  variableChanged(value: string | number | PandasTable) { 
     if (this.variableValue !== this.oldVariableValue) {
-      this.myVariableService.pythonPushVariable(this.variableName, this.variableValue)
+      this.myVariableService.pythonPushVariable(this.variableName, this.variableValue, this.isPandas)
       .then((status) => {
         if (status !== 'ignore') {
           this.variableChange.emit(this.variableName);
@@ -63,7 +65,7 @@ export class VariableBaseComponent implements AfterViewInit {
     .then(future => {
       future.onIOPub = ((msg: any) => {
         if (msg.content.name === 'stdout') {
-          console.log(msg.content.text)
+          // console.log(msg.content.text)
     
           const result = JSON.parse(msg.content.text);
           if (result.defined && !this.isFocus) {
@@ -74,14 +76,12 @@ export class VariableBaseComponent implements AfterViewInit {
     })
   }
 
-  updateVariableView(value: string | number | {}[]) {
+  updateVariableView(value: string | number | PandasTable) {
     this.variableValue = value
   }
 
   formReady() {
     this.isFormReady = true;
   }
-
-
 
 }

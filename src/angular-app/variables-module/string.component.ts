@@ -23,4 +23,8 @@ import {
     type="text" class="variableString">
 </mat-input-container>`,
 })
-export class StringComponent extends VariableBaseComponent { }
+export class StringComponent extends VariableBaseComponent { 
+  updateVariableView(value: string) {
+    this.variableValue = String(value)
+  }
+}

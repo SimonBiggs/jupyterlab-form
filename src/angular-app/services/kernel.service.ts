@@ -29,10 +29,23 @@ export class KernelService {
   kernel: Kernel.IKernelConnection;
 
   sessionStartCode = `
+import json
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 %matplotlib inline
+
+# https://stackoverflow.com/a/44833650
+def json_table_to_df(json_table):
+    table = json.loads(json_table)
+    df = pd.DataFrame(
+        table['data'],
+        columns=[t['name'] for t in table['schema']['fields']])
+
+    df.set_index(table['schema']['primaryKey'], inplace=True)
+
+    return df
 `
 
   queueId = 0;
