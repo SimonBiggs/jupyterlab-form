@@ -8,5 +8,5 @@ export interface PandasTable {
     primaryKey: string
     pandas_version: string
   }
-  data: {}[]
+  data: { [key: string]: string | number }[]
 }

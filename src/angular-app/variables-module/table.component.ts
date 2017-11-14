@@ -47,7 +47,10 @@ styles: [
 })
 export class TableComponent extends VariableBaseComponent {
   dynamicColumnDefs: string[]
-  dataSource = new MatTableDataSource();
+  dataSource: MatTableDataSource<{
+    [key: string]: string | number 
+  }> = new MatTableDataSource();
+
   variableValue: PandasTable
   isPandas = true
   focus: [number, string] = [null, null];
@@ -55,11 +58,24 @@ export class TableComponent extends VariableBaseComponent {
   updateVariableView(value: PandasTable) {
     this.variableValue = value;
     let columns: string[] = []
-    this.variableValue.schema.fields.forEach(val => {
+    value.schema.fields.forEach(val => {
       columns.push(val.name)
     })
     this.dynamicColumnDefs = columns
-    this.dataSource.data = value.data;
+
+    // This test of length isn't sufficient
+    if (this.dataSource.data.length !== value.data.length) {
+      value.data.forEach((row, i) => {
+        const keys = Object.keys(row)
+        keys.forEach((key, j) => {
+          if ((i !== this.focus[0]) || (key !== this.focus[1])) {
+            this.dataSource.data[i][key] = row[key];
+          }
+        })
+      })
+    } else {
+      this.dataSource.data = value.data;
+    }
   }
 
   variableChanged(value: PandasTable) {
