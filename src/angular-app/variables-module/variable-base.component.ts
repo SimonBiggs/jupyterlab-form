@@ -44,6 +44,7 @@ export class VariableBaseComponent implements AfterViewInit {
   }
 
   variableChanged(value: string | number | PandasTable) { 
+    // This if statement may be always false ... worth investigating
     if (this.variableValue !== this.oldVariableValue) {
       this.myVariableService.pythonPushVariable(this.variableName, this.variableValue, this.isPandas)
       .then((status) => {

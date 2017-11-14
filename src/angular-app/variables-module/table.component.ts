@@ -17,7 +17,7 @@ import { PandasTable } from '../interfaces/pandas-table'
 </span>
 
 <mat-table #table [dataSource]="dataSource" *ngIf="variableValue">
-  <ng-container [matColumnDef]="column" *ngFor="let column of dynamicColumnDefs; let i = index">
+  <ng-container [matColumnDef]="column" *ngFor="let column of columnDefs; let i = index">
     <mat-header-cell *matHeaderCellDef> {{column}} </mat-header-cell>
     <mat-cell *matCellDef="let row; let j = index">
       <span *ngIf="column == variableValue.schema.primaryKey">
@@ -26,8 +26,8 @@ import { PandasTable } from '../interfaces/pandas-table'
       <mat-input-container class="variableNumber" *ngIf="column != variableValue.schema.primaryKey">
         <input
           matInput
-          (blur)="onBlur(row, column)"
-          (focus)="onFocus(row, column)"
+          (blur)="onBlur([j, column])"
+          (focus)="onFocus([j, column])"
           [disabled]="!isFormReady"
           [(ngModel)]="row[column]"
           (ngModelChange)="variableChanged($event)"
@@ -36,8 +36,8 @@ import { PandasTable } from '../interfaces/pandas-table'
     </mat-cell>
   </ng-container>
 
-  <mat-header-row *matHeaderRowDef="dynamicColumnDefs"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: dynamicColumnDefs;"></mat-row>
+  <mat-header-row *matHeaderRowDef="columnDefs"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: columnDefs;"></mat-row>
 </mat-table>`,
 styles: [
   `.variableNumber {
@@ -46,7 +46,8 @@ styles: [
 `]
 })
 export class TableComponent extends VariableBaseComponent {
-  dynamicColumnDefs: string[]
+  columnDefs: string[] = []
+  oldColumnDefs: string[] = []
   dataSource: MatTableDataSource<{
     [key: string]: string | number 
   }> = new MatTableDataSource();
@@ -56,15 +57,29 @@ export class TableComponent extends VariableBaseComponent {
   focus: [number, string] = [null, null];
 
   updateVariableView(value: PandasTable) {
+    let numRowsUnchanged: boolean
+    if (this.variableValue) {
+      numRowsUnchanged = (
+        value.data.length == this.variableValue.data.length
+      )
+    } else {
+      numRowsUnchanged = false
+    }
     this.variableValue = value;
     let columns: string[] = []
     value.schema.fields.forEach(val => {
       columns.push(val.name)
     })
-    this.dynamicColumnDefs = columns
+    this.oldColumnDefs = this.columnDefs
+    this.columnDefs = columns
 
-    // This test of length isn't sufficient
-    if (this.dataSource.data.length !== value.data.length) {
+    const columnsUnchanged = (
+      this.oldColumnDefs.length == this.columnDefs.length && 
+      this.columnDefs.every(
+        (item, index) => { return item === this.oldColumnDefs[index] })
+    )
+
+    if (columnsUnchanged && numRowsUnchanged) {
       value.data.forEach((row, i) => {
         const keys = Object.keys(row)
         keys.forEach((key, j) => {
@@ -78,9 +93,14 @@ export class TableComponent extends VariableBaseComponent {
     }
   }
 
-  variableChanged(value: PandasTable) {
+  variableChanged(value: string | number | PandasTable) {
+    this.variableValue.data = this.dataSource.data
     super.variableChanged(value);
   }
+
+  // variableChanged(value: PandasTable) {
+  //   super.variableChanged(value);
+  // }
 
   onBlur(tableCoords: [number, string]) {
     this.focus = [null, null];
