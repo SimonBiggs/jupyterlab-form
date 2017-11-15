@@ -6,8 +6,11 @@ import {
   MatTableDataSource
 } from '@angular/material';
 
+import * as  stringify from 'json-stable-stringify';
+
 import { VariableBaseComponent } from './variable-base.component';
 import { PandasTable } from '../interfaces/pandas-table'
+import { VariableValue } from '../types/variable-value';
 
 @Component({
   selector: 'app-table',
@@ -67,6 +70,8 @@ export class TableComponent extends VariableBaseComponent {
       numRowsUnchanged = false
     }
     this.variableValue = value;
+    this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue));
+
     let columns: string[] = []
     value.schema.fields.forEach(val => {
       columns.push(val.name)
@@ -89,32 +94,33 @@ export class TableComponent extends VariableBaseComponent {
           }
         })
       })
+      // this.variableValue.data = this.dataSource.data;
+      // this.oldVariableValue = JSON.parse(JSON.stringify(this.dataSource.data))
     } else {
       this.dataSource.data = value.data;
     }
   }
 
-  variableChanged(value: string | number | PandasTable) {
-    this.dataSource.data.forEach((row, i) => {
-      const keys = Object.keys(row)
-      keys.forEach((key, j) => {
-        if (key != this.variableValue.schema.primaryKey) {
-          this.variableValue.data[i][key] = row[key];
-        }
-      })
-    })
+  variableChanged(value: VariableValue) {
 
-    if (!this.equals(this.variableValue, this.oldVariableValue)) {
+    this.variableValue.data = JSON.parse(JSON.stringify(this.dataSource.data))
+    // console.log(!(stringify(this.variableValue) === stringify(this.oldVariableValue)))
+
+    // console.log(stringify(this.variableValue))
+    // console.log(stringify(this.oldVariableValue))
+
+    if (!(stringify(this.variableValue) === stringify(this.oldVariableValue))) {
+      this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue))
+
       this.myVariableService.pythonPushVariable(this.variableName, this.variableValue, this.isPandas)
       .then((status) => {
         if (status !== 'ignore') {
           this.variableChange.emit(this.variableName);
         }
       });
-      this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue))
+      
     }
   }
-
 
   onBlur(tableCoords: [number, string]) {
     this.focus = [null, null];
@@ -122,41 +128,6 @@ export class TableComponent extends VariableBaseComponent {
 
   onFocus(tableCoords: [number, string]) {
     this.focus = tableCoords;
-  }
-
-  equals( x: any, y: any ) {
-    if ( x === y ) return true;
-      // if both x and y are null or undefined and exactly the same
-  
-    if ( ! ( x instanceof Object ) || ! ( y instanceof Object ) ) return false;
-      // if they are not strictly equal, they both need to be Objects
-  
-    if ( x.constructor !== y.constructor ) return false;
-      // they must have the exact same prototype chain, the closest we can do is
-      // test there constructor.
-  
-    for ( var p in x ) {
-      if ( ! x.hasOwnProperty( p ) ) continue;
-        // other properties were tested using x.constructor === y.constructor
-  
-      if ( ! y.hasOwnProperty( p ) ) return false;
-        // allows to compare x[ p ] and y[ p ] when set to undefined
-  
-      if ( x[ p ] === y[ p ] ) continue;
-        // if they have the same strict value or identity then they are equal
-  
-      if ( typeof( x[ p ] ) !== "object" ) return false;
-        // Numbers, Strings, Functions, Booleans must be strictly equal
-  
-      if ( ! this.equals( x[ p ],  y[ p ] ) ) return false;
-        // Objects and Arrays must be tested recursively
-    }
-  
-    for ( p in y ) {
-      if ( y.hasOwnProperty( p ) && ! x.hasOwnProperty( p ) ) return false;
-        // allows x[ p ] to be set to undefined
-    }
-    return true;
   }
 }
 

@@ -22,6 +22,7 @@ import {
 import { CommonModule } from '@angular/common';
 
 import { KernelService } from '../services/kernel.service';
+import { VariableService } from '../services/variable.service';
 
 import { SectionsModule } from '../sections-module/sections.module';
 import { StartComponent } from '../sections-module/start.component';
@@ -36,6 +37,8 @@ import { TableComponent } from '../variables-module/table.component';
 import { CodeModule } from '../code-module/code.module';
 import { CodeComponent } from '../code-module/code.component';
 
+import { VariableComponent } from '../types/variable-component';
+
 
 /**
  * Create a form component factory given an Angular template in the form of metadata.
@@ -47,11 +50,15 @@ import { CodeComponent } from '../code-module/code.component';
  */
 export
 function createFormComponentFactory(compiler: Compiler, metadata: Component): ComponentFactory<any> {
+  
+
   /**
    * The form component that is built each time the template changes
    */
   @Component(metadata)
   class FormComponent {   
+    variableComponents: VariableComponent[] = []
+
     @ViewChildren(StartComponent) startComponents: QueryList<StartComponent>;
     @ViewChildren(LiveComponent) liveComponents: QueryList<LiveComponent>;
     @ViewChildren(ButtonComponent) buttonComponents: QueryList<ButtonComponent>;
@@ -63,27 +70,18 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
     @ViewChildren(CodeComponent) codeComponents: QueryList<CodeComponent>;
   
     constructor(
-      private myKernelSevice: KernelService
+      private myKernelSevice: KernelService,
+      private myVariableService: VariableService
     ) { }
   
     ngAfterViewInit() {
+      this.variableComponents = this.variableComponents.concat(this.numberComponents.toArray())
+      this.variableComponents = this.variableComponents.concat(this.stringComponents.toArray())
+      this.variableComponents = this.variableComponents.concat(this.tableComponents.toArray())
+
       this.initialiseForm();
     }
 
-    /**
-     * Update all variable components from their python counterparts
-     */
-    pullAllVariables() {
-      for (const numberComponent of this.numberComponents.toArray()) {
-        numberComponent.pullVariable();
-      }
-      for (const stringComponent of this.stringComponents.toArray()) {
-        stringComponent.pullVariable();
-      }
-      for (const tableComponent of this.tableComponents.toArray()) {
-        tableComponent.pullVariable();
-      }
-    }
   
     /**
      * Initialise the form. Code ordering during initialisation is defined here.
@@ -111,7 +109,10 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
         this.myKernelSevice.isNewSession = false;
 
         // Variable components are initialised second
-        this.pullAllVariables()
+        for (const variableComponent of this.variableComponents) {
+          variableComponent.initialise();
+        }
+        this.myVariableService.fetchAll()
 
         // Wait until the code queue is complete before declaring form ready to
         // the various components.
@@ -121,7 +122,8 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
           // running.
           for (const codeComponent of this.codeComponents.toArray()) {
             codeComponent.aCodeRunCompleted.subscribe(() => {
-              this.pullAllVariables()
+              // this.pullAllVariables()
+              this.myVariableService.fetchAll()
             });
           }
 

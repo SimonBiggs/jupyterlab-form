@@ -74,7 +74,7 @@ that live section is subsequently run.
 \`\`\`
 table.iloc[0,3] = np.nanmean(table.iloc[0,0:3])
 table.iloc[1,3] = np.nanmean(table.iloc[1,0:3])
-table
+display(table)
 \`\`\`
 [/live]
 

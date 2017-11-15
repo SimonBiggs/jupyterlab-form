@@ -15,7 +15,7 @@ import {
 
 import { VariableService } from '../services/variable.service';
 
-import { PandasTable } from '../interfaces/pandas-table'
+import { VariableValue } from '../types/variable-value';
 
 
 @Component({})
@@ -28,8 +28,8 @@ export class VariableBaseComponent implements AfterViewInit {
   @ViewChild('variablecontainer') variablecontainer: ElementRef;
 
   variableName: string;
-  oldVariableValue: string | number | PandasTable = null;
-  variableValue: string | number | PandasTable;
+  oldVariableValue: VariableValue = null;
+  variableValue: VariableValue;
 
   constructor(
     public myChangeDetectorRef: ChangeDetectorRef,
@@ -44,9 +44,7 @@ export class VariableBaseComponent implements AfterViewInit {
     this.isFocus = true;
   }
 
-  variableChanged(value: string | number | PandasTable) { 
-
-
+  variableChanged(value: VariableValue) { 
     if (this.variableValue != this.oldVariableValue) {
       this.myVariableService.pythonPushVariable(this.variableName, this.variableValue, this.isPandas)
       .then((status) => {
@@ -63,23 +61,23 @@ export class VariableBaseComponent implements AfterViewInit {
     this.myChangeDetectorRef.detectChanges();
   }
 
-  pullVariable() {
-    this.myVariableService.pythonPullVariable(this.variableName, this.isPandas)
-    .then(future => {
-      future.onIOPub = ((msg: any) => {
-        if (msg.content.name === 'stdout') {
-          // console.log(msg.content.text)
+  // pullVariable() {
+  //   this.myVariableService.pythonPullVariable(this.variableName, this.isPandas)
+  //   .then(future => {
+  //     future.onIOPub = ((msg: any) => {
+  //       if (msg.content.name === 'stdout') {
+  //         // console.log(msg.content.text)
     
-          const result = JSON.parse(msg.content.text);
-          if (result.defined && !this.isFocus) {
-            this.updateVariableView(result.value);
-          }
-        }
-      }); 
-    })
-  }
+  //         const result = JSON.parse(msg.content.text);
+  //         if (result.defined && !this.isFocus) {
+  //           this.updateVariableView(result.value);
+  //         }
+  //       }
+  //     }); 
+  //   })
+  // }
 
-  updateVariableView(value: string | number | PandasTable) {
+  updateVariableView(value: VariableValue) {
     this.variableValue = value
   }
 
@@ -87,6 +85,8 @@ export class VariableBaseComponent implements AfterViewInit {
     this.isFormReady = true;
   }
 
-
-
+  initialise() {
+    this.myVariableService.initialiseVariableComponent(
+      this, this.variableName, this.isPandas)
+  }
 }
