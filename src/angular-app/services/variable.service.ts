@@ -42,11 +42,6 @@ print('}')`
     private myKernelSevice: KernelService
   ) { }
 
-  setVariable(variableName: string, variableContents: VariableValue) {
-    // this.variableStore[variableName] = variableContents;
-    // console.log(this.variableStore);
-  }
-
   initialiseVariableComponent(component: VariableComponent, variableName: string, isPandas: boolean) {
     this.componentStore[variableName] = component
     this.appendToFetchAllCode(variableName, isPandas);
@@ -126,28 +121,6 @@ except:
     return fetchCode;
   }
 
-  pythonPullVariable(variableName: string, isPandas = false): Promise<Kernel.IFuture> {
-    let fetchCode = this.createFetchCode(variableName, isPandas);
-
-    let futurePromise = this.pullVariable(variableName, fetchCode);
-    futurePromise.then(future => {
-      future.onIOPub = ((msg: any) => {
-        if (msg.content.name === 'stdout') {
-          const result = JSON.parse(msg.content.text);
-          if (result.defined) {
-            this.setVariable(variableName, result.value);
-          }
-        }
-      }); 
-      
-    })
-    return futurePromise
-  }
-
-  pullVariable(variableName: string, fetchCode: string): Promise<Kernel.IFuture> {
-    return this.myKernelSevice.runCode(fetchCode, '"pull"_"' + variableName + '"')
-  }
-
   pythonPushVariable(variableName: string, variableValue: VariableValue, isPandas = false) {
     let valueReference: string
 
@@ -177,7 +150,6 @@ except:
     ).then(future => {
       // console.log(future)
       if (future) {
-        this.setVariable(variableName, variableValue);
         return future.done;
       } else {
         return Promise.resolve('ignore');
