@@ -18,11 +18,19 @@ import { CodeComponent } from '../code-module/code.component';
 
 @Component({
   selector: 'app-start',
-  template: `<ng-content></ng-content>`
+  template: `<ng-content></ng-content>
+<div align="right" *ngIf="(!hasStartRun)">
+  <button
+  mat-mini-fab
+  (click)="runCode()">
+    <mat-icon>autorenew</mat-icon>
+  </button>
+</div>`
 })
 export class StartComponent implements OnInit, AfterViewInit {
 
   startId: number;
+  hasStartRun = false;
 
   @ContentChildren(CodeComponent) codeComponents: QueryList<CodeComponent>;
 
@@ -38,6 +46,7 @@ export class StartComponent implements OnInit, AfterViewInit {
     this.codeComponents.toArray().forEach((codeComponent, index) => {
       codeComponent.runCode();
     });
+    this.hasStartRun = true;
   }
 
   setId(id: number) {

@@ -19,32 +19,48 @@ import { VariableValue } from '../types/variable-value';
   <ng-content></ng-content>
 </span>
 
-<mat-table #table [dataSource]="dataSource" *ngIf="variableValue">
-  <ng-container [matColumnDef]="column" *ngFor="let column of columnDefs; let i = index">
-    <mat-header-cell *matHeaderCellDef> {{column}} </mat-header-cell>
-    <mat-cell *matCellDef="let row; let j = index">
-      <span *ngIf="column == variableValue.schema.primaryKey">
-        {{row[column]}}
-      </span>
-      <mat-input-container class="variableNumber" *ngIf="column != variableValue.schema.primaryKey">
-        <input
-          matInput
-          (blur)="onBlur([j, column])"
-          (focus)="onFocus([j, column])"
-          [disabled]="!isFormReady"
-          [(ngModel)]="row[column]"
-          (ngModelChange)="variableChanged($event)"
-          type="number">
-      </mat-input-container>
-    </mat-cell>
-  </ng-container>
+<div class="container mat-elevation-z8" >
+  <mat-table #table [dataSource]="dataSource" *ngIf="variableValue">
+    <ng-container [matColumnDef]="column" *ngFor="let column of columnDefs; let i = index">
+      <mat-header-cell *matHeaderCellDef> {{column}} </mat-header-cell>
+      <mat-cell *matCellDef="let row; let j = index">
+        <span *ngIf="column == variableValue.schema.primaryKey || isOutput">
+          {{row[column]}}
+        </span>
+        <mat-input-container *ngIf="column != variableValue.schema.primaryKey && !isOutput">
+          <input
+            matInput
+            (blur)="onBlur([j, column])"
+            (focus)="onFocus([j, column])"
+            [disabled]="!isFormReady"
+            [(ngModel)]="row[column]"
+            (ngModelChange)="variableChanged($event)"
+            type="number">
+        </mat-input-container>
+      </mat-cell>
+    </ng-container>
 
-  <mat-header-row *matHeaderRowDef="columnDefs"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: columnDefs;"></mat-row>
-</mat-table>`,
+    <mat-header-row *matHeaderRowDef="columnDefs"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: columnDefs;"></mat-row>
+  </mat-table>
+</div>
+`,
 styles: [
-  `.variableNumber {
-  width: 80px;
+`
+.container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
 }
 `]
 })

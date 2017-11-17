@@ -20,6 +20,7 @@ import { VariableValue } from '../types/variable-value';
 
 @Component({})
 export class VariableBaseComponent implements AfterViewInit {
+  isOutput = false;
   isFormReady = false;
   isPandas = false;
   isFocus = false;

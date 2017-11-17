@@ -57,7 +57,8 @@ Whenever a jupyterlab services session is started
 code within the start sections is run first.
 
 If you reopen or update the form template without restarting the kernel
-this code will not re-run.
+this code will not re-run however a button will appear that will allow you to 
+manually re-run the code if need be.
 
 As can be seen from this code there are already a few namespaces included by
 default within the Python session. Some of these are for convenience, some are
@@ -107,7 +108,8 @@ They will not run until their respective button is pressed.
 
 ### Output groups
 
-Code placed within output groups after any other code section is run. 
+Code placed within output groups will run after the code blocks within start, 
+live or button sections are run.
 
 Any variable placed within an output group will format as a non-editable card.
 By placing key output variables within an output group their results will be
