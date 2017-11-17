@@ -62,10 +62,8 @@ this code will not re-run.
 As can be seen from this code there are already a few namespaces included by
 default within the Python session. Some of these are for convenience, some are
 required for the proper running of the form. The code that is run at boot of 
-a new form kernel is 
-
-
-
+a new form kernel can be found within the 
+[source code](https://github.com/SimonBiggs/jupyterlab-form/blob/master/src/angular-app/services/session-start-code.ts).
 
 ### Live sections
 
@@ -85,8 +83,7 @@ that live section is subsequently run.
 [live]
 [table]table[/table]
 \`\`\`
-table.iloc[0,3] = np.nanmean(table.iloc[0,0:3])
-table.iloc[1,3] = np.nanmean(table.iloc[1,0:3])
+table.iloc[:,3] = np.nanmean(table.iloc[:,0:3], axis=1)
 display(table)
 \`\`\`
 [/live]

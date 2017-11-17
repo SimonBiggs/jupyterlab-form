@@ -42,6 +42,7 @@ print('}')`
     this.variableStore = {};
     this.oldVariableStore = {};
     this.componentStore = {};
+    this.fetchAllCode = '';
   }
 
   initialiseVariableComponent(component: VariableComponent, variableName: string, isPandas: boolean) {
