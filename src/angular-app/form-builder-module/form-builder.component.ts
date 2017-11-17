@@ -89,7 +89,9 @@ export class FormBuilderComponent implements OnInit, AfterViewInit {
     ).replace(/\[string\]/g, '<app-string>'
     ).replace(/\[\/string\]/g, '</app-string>'
     ).replace(/\[table\]/g, '<app-table>'
-    ).replace(/\[\/table\]/g, '</app-table>');
+    ).replace(/\[\/table\]/g, '</app-table>'
+    ).replace(/\[boolean\]/g, '<app-boolean>'
+    ).replace(/\[\/boolean\]/g, '</app-boolean>');
 
     // Render the markdown to html
     const html = this.myMarkdownIt.render(customTags);

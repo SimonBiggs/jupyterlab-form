@@ -30,6 +30,7 @@ import { LiveComponent } from '../sections-module/live.component';
 import { ButtonComponent } from '../sections-module/button.component';
 
 import { VariablesModule } from '../variables-module/variables.module';
+import { BooleanComponent } from '../variables-module/boolean.component';
 import { NumberComponent } from '../variables-module/number.component';
 import { StringComponent } from '../variables-module/string.component';
 import { TableComponent } from '../variables-module/table.component';
@@ -63,6 +64,7 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
     @ViewChildren(LiveComponent) liveComponents: QueryList<LiveComponent>;
     @ViewChildren(ButtonComponent) buttonComponents: QueryList<ButtonComponent>;
 
+    @ViewChildren(BooleanComponent) booleanComponents: QueryList<BooleanComponent>;
     @ViewChildren(NumberComponent) numberComponents: QueryList<NumberComponent>;
     @ViewChildren(StringComponent) stringComponents: QueryList<StringComponent>;
     @ViewChildren(TableComponent) tableComponents: QueryList<TableComponent>;
@@ -75,6 +77,7 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
     ) { }
   
     ngAfterViewInit() {
+      this.variableComponents = this.variableComponents.concat(this.booleanComponents.toArray())
       this.variableComponents = this.variableComponents.concat(this.numberComponents.toArray())
       this.variableComponents = this.variableComponents.concat(this.stringComponents.toArray())
       this.variableComponents = this.variableComponents.concat(this.tableComponents.toArray())

@@ -26,5 +26,7 @@ import {
 export class StringComponent extends VariableBaseComponent { 
   updateVariableView(value: string) {
     this.variableValue = String(value)
+
+    this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue));
   }
 }

@@ -50,6 +50,10 @@ table = pd.DataFrame(
   columns=['Meas1', 'Meas2', 'Meas3', 'Avg'],
   index=['6MV', '10MV'],
   data=[[1,np.nan,np.nan,np.nan],[4,5,np.nan,np.nan]])
+
+hello = False
+world = False
+bye = False
 \`\`\`
 [/start]
 
@@ -90,6 +94,25 @@ in the table contents:
 table.iloc[:,3] = np.nanmean(table.iloc[:,0:3], axis=1)
 \`\`\`
 [/live]
+
+Another is feedback or code activation as a result of a checklist:
+
+[live]
+[boolean]hello[/boolean]
+
+[boolean]world[/boolean]
+\`\`\`
+if bye:
+    hello = False
+    world = False
+
+if hello and world:
+    print('Hello World!')
+\`\`\`
+
+[boolean]bye[/boolean]
+[/live]
+
 
 ### Button sections
 

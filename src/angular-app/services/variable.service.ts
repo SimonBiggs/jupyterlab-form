@@ -82,8 +82,14 @@ ${fetchCode}`
     for (let name of variableNames) {
       if (this.variableStore[name].defined) {
         // console.log(this.variableStore[name].value)
+        if (name == 'world') {
+          console.log(stringify(this.oldVariableStore[name]))
+          console.log(stringify(this.variableStore[name]))
+        }
+
         if (this.oldVariableStore) {
           if (stringify(this.variableStore[name]) != stringify(this.oldVariableStore[name])) {
+            // this.oldVariableStore[name] = JSON.parse(JSON.stringify(this.variableStore[name]))
             this.updateComponentView(
               this.componentStore[name], this.variableStore[name].value)
             
@@ -98,6 +104,7 @@ ${fetchCode}`
   }
 
   updateComponentView(component: any, value: VariableValue) {
+    // console.log('update view')
     // console.log(value)
     component.updateVariableView(value)
   }
@@ -136,14 +143,24 @@ except:
       valueReference = `"${String(variableValue)}"`
     } else if (typeof(variableValue) === 'number') {
       valueReference = `${String(variableValue)}`
+    } else if (typeof(variableValue) === 'boolean') {
+      if (variableValue) {
+        valueReference = 'True'
+      } else {
+        valueReference = 'False'
+      }
     } else {
+      console.log(variableValue)
       throw RangeError("Unexpected variable type")
     }    
 
     let pushCode = `${variableName} = ${valueReference}`
 
     // console.log(pushCode)
-
+    this.oldVariableStore[variableName] = {
+      defined: true,
+      value: JSON.parse(JSON.stringify(valueReference))
+    }
     return this.pushVariable(variableName, variableValue, pushCode)
   }
 

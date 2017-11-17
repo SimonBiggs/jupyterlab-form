@@ -31,5 +31,7 @@ import {
 export class NumberComponent extends VariableBaseComponent { 
   updateVariableView(value: number) {
     this.variableValue = Number(value);
+
+    this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue));
   }
 }

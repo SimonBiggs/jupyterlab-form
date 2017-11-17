@@ -38,14 +38,18 @@ export class VariableBaseComponent implements AfterViewInit {
   ) { }
 
   onBlur(tableCoords?: [number, string]) {
+    // console.log('blur')
     this.isFocus = false;
   }
 
   onFocus(tableCoords?: [number, string]) {
+    // console.log('focus')
     this.isFocus = true;
   }
 
   variableChanged(value: VariableValue) { 
+    console.log(this.oldVariableValue)
+    console.log(this.variableValue)
     if (this.variableValue != this.oldVariableValue) {
       this.myVariableService.pythonPushVariable(this.variableName, this.variableValue, this.isPandas)
       .then((status) => {
@@ -62,24 +66,9 @@ export class VariableBaseComponent implements AfterViewInit {
     this.myChangeDetectorRef.detectChanges();
   }
 
-  // pullVariable() {
-  //   this.myVariableService.pythonPullVariable(this.variableName, this.isPandas)
-  //   .then(future => {
-  //     future.onIOPub = ((msg: any) => {
-  //       if (msg.content.name === 'stdout') {
-  //         // console.log(msg.content.text)
-    
-  //         const result = JSON.parse(msg.content.text);
-  //         if (result.defined && !this.isFocus) {
-  //           this.updateVariableView(result.value);
-  //         }
-  //       }
-  //     }); 
-  //   })
-  // }
-
   updateVariableView(value: VariableValue) {
     this.variableValue = value
+    this.oldVariableValue = JSON.parse(JSON.stringify(value))
   }
 
   formReady() {

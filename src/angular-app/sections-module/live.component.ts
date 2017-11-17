@@ -13,11 +13,14 @@ import {
   Component, ContentChildren, QueryList, AfterViewInit
 } from '@angular/core';
 
+import { BooleanComponent } from '../variables-module/boolean.component';
 import { NumberComponent } from '../variables-module/number.component';
 import { StringComponent } from '../variables-module/string.component';
 import { TableComponent } from '../variables-module/table.component';
 
 import { CodeComponent } from '../code-module/code.component';
+
+import { VariableComponent } from '../types/variable-component';
 
 @Component({
   selector: 'app-live',
@@ -25,10 +28,13 @@ import { CodeComponent } from '../code-module/code.component';
 })
 export class LiveComponent implements AfterViewInit {
 
+  variableComponents: VariableComponent[] = []
+
   liveId: number;
   afterViewInit = false;
   isFormReady = false;
 
+  @ContentChildren(BooleanComponent) booleanComponents: QueryList<BooleanComponent>;
   @ContentChildren(NumberComponent) numberComponents: QueryList<NumberComponent>;
   @ContentChildren(StringComponent) stringComponents: QueryList<StringComponent>;
   @ContentChildren(TableComponent) tableComponents: QueryList<TableComponent>;
@@ -37,18 +43,14 @@ export class LiveComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.afterViewInit = true;
-    for (const numberComponent of this.numberComponents.toArray()) {
-      numberComponent.variableChange.asObservable().subscribe(
-        value => this.variableChanged(value)
-      );
-    }
-    for (const stringComponent of this.stringComponents.toArray()) {
-      stringComponent.variableChange.asObservable().subscribe(
-        value => this.variableChanged(value)
-      );
-    }
-    for (const tableComponent of this.tableComponents.toArray()) {
-      tableComponent.variableChange.asObservable().subscribe(
+
+    this.variableComponents = this.variableComponents.concat(this.booleanComponents.toArray())
+    this.variableComponents = this.variableComponents.concat(this.numberComponents.toArray())
+    this.variableComponents = this.variableComponents.concat(this.stringComponents.toArray())
+    this.variableComponents = this.variableComponents.concat(this.tableComponents.toArray())
+
+    for (const variableComponent of this.variableComponents) {
+      variableComponent.variableChange.asObservable().subscribe(
         value => this.variableChanged(value)
       );
     }
