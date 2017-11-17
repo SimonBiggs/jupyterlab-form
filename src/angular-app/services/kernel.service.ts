@@ -16,6 +16,10 @@ import {
   PromiseDelegate
 } from '@phosphor/coreutils';
 
+import {
+  sessionStartCode
+} from './session-start-code';
+
 
 @Injectable()
 export class KernelService {
@@ -27,35 +31,6 @@ export class KernelService {
 
   session: Session.ISession;
   kernel: Kernel.IKernelConnection;
-
-  sessionStartCode = `
-import json
-
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-%matplotlib inline
-
-from IPython.display import display
-
-
-def json_table_to_df(json_table):
-    table = json.loads(json_table)
-    columns = [t['name'] for t in table['schema']['fields']]
-    index = table['schema']['primaryKey'][0]
-
-    df = pd.DataFrame(
-        table['data'],
-        columns=columns)
-
-    df.set_index(index, inplace=True)
-
-    for column in columns:
-        if column != index:
-            df[column] = df[column].astype('float64')
-
-    return df
-`
 
   queueId = 0;
   queueLog: any = {};
@@ -98,7 +73,7 @@ def json_table_to_df(json_table):
         this.sessionReady(session);
         this.isNewSession = true;
         this.sessionConnected.resolve(undefined);
-        this.runCode(this.sessionStartCode, 'session_start_code')
+        this.runCode(sessionStartCode, 'session_start_code')
         // console.log('new session ready');
       });
     });

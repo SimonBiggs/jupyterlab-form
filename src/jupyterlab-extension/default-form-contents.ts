@@ -14,23 +14,28 @@ extra elements which are explained below.
 
 ## Sections and variable inputs
 
-There are three kinds of sections:
+There are four kinds of sections:
 
  * \`start\`,
  * \`live\`,
- * and \`button\`.
+ * \`button\`,
+ * and \`output\`.
 
 Code which is written inside of these defined sections is run
 as python code according to specific rules.
 
 Within the form variable inputs can be included.
-There are two kinds of variable inputs:
+There are three kinds of variable inputs:
 
  * \`number\`,
- * and \`string\`.
+ * \`string\`,
+ * and \`table\`.
 
 These are attached to a specific python variable which update on
-user input.
+user input. Number and string variables can be assigned as a standard
+python variable type. Table variables on the other hand must be a pandas 
+dataframe and all of the values within the pandas dataframe are forced to be
+of the type float64.
 
 ### Start sections
 
@@ -53,6 +58,14 @@ code within the start sections is run first.
 
 If you reopen or update the form template without restarting the kernel
 this code will not re-run.
+
+As can be seen from this code there are already a few namespaces included by
+default within the Python session. Some of these are for convenience, some are
+required for the proper running of the form. The code that is run at boot of 
+a new form kernel is 
+
+
+
 
 ### Live sections
 
