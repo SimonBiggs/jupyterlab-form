@@ -82,10 +82,10 @@ ${fetchCode}`
     for (let name of variableNames) {
       if (this.variableStore[name].defined) {
         // console.log(this.variableStore[name].value)
-        if (name == 'world') {
-          console.log(stringify(this.oldVariableStore[name]))
-          console.log(stringify(this.variableStore[name]))
-        }
+        // if (name == 'world') {
+        //   console.log(stringify(this.oldVariableStore[name]))
+        //   console.log(stringify(this.variableStore[name]))
+        // }
 
         if (this.oldVariableStore) {
           if (stringify(this.variableStore[name]) != stringify(this.oldVariableStore[name])) {
@@ -150,7 +150,7 @@ except:
         valueReference = 'False'
       }
     } else {
-      console.log(variableValue)
+      // console.log(variableValue)
       throw RangeError("Unexpected variable type")
     }    
 

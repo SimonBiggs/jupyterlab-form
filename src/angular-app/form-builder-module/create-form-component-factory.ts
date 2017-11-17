@@ -97,8 +97,11 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
         // console.log(this.startComponents);
 
         // The start component section is run first
+        
+
         this.startComponents.toArray().forEach((startComponent, index) => {
           startComponent.setId(index);
+          startComponent.provideLiveSections(this.liveComponents);
 
           // Only run the code of a start component if it is a new session.
           // Once the data model for the form results has been built it can

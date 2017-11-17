@@ -48,8 +48,8 @@ export class VariableBaseComponent implements AfterViewInit {
   }
 
   variableChanged(value: VariableValue) { 
-    console.log(this.oldVariableValue)
-    console.log(this.variableValue)
+    // console.log(this.oldVariableValue)
+    // console.log(this.variableValue)
     if (this.variableValue != this.oldVariableValue) {
       this.myVariableService.pythonPushVariable(this.variableName, this.variableValue, this.isPandas)
       .then((status) => {

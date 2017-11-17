@@ -51,12 +51,12 @@ export class LiveComponent implements AfterViewInit {
 
     for (const variableComponent of this.variableComponents) {
       variableComponent.variableChange.asObservable().subscribe(
-        value => this.variableChanged(value)
+        value => this.runCode()
       );
     }
   }
 
-  variableChanged(variableName: string) {
+  runCode() {
     // This would be better done with a promise. It should always run, just
     // delayed until read and initialised.
     if (this.afterViewInit && this.isFormReady) {

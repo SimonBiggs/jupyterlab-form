@@ -11,10 +11,11 @@ required if new code is added into the [start] section.
 
 
 import {
-  Component, OnInit, ContentChildren, QueryList, AfterViewInit
+  Component, ContentChildren, QueryList
 } from '@angular/core';
 
 import { CodeComponent } from '../code-module/code.component';
+import { LiveComponent } from '../sections-module/live.component';
 
 @Component({
   selector: 'app-start',
@@ -27,26 +28,26 @@ import { CodeComponent } from '../code-module/code.component';
   </button>
 </div>`
 })
-export class StartComponent implements OnInit, AfterViewInit {
-
+export class StartComponent {
+  liveComponents: QueryList<LiveComponent>;
   startId: number;
   hasStartRun = false;
 
   @ContentChildren(CodeComponent) codeComponents: QueryList<CodeComponent>;
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-  ngAfterViewInit() {
+  provideLiveSections(liveComponents: QueryList<LiveComponent>) {
+    this.liveComponents = liveComponents;
   }
 
   runCode() {
-    this.codeComponents.toArray().forEach((codeComponent, index) => {
+    this.codeComponents.toArray().forEach(codeComponent => {
       codeComponent.runCode();
     });
     this.hasStartRun = true;
+
+    // this.liveComponents.toArray().forEach(liveComponent => {
+    //   liveComponent.runCode();
+    // });
   }
 
   setId(id: number) {

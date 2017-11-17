@@ -25,8 +25,9 @@ Code which is written inside of these defined sections is run
 as python code according to specific rules.
 
 Within the form variable inputs can be included.
-There are three kinds of variable inputs:
+There are four kinds of variable inputs:
 
+ * \`boolean\`,
  * \`number\`,
  * \`string\`,
  * and \`table\`.
@@ -35,7 +36,8 @@ These are attached to a specific python variable which update on
 user input. Number and string variables can be assigned as a standard
 python variable type. Table variables on the other hand must be a pandas 
 dataframe and all of the values within the pandas dataframe are forced to be
-of the type float64.
+of the type float64. Boolean creates a check box which represents either True
+or False within Python.
 
 ### Start sections
 
