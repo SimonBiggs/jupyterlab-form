@@ -70,7 +70,6 @@ export class TableComponent extends VariableBaseComponent {
       numRowsUnchanged = false
     }
     this.variableValue = value;
-    this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue));
 
     let columns: string[] = []
     value.schema.fields.forEach(val => {
@@ -90,14 +89,16 @@ export class TableComponent extends VariableBaseComponent {
         const keys = Object.keys(row)
         keys.forEach((key, j) => {
           if ((i !== this.focus[0]) || (key !== this.focus[1])) {
-            this.dataSource.data[i][key] = row[key];
+            if (this.oldVariableValue.data[i][key] !== row[key]) {
+              this.dataSource.data[i][key] = row[key];
+              this.oldVariableValue.data[i][key] = row[key];
+            }
           }
         })
       })
-      // this.variableValue.data = this.dataSource.data;
-      // this.oldVariableValue = JSON.parse(JSON.stringify(this.dataSource.data))
     } else {
       this.dataSource.data = value.data;
+      this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue));
     }
   }
 

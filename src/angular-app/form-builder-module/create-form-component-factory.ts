@@ -109,6 +109,8 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
         this.myKernelSevice.isNewSession = false;
 
         // Variable components are initialised second
+        this.myVariableService.resetVariableService();
+        
         for (const variableComponent of this.variableComponents) {
           variableComponent.initialise();
         }

@@ -15,12 +15,8 @@ import { KernelService } from './kernel.service';
 
 import { VariableStore } from '../interfaces/variable-store'
 import { VariableValue } from '../types/variable-value';
-// import { PandasTable } from '../interfaces/pandas-table'
 
 import { VariableComponent } from '../types/variable-component';
-// import { NumberComponent } from '../variables-module/number.component';
-// import { StringComponent } from '../variables-module/string.component';
-// import { TableComponent } from '../variables-module/table.component';
 
 
 @Injectable()
@@ -41,6 +37,12 @@ print('}')`
   constructor(
     private myKernelSevice: KernelService
   ) { }
+
+  resetVariableService() {
+    this.variableStore = {};
+    this.oldVariableStore = {};
+    this.componentStore = {};
+  }
 
   initialiseVariableComponent(component: VariableComponent, variableName: string, isPandas: boolean) {
     this.componentStore[variableName] = component
