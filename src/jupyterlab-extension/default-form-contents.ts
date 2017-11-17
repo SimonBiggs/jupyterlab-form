@@ -80,11 +80,13 @@ It is designed to contain both code and variable inputs. Whenever
 the user changes any variable within the live section all code within
 that live section is subsequently run.
 
+A neat use case for a live section is a table that live updates as users fill
+in the table contents:
+
 [live]
 [table]table[/table]
 \`\`\`
 table.iloc[:,3] = np.nanmean(table.iloc[:,0:3], axis=1)
-display(table)
 \`\`\`
 [/live]
 
@@ -95,34 +97,36 @@ should not run whenever a user changes a variable.
 
 They are defined as following:
 
+[string]a_string[/string]
+
 [button]
 \`print(a_string)\`
 [/button]
 
 They will not run until their respective button is pressed.
 
-[string]a_string[/string]
+### Output groups
+
+Code placed within output groups after any other code section is run. 
+
+Any variable placed within an output group will format as a non-editable card.
+By placing key output variables within an output group their results will be
+saved in a format that is easy to extract and trend.
+
 
 ## Future work
 
 It is the aim to have it so that the results of these forms can be
 saved in \`[formname]-[timestamp].results.json\` files.
-Whenever a set of results are saved
-a hashed copy of the template is saved to the path
-\`.frozen-forms/[formname]-[hash].form.md\`.
-That way whenever the \`[formname]-[timestamp].results.json\`
-file is viewed it will be displayed using the form template
-as it was at the time of filling the form out.
+Whenever a set of results are saved a copy of the template is included within
+the json.
 
-All variable inputs will also record the timestamp representing the
+All variable inputs will be recorded along with the timestamp representing the
 time at which that input was last changed.
 
-Templates will also have the option of referencing a \`.config.json\`
-file which will be hashed and frozen in the same way as above to provide
-abstracted metadata which can be changed independently of the forms.
-
-It might prove useful to create a separate extension which then provides
-interactive trending of the form results files over time.
+Once this form extension is in a usable state the benefits will truly come to 
+light once a second extension is made  which takes the data and trends the 
+results over time.
 
 Another extension of value would be a scheduling and overview extension
 which defines a set of tasks. Each task can contain multiple forms.
@@ -130,6 +134,4 @@ There would also be targets, tasks can be assigned to multiple targets
 and assigned tasks can be schuduled to be completed over defined intervals.
 This would present an overview of all targets, their corresponding tasks,
 when the scheduled tasks were last completed, when they are next due by.
-
-Beyond the big picture goals provided above there is a need for
-general user experience improvements.`
+`
