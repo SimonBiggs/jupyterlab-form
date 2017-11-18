@@ -11,7 +11,7 @@ import {
   <ng-content></ng-content>
 </span>
 
-<mat-input-container *ngIf="variableName">
+<mat-input-container class="variableString" *ngIf="variableName">
   <textarea
     matInput matTextareaAutosize
     [disabled]="!isFormReady"
@@ -22,6 +22,11 @@ import {
     (focus)="onFocus()"
     type="text" class="variableString"></textarea>
 </mat-input-container>`,
+styles: [
+  `.variableString {
+  width: 100%;
+}
+`]
 })
 export class StringComponent extends VariableBaseComponent { 
   updateVariableView(value: string) {

@@ -16,6 +16,7 @@ import {
 
 import { CodeComponent } from '../code-module/code.component';
 import { LiveComponent } from '../sections-module/live.component';
+import { ButtonComponent } from '../sections-module/button.component';
 
 @Component({
   selector: 'app-start',
@@ -30,13 +31,16 @@ import { LiveComponent } from '../sections-module/live.component';
 })
 export class StartComponent {
   liveComponents: QueryList<LiveComponent>;
+  buttonComponents: QueryList<ButtonComponent>;
+
   startId: number;
   hasStartRun = false;
 
   @ContentChildren(CodeComponent) codeComponents: QueryList<CodeComponent>;
 
-  provideLiveSections(liveComponents: QueryList<LiveComponent>) {
+  provideSections(liveComponents: QueryList<LiveComponent>, buttonComponents: QueryList<ButtonComponent>) {
     this.liveComponents = liveComponents;
+    this.buttonComponents = buttonComponents;
   }
 
   runCode() {
@@ -45,9 +49,15 @@ export class StartComponent {
     });
     this.hasStartRun = true;
 
-    // this.liveComponents.toArray().forEach(liveComponent => {
-    //   liveComponent.runCode();
-    // });
+    // Instead make start components just replace outputs with the code?
+
+    this.liveComponents.toArray().forEach(liveComponent => {
+      liveComponent.clearCodeOutput();
+    });
+
+    this.buttonComponents.toArray().forEach(buttonComponent => {
+      buttonComponent.clearCodeOutput();
+    });
   }
 
   setId(id: number) {

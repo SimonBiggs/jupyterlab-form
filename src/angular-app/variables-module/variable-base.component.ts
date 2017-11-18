@@ -38,12 +38,12 @@ export class VariableBaseComponent implements AfterViewInit {
   ) { }
 
   onBlur(tableCoords?: [number, string]) {
-    console.log('blur')
+    // console.log('blur')
     this.isFocus = false;
   }
 
   onFocus(tableCoords?: [number, string]) {
-    console.log('focus')
+    // console.log('focus')
     this.isFocus = true;
   }
 

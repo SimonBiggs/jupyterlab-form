@@ -146,8 +146,10 @@ except:
       } else {
         valueReference = 'False'
       }
+    } else if (variableValue === null) {
+      valueReference = 'None'
     } else {
-      // console.log(variableValue)
+      console.log(variableValue)
       throw RangeError("Unexpected variable type")
     }    
 

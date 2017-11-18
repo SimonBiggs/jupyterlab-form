@@ -38,7 +38,7 @@ import { OutputService } from '../services/output.service';
   selector: 'code',
   template: `
 <span #outputcontainer></span>
-<span #codecontainer *ngIf="future === undefined"><ng-content></ng-content></span>`
+<span #codecontainer [hidden]="future != undefined"><ng-content></ng-content></span>`
 })
 export class CodeComponent implements AfterViewInit, OnDestroy {
   name: string;
@@ -122,11 +122,19 @@ export class CodeComponent implements AfterViewInit, OnDestroy {
     this.promise.then(future => {
       if (future) {
         this.future = future;
+        this.outputArea.show()
         this.outputArea.future = this.future;
         this.outputcontainer.nativeElement.appendChild(this.outputArea.node);
         this.aCodeRunCompleted.emit();
       }
     });
+  }
+
+  hideOutput() {
+    this.future = undefined
+    this.outputArea.hide()
+
+    console.log(this.future)
   }
 
 
