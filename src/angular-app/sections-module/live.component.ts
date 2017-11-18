@@ -13,7 +13,8 @@ import {
   Component, ContentChildren, QueryList, AfterViewInit
 } from '@angular/core';
 
-import { BooleanComponent } from '../variables-module/boolean.component';
+import { ToggleComponent } from '../variables-module/toggle.component';
+import { TickComponent } from '../variables-module/tick.component';
 import { NumberComponent } from '../variables-module/number.component';
 import { StringComponent } from '../variables-module/string.component';
 import { TableComponent } from '../variables-module/table.component';
@@ -34,7 +35,8 @@ export class LiveComponent implements AfterViewInit {
   afterViewInit = false;
   isFormReady = false;
 
-  @ContentChildren(BooleanComponent) booleanComponents: QueryList<BooleanComponent>;
+  @ContentChildren(ToggleComponent) toggleComponents: QueryList<ToggleComponent>;
+  @ContentChildren(TickComponent) tickComponents: QueryList<TickComponent>;
   @ContentChildren(NumberComponent) numberComponents: QueryList<NumberComponent>;
   @ContentChildren(StringComponent) stringComponents: QueryList<StringComponent>;
   @ContentChildren(TableComponent) tableComponents: QueryList<TableComponent>;
@@ -44,7 +46,8 @@ export class LiveComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.afterViewInit = true;
 
-    this.variableComponents = this.variableComponents.concat(this.booleanComponents.toArray())
+    this.variableComponents = this.variableComponents.concat(this.toggleComponents.toArray())
+    this.variableComponents = this.variableComponents.concat(this.tickComponents.toArray())
     this.variableComponents = this.variableComponents.concat(this.numberComponents.toArray())
     this.variableComponents = this.variableComponents.concat(this.stringComponents.toArray())
     this.variableComponents = this.variableComponents.concat(this.tableComponents.toArray())

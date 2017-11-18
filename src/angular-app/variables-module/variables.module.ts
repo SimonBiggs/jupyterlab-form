@@ -7,10 +7,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import {
-  MatInputModule, MatTableModule, MatCheckboxModule
+  MatInputModule, MatTableModule, MatCheckboxModule, MatSlideToggleModule
 } from '@angular/material';
 
-import { BooleanComponent } from './boolean.component';
+import { ToggleComponent } from './toggle.component';
+import { TickComponent } from './tick.component';
 import { NumberComponent } from './number.component';
 import { StringComponent } from './string.component';
 import { TableComponent } from './table.component';
@@ -21,16 +22,19 @@ import { TableComponent } from './table.component';
     MatInputModule,
     MatTableModule,
     MatCheckboxModule,
+    MatSlideToggleModule,
     FormsModule
   ],
   declarations: [
-    BooleanComponent,
+    ToggleComponent,
+    TickComponent,
     NumberComponent,
     StringComponent,
     TableComponent
   ],
   exports: [
-    BooleanComponent,
+    ToggleComponent,
+    TickComponent,
     NumberComponent,
     StringComponent,
     TableComponent

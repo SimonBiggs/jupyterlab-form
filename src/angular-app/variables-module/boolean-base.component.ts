@@ -4,20 +4,8 @@ import {
   Component
 } from '@angular/core';
 
-@Component({
-  selector: 'app-boolean',
-  template: `
-<span #variablecontainer *ngIf="variableName === undefined">
-  <ng-content></ng-content>
-</span>
-
-<mat-checkbox 
-  [(ngModel)]="variableValue"
-  (ngModelChange)="variableChanged($event)">
-  {{variableName}}
-</mat-checkbox>`,
-})
-export class BooleanComponent extends VariableBaseComponent { 
+@Component({})
+export class BooleanBaseComponent extends VariableBaseComponent { 
   variableValue: boolean;
   updateVariableView(value: string) {
     if (value === 'True') {
