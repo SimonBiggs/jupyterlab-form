@@ -77,11 +77,17 @@ except:
       '"fetchAllVariables"')
     .then((future: Kernel.IFuture) => {
       if (future) {
-        future.onIOPub = ((msg) => {
+        let textContent = '';
+        future.onIOPub = (msg => {
           if (msg.content.text) {
-            let result = JSON.parse(String(msg.content.text))
-            this.variableStore = result
-            this.checkForChanges()
+            textContent = textContent.concat(String(msg.content.text))
+            try {
+              let result = JSON.parse(textContent)
+              this.variableStore = result
+              this.checkForChanges()
+            } catch (err) {
+              console.log(textContent)
+            }
           }
         }); 
       }
