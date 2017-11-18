@@ -103,8 +103,8 @@ python variable name.
 
 #### Table variables
 
-A neat use case for a live section is a table that live updates as users fill
-in the table contents:
+Table variables display a full pandas dataframe. The live code can update one
+part of the table as other parts are being edited.
 
 [live]
 [table]table[/table]
@@ -115,7 +115,10 @@ table.iloc[:,3] = np.nanmean(table.iloc[:,0:3], axis=1)
 
 #### The tick and toggle variables
 
-Another is feedback or code activation as a result of a checklist:
+Tick and toggle variables are simply different representations of a True/False
+boolean variable within python. They are provided for use cases such as check
+lists and pass fail tests. These variables can interact with each other in 
+interesting ways via the live Python code.
 
 [live]
 [tick]hello[/tick]
