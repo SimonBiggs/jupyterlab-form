@@ -19,6 +19,8 @@ import {
 })
 export class BooleanComponent extends VariableBaseComponent { 
   updateVariableView(value: string) {
+    // this.variableValue = value
+
     if (value === 'True') {
       this.variableValue = true
     } else if (value === 'False') {

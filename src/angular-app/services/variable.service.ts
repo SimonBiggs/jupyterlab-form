@@ -111,20 +111,17 @@ ${fetchCode}`
 
   createFetchCode(variableName: string, isPandas: boolean): string {
     let variableReference: string
-    let pythonFormatSection: string
 
     if (isPandas) {
       variableReference = variableName.concat(".to_json(orient='table')")
-      pythonFormatSection = '{}'
       
     } else {
-      variableReference = variableName
-      pythonFormatSection = '"{}"'
+      variableReference = `json.dumps(str(${variableName}))`
     }
 
     let fetchCode = `
 try:
-    print('{{ "defined": true, "value": ${pythonFormatSection} }}'.format(${variableReference}))
+    print('{{ "defined": true, "value": {} }}'.format(${variableReference}))
 except:
     print('{"defined": false}')
 `;
@@ -140,7 +137,7 @@ except:
       
     } else if (typeof(variableValue) === 'string') {
       variableValue = variableValue.replace(/\"/g, '\\"')
-      valueReference = `"${String(variableValue)}"`
+      valueReference = `"""${String(variableValue)}"""`
     } else if (typeof(variableValue) === 'number') {
       valueReference = `${String(variableValue)}`
     } else if (typeof(variableValue) === 'boolean') {

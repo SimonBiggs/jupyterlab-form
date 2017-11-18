@@ -12,21 +12,20 @@ import {
 </span>
 
 <mat-input-container *ngIf="variableName">
-  <input
-    matInput
+  <textarea
+    matInput matTextareaAutosize
     [disabled]="!isFormReady"
     [placeholder]="variableName"
     [(ngModel)]="variableValue"
     (ngModelChange)="variableChanged($event)"
     (blur)="onBlur()" 
     (focus)="onFocus()"
-    type="text" class="variableString">
+    type="text" class="variableString"></textarea>
 </mat-input-container>`,
 })
 export class StringComponent extends VariableBaseComponent { 
   updateVariableView(value: string) {
-    this.variableValue = String(value)
-
-    this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue));
+    value = String(value)
+    super.updateVariableView(value)
   }
 }

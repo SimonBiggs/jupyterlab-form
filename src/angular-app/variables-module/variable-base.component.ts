@@ -38,12 +38,12 @@ export class VariableBaseComponent implements AfterViewInit {
   ) { }
 
   onBlur(tableCoords?: [number, string]) {
-    // console.log('blur')
+    console.log('blur')
     this.isFocus = false;
   }
 
   onFocus(tableCoords?: [number, string]) {
-    // console.log('focus')
+    console.log('focus')
     this.isFocus = true;
   }
 
@@ -67,8 +67,13 @@ export class VariableBaseComponent implements AfterViewInit {
   }
 
   updateVariableView(value: VariableValue) {
-    this.variableValue = value
-    this.oldVariableValue = JSON.parse(JSON.stringify(value))
+    if (!this.isFocus) {
+      this.variableValue = value
+
+      // Should this be "python variable" instead? As in, should it always 
+      // update here?
+      this.oldVariableValue = JSON.parse(JSON.stringify(value))
+    }
   }
 
   formReady() {
