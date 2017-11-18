@@ -12,9 +12,13 @@ import {
 
 import { ToggleComponent } from './toggle.component';
 import { TickComponent } from './tick.component';
+
 import { NumberComponent } from './number.component';
-import { StringComponent } from './string.component';
+import { SliderComponent } from './slider.component';
 import { TableComponent } from './table.component';
+
+import { StringComponent } from './string.component';
+
 
 @NgModule({
   imports: [
@@ -29,6 +33,7 @@ import { TableComponent } from './table.component';
     ToggleComponent,
     TickComponent,
     NumberComponent,
+    SliderComponent,
     StringComponent,
     TableComponent
   ],
@@ -36,6 +41,7 @@ import { TableComponent } from './table.component';
     ToggleComponent,
     TickComponent,
     NumberComponent,
+    SliderComponent,
     StringComponent,
     TableComponent
   ]

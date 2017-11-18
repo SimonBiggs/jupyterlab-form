@@ -13,7 +13,8 @@ import {
 
 <mat-slide-toggle 
   [(ngModel)]="variableValue"
-  (ngModelChange)="variableChanged($event)">
+  (ngModelChange)="variableChanged($event)"
+  [disabled]="!isFormReady">
   {{variableName}}
 </mat-slide-toggle>`,
 })

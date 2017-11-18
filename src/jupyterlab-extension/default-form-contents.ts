@@ -74,7 +74,7 @@ a new form kernel can be found within the
 
 ### Live sections and demo of each of the variable types
 
-#### Number variables
+#### Number and slider variables
 
 A \`live\` section is made as following:
 
@@ -83,6 +83,7 @@ A \`live\` section is made as following:
 [number]data[1][/number]
 [number]data[2][/number]
 \`plt.plot(data, 'o');\`
+[slider]test[/slider]
 [/live]
 
 It is designed to contain both code and variable inputs. Whenever

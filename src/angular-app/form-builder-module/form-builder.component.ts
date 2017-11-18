@@ -93,7 +93,9 @@ export class FormBuilderComponent implements OnInit, AfterViewInit {
     ).replace(/\[tick\]/g, '<app-tick>'
     ).replace(/\[\/tick\]/g, '</app-tick>'
     ).replace(/\[toggle\]/g, '<app-toggle>'
-    ).replace(/\[\/toggle\]/g, '</app-toggle>');
+    ).replace(/\[\/toggle\]/g, '</app-toggle>'
+    ).replace(/\[slider\]/g, '<app-slider>'
+    ).replace(/\[\/slider\]/g, '</app-slider>');
 
     // Render the markdown to html
     const html = this.myMarkdownIt.render(customTags);

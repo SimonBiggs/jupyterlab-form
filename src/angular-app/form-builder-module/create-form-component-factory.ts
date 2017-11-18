@@ -33,8 +33,9 @@ import { VariablesModule } from '../variables-module/variables.module';
 import { ToggleComponent } from '../variables-module/toggle.component';
 import { TickComponent } from '../variables-module/tick.component';
 import { NumberComponent } from '../variables-module/number.component';
-import { StringComponent } from '../variables-module/string.component';
+import { SliderComponent } from '../variables-module/slider.component';
 import { TableComponent } from '../variables-module/table.component';
+import { StringComponent } from '../variables-module/string.component';
 
 import { CodeModule } from '../code-module/code.module';
 import { CodeComponent } from '../code-module/code.component';
@@ -60,16 +61,22 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
   class FormComponent {   
     variableComponents: VariableComponent[] = []
 
+    // Sections
     @ViewChildren(StartComponent) startComponents: QueryList<StartComponent>;
     @ViewChildren(LiveComponent) liveComponents: QueryList<LiveComponent>;
     @ViewChildren(ButtonComponent) buttonComponents: QueryList<ButtonComponent>;
 
+    // Variables
     @ViewChildren(ToggleComponent) toggleComponents: QueryList<ToggleComponent>;
     @ViewChildren(TickComponent) tickComponents: QueryList<TickComponent>;
+
     @ViewChildren(NumberComponent) numberComponents: QueryList<NumberComponent>;
-    @ViewChildren(StringComponent) stringComponents: QueryList<StringComponent>;
+    @ViewChildren(SliderComponent) sliderComponents: QueryList<SliderComponent>;
     @ViewChildren(TableComponent) tableComponents: QueryList<TableComponent>;
 
+    @ViewChildren(StringComponent) stringComponents: QueryList<StringComponent>;
+
+    // Code
     @ViewChildren(CodeComponent) codeComponents: QueryList<CodeComponent>;
   
     constructor(
@@ -80,9 +87,12 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
     ngAfterViewInit() {
       this.variableComponents = this.variableComponents.concat(this.toggleComponents.toArray())
       this.variableComponents = this.variableComponents.concat(this.tickComponents.toArray())
+
       this.variableComponents = this.variableComponents.concat(this.numberComponents.toArray())
-      this.variableComponents = this.variableComponents.concat(this.stringComponents.toArray())
+      this.variableComponents = this.variableComponents.concat(this.sliderComponents.toArray())
       this.variableComponents = this.variableComponents.concat(this.tableComponents.toArray())
+
+      this.variableComponents = this.variableComponents.concat(this.stringComponents.toArray())
 
       this.initialiseForm();
     }
@@ -145,15 +155,9 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
           });
 
           // Tell the variable components that the form is ready
-          for (const numberComponent of this.numberComponents.toArray()) {
-            numberComponent.formReady();
-          }
-          for (const stringComponent of this.stringComponents.toArray()) {
-            stringComponent.formReady();
-          }
-          for (const tableComponent of this.tableComponents.toArray()) {
-            tableComponent.formReady();
-          }
+          this.variableComponents.forEach(variableComponent => {
+            variableComponent.formReady();
+          })
 
           // Tell the button components that the form is ready
           this.buttonComponents.toArray().forEach((buttonComponent, index) => {
