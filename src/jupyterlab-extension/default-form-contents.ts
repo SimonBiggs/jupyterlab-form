@@ -98,7 +98,7 @@ plot.
 The slider requires four inputs, the minimum, maximum, step size, and finally 
 the name of the python variable which is mapped to the slider.
 
-All other veriable types apart from the slider only require one input, the
+All other variable types apart from the slider only require one input, the
 python variable name.
 
 #### Table variables
