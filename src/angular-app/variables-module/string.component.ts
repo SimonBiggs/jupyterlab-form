@@ -37,7 +37,9 @@ export class StringComponent extends VariableBaseComponent {
   }
 
   pythonValueReference() {
-    const escapedString = this.variableValue.replace(/\"/g, '\\"')
+    const escapedString = this.variableValue
+    .replace(/\"/g, '\\"')
+    .replace(/\\/g, '\\\\')
     const valueReference = `"""${String(escapedString)}"""`
 
     return valueReference
