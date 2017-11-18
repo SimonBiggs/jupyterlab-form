@@ -62,15 +62,6 @@ ${fetchCode}`
   }
 
   createFetchCode(variableReference: string): string {
-    // let variableReference: string
-
-    // if (isPandas) {
-    //   variableReference = variableName.concat(".to_json(orient='table')")
-      
-    // } else {
-    //   variableReference = `json.dumps(str(${variableName}))`
-    // }
-
     let fetchCode = `
 try:
     print('{{ "defined": true, "value": {} }}'.format(${variableReference}))
@@ -89,12 +80,9 @@ except:
         if (msg.content.text) {
           let result = JSON.parse(String(msg.content.text))
           this.variableStore = result
-          // console.log(this.variableStore)
           this.checkForChanges()
         }
-
       }); 
-      
     })
   }
 
@@ -103,18 +91,10 @@ except:
 
     for (let name of variableNames) {
       if (this.variableStore[name].defined) {
-        // console.log(this.variableStore[name].value)
-        // if (name == 'world') {
-        //   console.log(stringify(this.oldVariableStore[name]))
-        //   console.log(stringify(this.variableStore[name]))
-        // }
-
         if (this.oldVariableStore) {
           if (stringify(this.variableStore[name]) != stringify(this.oldVariableStore[name])) {
-            // this.oldVariableStore[name] = JSON.parse(JSON.stringify(this.variableStore[name]))
             this.updateComponentView(
               this.componentStore[name], this.variableStore[name].value)
-            
           }
         } else {
           this.updateComponentView(
@@ -126,26 +106,17 @@ except:
   }
 
   updateComponentView(component: any, value: VariableValue) {
-    // console.log('update view')
-    // console.log(value)
     component.updateVariableView(value)
   }
 
-
-
-  pythonPushVariable(variableName: string, valueReference: string) {
-
+  pushVariable(variableName: string, valueReference: string) {
     let pushCode = `${variableName} = ${valueReference}`
-
-    // console.log(pushCode)
+    
     this.oldVariableStore[variableName] = {
       defined: true,
       value: JSON.parse(JSON.stringify(valueReference))
     }
-    return this.pushVariable(variableName, pushCode)
-  }
 
-  pushVariable(variableName: string, pushCode: string) {
     return this.myKernelSevice.runCode(
       pushCode, '"push"_"' + variableName + '"'
     ).then(future => {

@@ -14,7 +14,6 @@ import {
 } from '@angular/core';
 
 import { VariableService } from '../services/variable.service';
-
 import { VariableValue } from '../types/variable-value';
 
 
@@ -38,12 +37,10 @@ export class VariableBaseComponent implements AfterViewInit {
   ) { }
 
   onBlur(tableCoords?: [number, string]) {
-    // console.log('blur')
     this.isFocus = false;
   }
 
   onFocus(tableCoords?: [number, string]) {
-    // console.log('focus')
     this.isFocus = true;
   }
 
@@ -66,7 +63,7 @@ export class VariableBaseComponent implements AfterViewInit {
   variableChanged(value: VariableValue) { 
     if (this.testIfDifferent()) {
       const valueReference = this.pythonValueReference()
-      this.myVariableService.pythonPushVariable(this.variableName, valueReference)
+      this.myVariableService.pushVariable(this.variableName, valueReference)
       .then((status) => {
         if (status !== 'ignore') {
           this.variableChange.emit(this.variableName);
@@ -84,9 +81,6 @@ export class VariableBaseComponent implements AfterViewInit {
   updateVariableView(value: VariableValue) {
     if (!this.isFocus) {
       this.variableValue = value
-
-      // Should this be "python variable" instead? As in, should it always 
-      // update here?
       this.oldVariableValue = JSON.parse(JSON.stringify(value))
     }
   }
