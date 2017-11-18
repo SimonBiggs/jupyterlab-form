@@ -134,8 +134,6 @@ field.
 
 ### Button sections
 
-#### String variables
-
 Button groups are designed for long running or standalone tasks that
 should not run whenever a user changes a variable.
 

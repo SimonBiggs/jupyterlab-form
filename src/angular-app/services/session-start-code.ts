@@ -1,5 +1,4 @@
 export const sessionStartCode = `
-import re
 import json
 
 import numpy as np
