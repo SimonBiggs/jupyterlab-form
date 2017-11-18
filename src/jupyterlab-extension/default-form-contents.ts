@@ -25,19 +25,19 @@ Code which is written inside of these defined sections is run
 as python code according to specific rules.
 
 Within the form variable inputs can be included.
-There are four kinds of variable inputs:
+There are six kinds of variable inputs:
 
- * \`boolean\`,
  * \`number\`,
- * \`string\`,
- * and \`table\`.
+ * \`slider\`,
+ * \`table\`,
+ * \`tick\`,
+ * \`toggle\`,
+ * and \`string\`.
 
 These are attached to a specific python variable which update on
-user input. Number and string variables can be assigned as a standard
-python variable type. Table variables on the other hand must be a pandas 
-dataframe and all of the values within the pandas dataframe are forced to be
-of the type float64. Boolean creates a check box which represents either True
-or False within Python.
+user input. Number and slider represent floats. String represents a Python
+string. Tick and toggle are both booleans. The table variable is a pandas 
+dataframe with all of the values in the dataframe being floats.
 
 ### Start sections
 
