@@ -78,9 +78,15 @@ a new form kernel can be found within the
 
 ### Live sections and demo of each of the variable types
 
+Each of the usable variables are demoed below making use of \`live\` sections.
+A live section is designed to contain both code and variable inputs. Whenever
+the user changes any variable within the live section all code within
+that live section is subsequently run.
+
 #### Number and slider variables
 
-A \`live\` section is made as following:
+Here is a \`live\` section containing both number and slider that produces a 
+plot.
 
 [live]
 [number]data[0][/number]
@@ -93,9 +99,11 @@ A \`live\` section is made as following:
 \`plt.plot(data, 'o');\`
 [/live]
 
-It is designed to contain both code and variable inputs. Whenever
-the user changes any variable within the live section all code within
-that live section is subsequently run.
+The slider requires four inputs, the minimum, maximum, step size, and finally 
+the name of the python variable which is mapped to the slider.
+
+All other veriable types apart from the slider only require one input, the
+python variable name.
 
 #### Table variables
 
