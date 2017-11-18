@@ -23,6 +23,8 @@ export class VariableBaseComponent implements AfterViewInit {
   isFormReady = false;
   isPandas = false;
   isFocus = false;
+  
+  variableIdentifier: string
 
   @Output() variableChange = new EventEmitter<any>();
   @ViewChild('variablecontainer') variablecontainer: ElementRef;
@@ -63,7 +65,7 @@ export class VariableBaseComponent implements AfterViewInit {
   variableChanged(value: VariableValue) { 
     if (this.testIfDifferent()) {
       const valueReference = this.pythonValueReference()
-      this.myVariableService.pushVariable(this.variableName, valueReference)
+      this.myVariableService.pushVariable(this.variableIdentifier, this.variableName, valueReference)
       .then((status) => {
         if (status !== 'ignore') {
           this.variableChange.emit(this.variableName);
@@ -80,8 +82,11 @@ export class VariableBaseComponent implements AfterViewInit {
 
   updateVariableView(value: VariableValue) {
     if (!this.isFocus) {
-      this.variableValue = value
-      this.updateOldVariable()
+      if (this.variableValue != value) {
+        this.variableValue = value
+        this.updateOldVariable()
+        this.variableChange.emit(this.variableName)
+      }
     }
   }
 
@@ -89,7 +94,8 @@ export class VariableBaseComponent implements AfterViewInit {
     this.isFormReady = true;
   }
 
-  initialise() {
+  initialise(index: number) {
+    this.variableIdentifier = `(${String(index)})-${this.variableName}`
     this.myVariableService.initialiseVariableComponent(this)
   }
 }

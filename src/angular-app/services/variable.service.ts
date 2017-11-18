@@ -46,16 +46,16 @@ print('}')`
   }
 
   initialiseVariableComponent(component: VariableComponent) {
-    const variableName = component.variableName
-    this.componentStore[variableName] = component
+    const variableIdentifier = component.variableIdentifier
+    this.componentStore[variableIdentifier] = component
     
     const variableReference = component.pythonVariableReference();
-    this.appendToFetchAllCode(variableName, variableReference);
+    this.appendToFetchAllCode(variableIdentifier, variableReference);
   }
 
-  appendToFetchAllCode(variableName: string, variableReference: string) {
+  appendToFetchAllCode(variableIdentifier: string, variableReference: string) {
     let fetchCode = this.createFetchCode(variableReference);
-    let fetchAllCodeAppend = `print(',"${variableName}":')
+    let fetchAllCodeAppend = `print(',"${variableIdentifier}":')
 ${fetchCode}`
 
     this.fetchAllCode = this.fetchAllCode.concat(fetchAllCodeAppend)
@@ -76,29 +76,31 @@ except:
       this.fetchAllCodeStart.concat(this.fetchAllCode, this.fetchAllCodeEnd), 
       '"fetchAllVariables"')
     .then((future: Kernel.IFuture) => {
-      future.onIOPub = ((msg) => {
-        if (msg.content.text) {
-          let result = JSON.parse(String(msg.content.text))
-          this.variableStore = result
-          this.checkForChanges()
-        }
-      }); 
+      if (future) {
+        future.onIOPub = ((msg) => {
+          if (msg.content.text) {
+            let result = JSON.parse(String(msg.content.text))
+            this.variableStore = result
+            this.checkForChanges()
+          }
+        }); 
+      }
     })
   }
 
   checkForChanges() {
-    const variableNames = Object.keys(this.componentStore);
+    const variableIdentifiers = Object.keys(this.componentStore);
 
-    for (let name of variableNames) {
-      if (this.variableStore[name].defined) {
+    for (let identifier of variableIdentifiers) {
+      if (this.variableStore[identifier].defined) {
         if (this.oldVariableStore) {
-          if (stringify(this.variableStore[name]) != stringify(this.oldVariableStore[name])) {
+          if (stringify(this.variableStore[identifier]) != stringify(this.oldVariableStore[identifier])) {
             this.updateComponentView(
-              this.componentStore[name], this.variableStore[name].value)
+              this.componentStore[identifier], this.variableStore[identifier].value)
           }
         } else {
           this.updateComponentView(
-            this.componentStore[name], this.variableStore[name].value)
+            this.componentStore[identifier], this.variableStore[identifier].value)
         } 
       }
     }
@@ -109,20 +111,24 @@ except:
     component.updateVariableView(value);
   }
 
-  pushVariable(variableName: string, valueReference: string) {
+  pushVariable(variableIdentifier: string, variableName: string, valueReference: string) {
     let pushCode = `${variableName} = ${valueReference}`
     
-    this.oldVariableStore[variableName] = {
+    this.oldVariableStore[variableIdentifier] = {
       defined: true,
       value: JSON.parse(JSON.stringify(valueReference))
     }
 
     return this.myKernelSevice.runCode(
-      pushCode, '"push"_"' + variableName + '"'
+      pushCode, '"push"_"' + variableIdentifier + '"'
     ).then(future => {
       // console.log(future)
       if (future) {
-        return future.done;
+        const promise = future.done
+        future.done.then(() => {
+          this.fetchAll();
+        })
+        return promise;
       } else {
         return Promise.resolve('ignore');
       }

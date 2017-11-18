@@ -72,7 +72,7 @@ required for the proper running of the form. The code that is run at boot of
 a new form kernel can be found within the 
 [source code](https://github.com/SimonBiggs/jupyterlab-form/blob/master/src/angular-app/services/session-start-code.ts).
 
-### Live sections
+### Live sections and demo of each of the variable types
 
 #### Number variables
 
@@ -121,6 +121,16 @@ if hello and world:
 [boolean]bye[/boolean]
 [/live]
 
+#### String variables
+
+String variables fill the entire width of the container they are in. They also
+expand when new lines are provied. An example use case is an optional notes
+field.
+
+[live]
+[string]notes[/string]
+\`print(notes)\`
+[/live]
 
 ### Button sections
 
@@ -131,10 +141,10 @@ should not run whenever a user changes a variable.
 
 They are defined as following:
 
-[string]a_string[/string]
+[string]notes[/string]
 
 [button]
-\`print(a_string)\`
+\`print(notes)\`
 [/button]
 
 They will not run until their respective button is pressed.

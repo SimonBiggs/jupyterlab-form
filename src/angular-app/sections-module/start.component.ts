@@ -51,13 +51,13 @@ export class StartComponent {
 
     // Instead make start components just replace outputs with the code?
 
-    this.liveComponents.toArray().forEach(liveComponent => {
-      liveComponent.clearCodeOutput();
-    });
+    // this.liveComponents.toArray().forEach(liveComponent => {
+    //   liveComponent.clearCodeOutput();
+    // });
 
-    this.buttonComponents.toArray().forEach(buttonComponent => {
-      buttonComponent.clearCodeOutput();
-    });
+    // this.buttonComponents.toArray().forEach(buttonComponent => {
+    //   buttonComponent.clearCodeOutput();
+    // });
   }
 
   setId(id: number) {

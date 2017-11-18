@@ -51,7 +51,6 @@ import { VariableComponent } from '../types/variable-component';
  */
 export
 function createFormComponentFactory(compiler: Compiler, metadata: Component): ComponentFactory<any> {
-  
 
   /**
    * The form component that is built each time the template changes
@@ -118,9 +117,9 @@ function createFormComponentFactory(compiler: Compiler, metadata: Component): Co
         // Variable components are initialised second
         this.myVariableService.resetVariableService();
         
-        for (const variableComponent of this.variableComponents) {
-          variableComponent.initialise();
-        }
+        this.variableComponents.forEach((variableComponent, index) => {
+          variableComponent.initialise(index);
+        })
         this.myVariableService.fetchAll()
 
         // Wait until the code queue is complete before declaring form ready to
