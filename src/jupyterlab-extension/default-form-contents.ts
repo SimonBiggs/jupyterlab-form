@@ -56,10 +56,6 @@ table = pd.DataFrame(
 hello = False
 world = False
 bye = False
-
-min = 0
-max = 100
-step = 1
 \`\`\`
 [/start]
 
