@@ -113,17 +113,13 @@ export class TableComponent extends VariableBaseComponent {
       })
     } else {
       this.dataSource.data = value.data;
-      this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue));
+      this.updateOldVariable()
     }
   }
 
   testIfDifferent() {
     this.variableValue.data = JSON.parse(JSON.stringify(this.dataSource.data));
     return !(stringify(this.variableValue) === stringify(this.oldVariableValue));
-  }
-
-  updateOldVariable() {
-    this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue));
   }
 
   pythonValueReference() {

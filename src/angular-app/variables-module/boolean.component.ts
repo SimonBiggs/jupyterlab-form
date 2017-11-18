@@ -20,8 +20,6 @@ import {
 export class BooleanComponent extends VariableBaseComponent { 
   variableValue: boolean;
   updateVariableView(value: string) {
-    // this.variableValue = value
-
     if (value === 'True') {
       this.variableValue = true
     } else if (value === 'False') {
@@ -29,8 +27,7 @@ export class BooleanComponent extends VariableBaseComponent {
     } else {
       RangeError("Unexpected boolean response")
     }
-    
-    this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue));
+    this.updateOldVariable()
   }
 
   pythonValueReference() {

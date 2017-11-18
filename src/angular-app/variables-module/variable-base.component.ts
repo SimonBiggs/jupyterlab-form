@@ -57,7 +57,7 @@ export class VariableBaseComponent implements AfterViewInit {
   }
 
   updateOldVariable() {
-    this.oldVariableValue = this.variableValue;
+    this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue));
   }
 
   variableChanged(value: VariableValue) { 
@@ -81,7 +81,7 @@ export class VariableBaseComponent implements AfterViewInit {
   updateVariableView(value: VariableValue) {
     if (!this.isFocus) {
       this.variableValue = value
-      this.oldVariableValue = JSON.parse(JSON.stringify(value))
+      this.updateOldVariable()
     }
   }
 

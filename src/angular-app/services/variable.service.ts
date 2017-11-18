@@ -106,7 +106,7 @@ except:
   }
 
   updateComponentView(component: any, value: VariableValue) {
-    component.updateVariableView(value)
+    component.updateVariableView(value);
   }
 
   pushVariable(variableName: string, valueReference: string) {
