@@ -29,8 +29,17 @@ styles: [
 `]
 })
 export class StringComponent extends VariableBaseComponent { 
+  variableValue: string
+
   updateVariableView(value: string) {
     value = String(value)
     super.updateVariableView(value)
+  }
+
+  pythonValueReference() {
+    const escapedString = this.variableValue.replace(/\"/g, '\\"')
+    const valueReference = `"""${String(escapedString)}"""`
+
+    return valueReference
   }
 }

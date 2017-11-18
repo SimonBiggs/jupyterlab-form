@@ -10,7 +10,6 @@ import * as  stringify from 'json-stable-stringify';
 
 import { VariableBaseComponent } from './variable-base.component';
 import { PandasTable } from '../interfaces/pandas-table'
-import { VariableValue } from '../types/variable-value';
 
 @Component({
   selector: 'app-table',
@@ -118,25 +117,21 @@ export class TableComponent extends VariableBaseComponent {
     }
   }
 
-  variableChanged(value: VariableValue) {
+  testIfDifferent() {
+    this.variableValue.data = JSON.parse(JSON.stringify(this.dataSource.data));
+    return !(stringify(this.variableValue) === stringify(this.oldVariableValue));
+  }
 
-    this.variableValue.data = JSON.parse(JSON.stringify(this.dataSource.data))
-    // console.log(!(stringify(this.variableValue) === stringify(this.oldVariableValue)))
+  updateOldVariable() {
+    this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue));
+  }
 
-    // console.log(stringify(this.variableValue))
-    // console.log(stringify(this.oldVariableValue))
+  pythonValueReference() {
+    return `json_table_to_df('${JSON.stringify(this.variableValue)}')`
+  }
 
-    if (!(stringify(this.variableValue) === stringify(this.oldVariableValue))) {
-      this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue))
-
-      this.myVariableService.pythonPushVariable(this.variableName, this.variableValue, this.isPandas)
-      .then((status) => {
-        if (status !== 'ignore') {
-          this.variableChange.emit(this.variableName);
-        }
-      });
-      
-    }
+  pythonVariableReference() {
+    return this.variableName.concat(".to_json(orient='table')")
   }
 
   onBlur(tableCoords: [number, string]) {

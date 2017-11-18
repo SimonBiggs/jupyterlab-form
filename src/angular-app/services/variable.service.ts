@@ -45,17 +45,39 @@ print('}')`
     this.fetchAllCode = '';
   }
 
-  initialiseVariableComponent(component: VariableComponent, variableName: string, isPandas: boolean) {
+  initialiseVariableComponent(component: VariableComponent) {
+    const variableName = component.variableName
     this.componentStore[variableName] = component
-    this.appendToFetchAllCode(variableName, isPandas);
+    
+    const variableReference = component.pythonVariableReference();
+    this.appendToFetchAllCode(variableName, variableReference);
   }
 
-  appendToFetchAllCode(variableName: string, isPandas: boolean) {
-    let fetchCode = this.createFetchCode(variableName, isPandas);
+  appendToFetchAllCode(variableName: string, variableReference: string) {
+    let fetchCode = this.createFetchCode(variableReference);
     let fetchAllCodeAppend = `print(',"${variableName}":')
 ${fetchCode}`
 
     this.fetchAllCode = this.fetchAllCode.concat(fetchAllCodeAppend)
+  }
+
+  createFetchCode(variableReference: string): string {
+    // let variableReference: string
+
+    // if (isPandas) {
+    //   variableReference = variableName.concat(".to_json(orient='table')")
+      
+    // } else {
+    //   variableReference = `json.dumps(str(${variableName}))`
+    // }
+
+    let fetchCode = `
+try:
+    print('{{ "defined": true, "value": {} }}'.format(${variableReference}))
+except:
+    print('{"defined": false}')
+`;
+    return fetchCode;
   }
 
   fetchAll() {
@@ -109,49 +131,9 @@ ${fetchCode}`
     component.updateVariableView(value)
   }
 
-  createFetchCode(variableName: string, isPandas: boolean): string {
-    let variableReference: string
 
-    if (isPandas) {
-      variableReference = variableName.concat(".to_json(orient='table')")
-      
-    } else {
-      variableReference = `json.dumps(str(${variableName}))`
-    }
 
-    let fetchCode = `
-try:
-    print('{{ "defined": true, "value": {} }}'.format(${variableReference}))
-except:
-    print('{"defined": false}')
-`;
-    return fetchCode;
-  }
-
-  pythonPushVariable(variableName: string, variableValue: VariableValue, isPandas = false) {
-    let valueReference: string
-
-    if (isPandas) {
-      // valueReference = `pd.read_json('${JSON.stringify(variableValue)}', orient='table')`
-      valueReference = `json_table_to_df('${JSON.stringify(variableValue)}')`
-      
-    } else if (typeof(variableValue) === 'string') {
-      variableValue = variableValue.replace(/\"/g, '\\"')
-      valueReference = `"""${String(variableValue)}"""`
-    } else if (typeof(variableValue) === 'number') {
-      valueReference = `${String(variableValue)}`
-    } else if (typeof(variableValue) === 'boolean') {
-      if (variableValue) {
-        valueReference = 'True'
-      } else {
-        valueReference = 'False'
-      }
-    } else if (variableValue === null) {
-      valueReference = 'None'
-    } else {
-      console.log(variableValue)
-      throw RangeError("Unexpected variable type")
-    }    
+  pythonPushVariable(variableName: string, valueReference: string) {
 
     let pushCode = `${variableName} = ${valueReference}`
 
@@ -160,10 +142,10 @@ except:
       defined: true,
       value: JSON.parse(JSON.stringify(valueReference))
     }
-    return this.pushVariable(variableName, variableValue, pushCode)
+    return this.pushVariable(variableName, pushCode)
   }
 
-  pushVariable(variableName: string, variableValue: VariableValue, pushCode: string) {
+  pushVariable(variableName: string, pushCode: string) {
     return this.myKernelSevice.runCode(
       pushCode, '"push"_"' + variableName + '"'
     ).then(future => {

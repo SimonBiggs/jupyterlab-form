@@ -47,17 +47,32 @@ export class VariableBaseComponent implements AfterViewInit {
     this.isFocus = true;
   }
 
+  pythonValueReference() {
+    return String(this.variableValue);
+  }
+
+  pythonVariableReference() {
+    return `json.dumps(str(${this.variableName}))`
+  }
+
+  testIfDifferent() {
+    return this.variableValue != this.oldVariableValue
+  }
+
+  updateOldVariable() {
+    this.oldVariableValue = this.variableValue;
+  }
+
   variableChanged(value: VariableValue) { 
-    // console.log(this.oldVariableValue)
-    // console.log(this.variableValue)
-    if (this.variableValue != this.oldVariableValue) {
-      this.myVariableService.pythonPushVariable(this.variableName, this.variableValue, this.isPandas)
+    if (this.testIfDifferent()) {
+      const valueReference = this.pythonValueReference()
+      this.myVariableService.pythonPushVariable(this.variableName, valueReference)
       .then((status) => {
         if (status !== 'ignore') {
           this.variableChange.emit(this.variableName);
         }
       });
-      this.oldVariableValue = this.variableValue;
+      this.updateOldVariable();
     }
   }
 
@@ -81,7 +96,6 @@ export class VariableBaseComponent implements AfterViewInit {
   }
 
   initialise() {
-    this.myVariableService.initialiseVariableComponent(
-      this, this.variableName, this.isPandas)
+    this.myVariableService.initialiseVariableComponent(this)
   }
 }

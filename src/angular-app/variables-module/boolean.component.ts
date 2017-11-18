@@ -18,6 +18,7 @@ import {
 </mat-checkbox>`,
 })
 export class BooleanComponent extends VariableBaseComponent { 
+  variableValue: boolean;
   updateVariableView(value: string) {
     // this.variableValue = value
 
@@ -30,5 +31,16 @@ export class BooleanComponent extends VariableBaseComponent {
     }
     
     this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue));
+  }
+
+  pythonValueReference() {
+    let valueReference: string;
+    if (this.variableValue) {
+      valueReference = 'True'
+    } else {
+      valueReference = 'False'
+    }
+
+    return valueReference
   }
 }

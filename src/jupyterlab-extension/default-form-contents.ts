@@ -74,6 +74,8 @@ a new form kernel can be found within the
 
 ### Live sections
 
+#### Number variables
+
 A \`live\` section is made as following:
 
 [live]
@@ -87,6 +89,8 @@ It is designed to contain both code and variable inputs. Whenever
 the user changes any variable within the live section all code within
 that live section is subsequently run.
 
+#### Table variables
+
 A neat use case for a live section is a table that live updates as users fill
 in the table contents:
 
@@ -96,6 +100,8 @@ in the table contents:
 table.iloc[:,3] = np.nanmean(table.iloc[:,0:3], axis=1)
 \`\`\`
 [/live]
+
+#### Boolean variables
 
 Another is feedback or code activation as a result of a checklist:
 
@@ -117,6 +123,8 @@ if hello and world:
 
 
 ### Button sections
+
+#### String variables
 
 Button groups are designed for long running or standalone tasks that
 should not run whenever a user changes a variable.
