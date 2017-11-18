@@ -7,7 +7,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import {
-  MatInputModule, MatTableModule, MatCheckboxModule, MatSlideToggleModule
+  MatInputModule, MatTableModule, MatCheckboxModule, MatSlideToggleModule,
+  MatSliderModule
 } from '@angular/material';
 
 import { ToggleComponent } from './toggle.component';
@@ -27,6 +28,7 @@ import { StringComponent } from './string.component';
     MatTableModule,
     MatCheckboxModule,
     MatSlideToggleModule,
+    MatSliderModule,
     FormsModule
   ],
   declarations: [

@@ -1,7 +1,7 @@
 import { BooleanBaseComponent } from './boolean-base.component';
 
 import {
-  Component
+  Component, AfterViewInit
 } from '@angular/core';
 
 @Component({
@@ -18,4 +18,4 @@ import {
   {{variableName}}
 </mat-checkbox>`,
 })
-export class TickComponent extends BooleanBaseComponent { }
+export class TickComponent extends BooleanBaseComponent implements AfterViewInit { }

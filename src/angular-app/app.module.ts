@@ -1,12 +1,12 @@
 /*
 The root app module.
 */
-
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ApplicationRef, ErrorHandler } from '@angular/core';
 
 import {
-  MatButtonModule, MatInputModule, MatIconModule, MatCheckboxModule
+  MatButtonModule, MatInputModule, MatIconModule, MatCheckboxModule, 
+  MatSliderModule
 } from '@angular/material';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,12 +26,13 @@ import { AppComponent } from './app.component';
     AppComponent
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     MatButtonModule,
     MatIconModule,
     MatInputModule,
     MatCheckboxModule,
-    BrowserAnimationsModule,
+    MatSliderModule,
     FormBuilderModule
   ],
   entryComponents: [

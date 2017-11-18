@@ -56,6 +56,10 @@ table = pd.DataFrame(
 hello = False
 world = False
 bye = False
+
+min = 0
+max = 100
+step = 1
 \`\`\`
 [/start]
 
@@ -82,8 +86,11 @@ A \`live\` section is made as following:
 [number]data[0][/number]
 [number]data[1][/number]
 [number]data[2][/number]
+
+[slider]0,100,1,data[0][/slider]
+[slider]-100,100,20,data[1][/slider]
+[slider]0,1,0.01,data[2][/slider]
 \`plt.plot(data, 'o');\`
-[slider]test[/slider]
 [/live]
 
 It is designed to contain both code and variable inputs. Whenever

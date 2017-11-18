@@ -38,6 +38,11 @@ export class VariableBaseComponent implements AfterViewInit {
     public myVariableService: VariableService
   ) { }
 
+  ngAfterViewInit() {
+    this.variableName = this.variablecontainer.nativeElement.innerHTML.trim();
+    this.myChangeDetectorRef.detectChanges();
+  }
+
   onBlur(tableCoords?: [number, string]) {
     this.isFocus = false;
   }
@@ -62,7 +67,10 @@ export class VariableBaseComponent implements AfterViewInit {
     this.oldVariableValue = JSON.parse(JSON.stringify(this.variableValue));
   }
 
-  variableChanged(value: VariableValue) { 
+  onVariableChange() { }
+
+  variableChanged(value: VariableValue) {
+    this.onVariableChange()
     if (this.testIfDifferent()) {
       const valueReference = this.pythonValueReference()
       this.myVariableService.pushVariable(this.variableIdentifier, this.variableName, valueReference)
@@ -73,11 +81,6 @@ export class VariableBaseComponent implements AfterViewInit {
       });
       this.updateOldVariable();
     }
-  }
-
-  ngAfterViewInit() {
-    this.variableName = this.variablecontainer.nativeElement.innerHTML.trim();
-    this.myChangeDetectorRef.detectChanges();
   }
 
   updateVariableView(value: VariableValue) {

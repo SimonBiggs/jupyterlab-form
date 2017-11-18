@@ -1,7 +1,7 @@
 import { BooleanBaseComponent } from './boolean-base.component';
 
 import {
-  Component
+  Component, AfterViewInit
 } from '@angular/core';
 
 @Component({
@@ -18,4 +18,4 @@ import {
   {{variableName}}
 </mat-slide-toggle>`,
 })
-export class ToggleComponent extends BooleanBaseComponent { }
+export class ToggleComponent extends BooleanBaseComponent implements AfterViewInit { }

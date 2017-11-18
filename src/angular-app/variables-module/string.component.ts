@@ -1,7 +1,7 @@
 import { VariableBaseComponent } from './variable-base.component';
 
 import {
-  Component
+  Component, AfterViewInit
 } from '@angular/core';
 
 @Component({
@@ -28,7 +28,7 @@ styles: [
 }
 `]
 })
-export class StringComponent extends VariableBaseComponent { 
+export class StringComponent extends VariableBaseComponent implements AfterViewInit { 
   variableValue: string
 
   updateVariableView(value: string) {

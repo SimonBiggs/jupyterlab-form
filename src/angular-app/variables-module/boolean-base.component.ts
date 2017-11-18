@@ -1,11 +1,11 @@
 import { VariableBaseComponent } from './variable-base.component';
 
 import {
-  Component
+  Component, AfterViewInit
 } from '@angular/core';
 
 @Component({})
-export class BooleanBaseComponent extends VariableBaseComponent { 
+export class BooleanBaseComponent extends VariableBaseComponent implements AfterViewInit { 
   variableValue: boolean;
   updateVariableView(value: string) {
     if (value === 'True') {

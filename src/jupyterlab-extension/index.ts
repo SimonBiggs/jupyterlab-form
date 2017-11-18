@@ -5,6 +5,7 @@ The JupyterLab extension entry point.
 
 // import '../angular-app/polyfills';
 import './styles';
+import 'hammerjs';
 
 import {
   JupyterLab, JupyterLabPlugin, ILayoutRestorer

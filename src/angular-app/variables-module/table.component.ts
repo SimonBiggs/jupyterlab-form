@@ -1,5 +1,5 @@
 import {
-  Component
+  Component, AfterViewInit
 } from '@angular/core';
 
 import {
@@ -63,7 +63,7 @@ styles: [
 }
 `]
 })
-export class TableComponent extends VariableBaseComponent {
+export class TableComponent extends VariableBaseComponent implements AfterViewInit {
   columnDefs: string[] = []
   oldColumnDefs: string[] = []
   dataSource: MatTableDataSource<{
@@ -117,8 +117,11 @@ export class TableComponent extends VariableBaseComponent {
     }
   }
 
-  testIfDifferent() {
+  onVariableChange() { 
     this.variableValue.data = JSON.parse(JSON.stringify(this.dataSource.data));
+  }
+
+  testIfDifferent() {
     return !(stringify(this.variableValue) === stringify(this.oldVariableValue));
   }
 
