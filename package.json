@@ -1,6 +1,6 @@
 {
   "name": "@simonbiggs/jupyterlab-form",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
@@ -14,12 +14,12 @@
     "jupyterlab"
   ],
   "scripts": {
-    "build": "npm run clean && npm run copy && tsc && npm run sass",
+    "build": "jlpm run clean && jlpm run copy && tsc && jlpm run sass",
     "copy": "cp -r ./src ./lib ",
     "sass": "node-sass ./src/angular-app/theme.scss ./lib/angular-app/theme.css",
     "watch": "tsc -w",
     "clean": "rimraf lib",
-    "prepack": "npm run build"
+    "prepack": "jlpm run build"
   },
   "files": [
     "lib/**/*.{d.ts,eot,gif,html,css,jpg,js,js.map,json,png,svg,woff2,ttf}"
@@ -44,7 +44,7 @@
     "@jupyterlab/rendermime": "0.12.0",
     "@jupyterlab/services": "0.51.0",
     "@phosphor/widgets": "^1.5.0",
-    "@simonbiggs/phosphor-angular-loader": "^0.5.0",
+    "@simonbiggs/phosphor-angular-loader": "^0.5.3",
     "@types/codemirror": "0.0.47",
     "@types/json-stable-stringify": "^1.0.32",
     "@types/markdown-it": "0.0.4",

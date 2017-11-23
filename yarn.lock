@@ -345,13 +345,11 @@
     "@phosphor/signaling" "^1.2.2"
     "@phosphor/virtualdom" "^1.1.2"
 
-"@simonbiggs/phosphor-angular-loader@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@simonbiggs/phosphor-angular-loader/-/phosphor-angular-loader-0.5.0.tgz#14d19461e93a2b0841a2adb6b0200634d4d05bf5"
+"@simonbiggs/phosphor-angular-loader@^0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@simonbiggs/phosphor-angular-loader/-/phosphor-angular-loader-0.5.3.tgz#df592aef658ebe5023ad7480fe253bf15e5dd679"
   dependencies:
-    "@angular/common" "^5.0.0"
     "@angular/compiler" "^5.0.0"
-    "@angular/core" "^5.0.0"
     "@angular/platform-browser" "^5.0.0"
     "@angular/platform-browser-dynamic" "^5.0.0"
     "@phosphor/coreutils" "^1.3.0"
