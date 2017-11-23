@@ -20,14 +20,14 @@ import {
 } from '@jupyterlab/apputils';
 
 import {
-  FormTemplateWidget, FormTemplateWidgetFactory,
-  FormResultsWidget,
-  FormResultsWidgetFactory
+  OpenFormTemplateWidget, OpenFormTemplateWidgetFactory,
+  // FormResultsWidget,
+  // FormResultsWidgetFactory
 } from './widget';
 
 import {
   // FormResultsModel,
-  FormResultsModelFactory
+  FormModelFactory
 } from './model';
 
 import {
@@ -63,11 +63,11 @@ import {
 // } from '@jupyterlab/services';
 
 const formTemplateFactoryName = 'Form Template';
-const formResultsFactoryName = 'Form Results';
+// const formResultsFactoryName = 'Form Results';
 const editorFactoryName = 'Editor';
 
 const formTemplateFileExt = '.form.md';
-const formResutsFileExt = '.form.json';
+// const formResutsFileExt = '.form.json';
 
 function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocumentManager, launcher: ILauncher | null) {  
   const services = app.serviceManager;
@@ -82,16 +82,16 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
     fileFormat: 'text'
   });
 
-  app.docRegistry.addFileType({
-    name: 'form-results',
-    mimeTypes: ['application/x-form+json'],
-    extensions: [formResutsFileExt],
-    contentType: 'file',
-    fileFormat: 'json'
-  });
+  // app.docRegistry.addFileType({
+  //   name: 'form-results',
+  //   mimeTypes: ['application/x-form+json'],
+  //   extensions: [formResutsFileExt],
+  //   contentType: 'file',
+  //   fileFormat: 'json'
+  // });
 
   // Define the widget factories
-  const formTemplateWidgetFactory = new FormTemplateWidgetFactory({
+  const openFormTemplateWidgetFactory = new OpenFormTemplateWidgetFactory({
     name: formTemplateFactoryName,
     fileTypes: ['form-template'],
     defaultFor: ['form-template'],
@@ -99,28 +99,28 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
     services: services
   });
 
-  const formResultsWidgetFactory = new FormResultsWidgetFactory({
-    name: formResultsFactoryName,
-    modelName: 'form-results',
-    fileTypes: ['form-results'],
-    defaultFor: ['form-results'],
-    services: services,
-    docManager: docManager
-  });
+  // const formResultsWidgetFactory = new FormResultsWidgetFactory({
+  //   name: formResultsFactoryName,
+  //   modelName: 'form-results',
+  //   fileTypes: ['form-results'],
+  //   defaultFor: ['form-results'],
+  //   services: services,
+  //   template: ''
+  // });
 
   // Register factories
-  registry.addModelFactory(new FormResultsModelFactory({}));
-  registry.addWidgetFactory(formTemplateWidgetFactory);
-  registry.addWidgetFactory(formResultsWidgetFactory);
+  registry.addModelFactory(new FormModelFactory({}));
+  registry.addWidgetFactory(openFormTemplateWidgetFactory);
+  // registry.addWidgetFactory(formResultsWidgetFactory);
 
   // Set up the trackers
-  const formTemplateTracker = new InstanceTracker<FormTemplateWidget>({
+  const formTemplateTracker = new InstanceTracker<OpenFormTemplateWidget>({
     namespace: '@simonbiggs/jupyterlab-form/template'
   });
 
-  const formResultsTracker = new InstanceTracker<FormResultsWidget>({
-    namespace: '@simonbiggs/jupyterlab-form/results'
-  });
+  // const formResultsTracker = new InstanceTracker<FormResultsWidget>({
+  //   namespace: '@simonbiggs/jupyterlab-form/results'
+  // });
 
   // Set up state restorers
   restorer.restore(formTemplateTracker, {
@@ -129,22 +129,22 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
     name: widget => widget.context.path
   });
 
-  restorer.restore(formResultsTracker, {
-    command: 'docmanager:open',
-    args: widget => ({ path: widget.context.path, factory: formResultsFactoryName }),
-    name: widget => widget.context.path
-  });
+  // restorer.restore(formResultsTracker, {
+  //   command: 'docmanager:open',
+  //   args: widget => ({ path: widget.context.path, factory: formResultsFactoryName }),
+  //   name: widget => widget.context.path
+  // });
 
   // Connect the trackers
-  formTemplateWidgetFactory.widgetCreated.connect((sender, widget) => {
+  openFormTemplateWidgetFactory.widgetCreated.connect((sender, widget) => {
     formTemplateTracker.add(widget);
     widget.context.pathChanged.connect(() => { formTemplateTracker.save(widget); });
   });
 
-  formResultsWidgetFactory.widgetCreated.connect((sender, widget) => {
-    formResultsTracker.add(widget);
-    widget.context.pathChanged.connect(() => { formResultsTracker.save(widget); });
-  });
+  // formResultsWidgetFactory.widgetCreated.connect((sender, widget) => {
+  //   formResultsTracker.add(widget);
+  //   widget.context.pathChanged.connect(() => { formResultsTracker.save(widget); });
+  // });
 
 
 

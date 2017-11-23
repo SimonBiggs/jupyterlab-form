@@ -9,8 +9,13 @@ import {
   Component, ViewChild
 } from '@angular/core';
 
+import {
+  DocumentRegistry
+} from '@jupyterlab/docregistry';
+
 import { FormBuilderComponent } from './form-builder-module/form-builder.component';
 import { KernelService } from './services/kernel.service';
+import { JupyterlabModelService } from './services/jupyterlab-model.service';
 
 import {
   ServiceManager
@@ -25,16 +30,26 @@ export class AppComponent {
   @ViewChild('form') formBuilderComponent: FormBuilderComponent;
 
   constructor(
-    private myKernelService: KernelService
+    private myKernelService: KernelService,
+    private myJupyterlabModelService: JupyterlabModelService
   ) { }
 
   /**
    * Set or update the template of the form.
    * 
-   * @param formContents: The template to set the form with
+   * @param template: The template to set the form with
    */
-  public setFormContents(formContents: string) {
-    this.formBuilderComponent.setFormContents(formContents);
+  public setTemplateAndBuildForm(template: string) {
+    this.myJupyterlabModelService.setTemplate(template);
+    this.formBuilderComponent.buildForm();
+  }
+
+  public setDocumentModel(model: DocumentRegistry.IModel) {
+    this.myJupyterlabModelService.setModel(model);
+  }
+
+  public modelReady(): Promise<void> {
+    return this.myJupyterlabModelService.modelReady.promise;
   }
 
   /**

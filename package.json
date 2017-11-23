@@ -44,7 +44,7 @@
     "@jupyterlab/rendermime": "0.12.0",
     "@jupyterlab/services": "0.51.0",
     "@phosphor/widgets": "^1.5.0",
-    "@simonbiggs/phosphor-angular-loader": "^0.5.3",
+    "@simonbiggs/phosphor-angular-loader": "^0.6.0",
     "@types/codemirror": "0.0.47",
     "@types/json-stable-stringify": "^1.0.32",
     "@types/markdown-it": "0.0.4",

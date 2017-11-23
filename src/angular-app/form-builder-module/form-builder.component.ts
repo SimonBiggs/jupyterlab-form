@@ -15,6 +15,8 @@ import * as  MarkdownIt from 'markdown-it';
 
 import { createFormComponentFactory } from './create-form-component-factory';
 
+import { JupyterlabModelService } from '../services/jupyterlab-model.service';
+
 import {
   PromiseDelegate
 } from '@phosphor/coreutils';
@@ -36,7 +38,8 @@ export class FormBuilderComponent implements OnInit, AfterViewInit {
   private formComponentRef: ComponentRef<any>;
 
   constructor(
-    private compiler: Compiler
+    private compiler: Compiler,
+    private myJupyterlabModelService: JupyterlabModelService
   ) { }
 
   ngOnInit() {
@@ -57,10 +60,9 @@ export class FormBuilderComponent implements OnInit, AfterViewInit {
    * 
    * This function makes sure to only begin building the form once the component
    * has sufficiently initialised.
-   * 
-   * @param formContents The template to set the form with
    */
-  public setFormContents(markdownTemplate: string) {
+  public buildForm() {
+    const markdownTemplate = this.myJupyterlabModelService.getTemplate()
     this.viewInitialised.promise.then(() => {
       const htmlTemplate = this.convertTemplate(markdownTemplate);
 

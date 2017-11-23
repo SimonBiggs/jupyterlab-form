@@ -24,7 +24,7 @@ import {
 // }
 
 export
-namespace FormResultsModel {
+namespace FormModel {
   /**
    * An options object for initializing a notebook model.
    */
@@ -45,12 +45,13 @@ namespace FormResultsModel {
 }
 
 export
-class FormResultsModel extends DocumentModel {
+class FormModel extends DocumentModel {
 
-  constructor(options: FormResultsModel.IOptions) {
+  constructor(options: FormModel.IOptions) {
     super(options.languagePreference, options.modelDB);
     // this.modelDB.setValue('formPath', options.formPath);
-    this.modelDB.createString('formPath').insert(0, './testing.form.md')
+    // this.modelDB.createString('formPath').insert(0, './testing.form.md')
+    this.modelDB.createString('template')
   }
 
   /**
@@ -96,7 +97,7 @@ class FormResultsModel extends DocumentModel {
 
 
 export
-namespace FormResultsModelFactory {
+namespace FormModelFactory {
   export
   interface IOptions {
     // formPath: string
@@ -104,11 +105,11 @@ namespace FormResultsModelFactory {
 }
 
 export
-class FormResultsModelFactory implements DocumentRegistry.IModelFactory<DocumentRegistry.IModel> {
+class FormModelFactory implements DocumentRegistry.IModelFactory<DocumentRegistry.IModel> {
   private _disposed = false;
   // formPath: string;
 
-  constructor(options: FormResultsModelFactory.IOptions) {
+  constructor(options: FormModelFactory.IOptions) {
     // this.formPath = options.formPath;
   }
 
@@ -157,7 +158,7 @@ class FormResultsModelFactory implements DocumentRegistry.IModelFactory<Document
    */
   createNew(languagePreference?: string, modelDB?: IModelDB): DocumentRegistry.IModel {
     // let formPath = this.formPath;
-    return new FormResultsModel({ languagePreference, modelDB });
+    return new FormModel({ languagePreference, modelDB });
   }
 
   /**
