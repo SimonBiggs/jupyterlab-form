@@ -8,7 +8,7 @@ The extension style.
     overflow: auto;
 }
 
-.jp-Form > .jp-Toolbar {
+.jp-FormContainer > .jp-Toolbar {
     display: block;
     min-height: var(--jp-toolbar-micro-height);
     background: var(--jp-toolbar-background);

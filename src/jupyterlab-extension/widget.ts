@@ -198,7 +198,7 @@ class OpenFormTemplateWidget extends Widget implements DocumentRegistry.IReadyWi
     this._context = options.context;
     this._services = options.services;
 
-    this.addClass('jp-Form');
+    this.addClass('jp-FormContainer');
 
     this.title.closable = true;
 
