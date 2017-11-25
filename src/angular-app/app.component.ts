@@ -9,10 +9,6 @@ import {
   Component, ViewChild
 } from '@angular/core';
 
-import {
-  DocumentRegistry
-} from '@jupyterlab/docregistry';
-
 import { FormBuilderComponent } from './form-builder-module/form-builder.component';
 import { KernelService } from './services/kernel.service';
 import { JupyterlabModelService } from './services/jupyterlab-model.service';
@@ -20,6 +16,10 @@ import { JupyterlabModelService } from './services/jupyterlab-model.service';
 import {
   ServiceManager
 } from '@jupyterlab/services';
+
+import {
+  FormModel
+} from '../jupyterlab-extension/model';
 
 @Component({
   selector: 'app-root',
@@ -44,7 +44,7 @@ export class AppComponent {
     this.formBuilderComponent.buildForm();
   }
 
-  public setDocumentModel(model: DocumentRegistry.IModel) {
+  public setDocumentModel(model: FormModel) {
     this.myJupyterlabModelService.setModel(model);
   }
 

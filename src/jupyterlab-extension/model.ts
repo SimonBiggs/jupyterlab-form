@@ -10,12 +10,13 @@ import {
 } from '@jupyterlab/docregistry';
 
 import {
- IModelDB
+ IModelDB, IObservableString
 } from '@jupyterlab/coreutils';
 
 import {
   Contents
 } from '@jupyterlab/services';
+
 
 
 // export
@@ -46,12 +47,14 @@ namespace FormModel {
 
 export
 class FormModel extends DocumentModel {
+  template: IObservableString;
 
   constructor(options: FormModel.IOptions) {
     super(options.languagePreference, options.modelDB);
     // this.modelDB.setValue('formPath', options.formPath);
     // this.modelDB.createString('formPath').insert(0, './testing.form.md')
     this.modelDB.createString('template')
+    this.template = this.modelDB.get('template') as IObservableString;
   }
 
   /**
@@ -82,15 +85,28 @@ class FormModel extends DocumentModel {
    * Serialize the model to JSON.
    */
   toJSON() {
-
-    return {};
+    return {
+      template: this.getTemplate()
+    };
   }
 
   /**
    * Deserialize the model from JSON.
    */
   fromJSON(value: any): void {
+    this.setTemplate(value.template);
+  }
 
+  setTemplate(template: string) {
+    // console.log(template)
+    this.template.clear()
+    this.template.insert(0, template);
+
+    // console.log(this.template.text)
+  }
+
+  getTemplate() {
+    return this.template.text
   }
 }
 

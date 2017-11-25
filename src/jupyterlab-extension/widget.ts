@@ -28,7 +28,7 @@ import {
  } from '@jupyterlab/coreutils';
 
 import {
-  ServiceManager, ContentsManager, 
+  ServiceManager, ContentsManager, Contents
   // Contents
 } from '@jupyterlab/services';
 
@@ -124,7 +124,7 @@ class FormWidget extends AngularWidget<AppComponent, AppModule> implements Docum
     this._services = options.services;
     this.addClass('jp-Form');
 
-    this.model = new FormModel({});
+    this.model = this._context.model as FormModel;
 
     this._context.pathChanged.connect(this._onPathChanged, this);
 
@@ -174,59 +174,27 @@ class FormWidget extends AngularWidget<AppComponent, AppModule> implements Docum
 
 
 export
-namespace OpenFormTemplateWidget {
+namespace OpenFormWidget {
   export
   interface IOptions {
     context: DocumentRegistry.Context;
     services: ServiceManager;
+    templateEditor?: Contents.IModel;
   }
 }
 
 
-export
-class OpenFormTemplateWidget extends Widget implements DocumentRegistry.IReadyWidget{
-  private _monitor: ActivityMonitor<any, any> | null = null;
+class BaseOpenFormWidget extends Widget implements DocumentRegistry.IReadyWidget {
   _context: DocumentRegistry.Context;
   _services: ServiceManager;
-  form: FormWidget
+  form: FormWidget;
 
-  constructor(options: OpenFormTemplateWidget.IOptions) {
+  constructor(options: OpenFormWidget.IOptions) {
     super();
-
-    this.id = '@simonbiggs/jupyterlab-form/open-form-template';
-
-    this._context = options.context;
-    this._services = options.services;
 
     this.addClass('jp-FormContainer');
 
     this.title.closable = true;
-
-    this.title.label = PathExt.basename(this._context.path);
-    this._context.pathChanged.connect(this._onPathChanged, this);
-
-    let form = this.form = new FormWidget({
-      context: this._context,
-      services: this._services
-    })
-
-    let layout = this.layout = new BoxLayout();
-    let toolbar = new Widget();
-    toolbar.addClass('jp-Toolbar');
-
-    layout.addWidget(toolbar);
-    BoxLayout.setStretch(toolbar, 0);
-    layout.addWidget(form);
-    BoxLayout.setStretch(form, 1);
-
-    this._context.ready.then(() => {
-      this.updateTemplate();
-      this._monitor = new ActivityMonitor({
-        signal: this._context.model.contentChanged,
-        timeout: RENDER_TIMEOUT
-      });
-      this._monitor.activityStopped.connect(this.updateTemplate, this);
-    });
   }
 
   get ready() {
@@ -237,8 +205,54 @@ class OpenFormTemplateWidget extends Widget implements DocumentRegistry.IReadyWi
     return this._context;
   }
 
-  private _onPathChanged(): void {
+  setLayout(form: FormWidget) {
+    let layout = this.layout = new BoxLayout();
+    let toolbar = new Widget();
+    toolbar.addClass('jp-Toolbar');
+
+    layout.addWidget(toolbar);
+    BoxLayout.setStretch(toolbar, 0);
+    layout.addWidget(this.form);
+    BoxLayout.setStretch(this.form, 1);
+  }
+
+  onPathChanged(): void {
     this.title.label = PathExt.basename(this._context.path);
+  }
+
+}
+
+
+export
+class OpenFormTemplateWidget extends BaseOpenFormWidget implements DocumentRegistry.IReadyWidget{
+  private _monitor: ActivityMonitor<any, any> | null = null;
+
+  constructor(options: OpenFormWidget.IOptions) {
+    super(options);
+
+    this.id = '@simonbiggs/jupyterlab-form/open-form-template';
+
+    this._context = options.context;
+    this._services = options.services;
+
+    this.title.label = PathExt.basename(this._context.path);
+    this._context.pathChanged.connect(this.onPathChanged, this);
+
+    this.form = new FormWidget({
+      context: this._context,
+      services: this._services
+    })
+
+    this.setLayout(this.form)
+
+    this._context.ready.then(() => {
+      this.updateTemplate();
+      this._monitor = new ActivityMonitor({
+        signal: this._context.model.contentChanged,
+        timeout: RENDER_TIMEOUT
+      });
+      this._monitor.activityStopped.connect(this.updateTemplate, this);
+    });
   }
 
   updateTemplate() {
@@ -278,6 +292,68 @@ class OpenFormTemplateWidgetFactory extends ABCWidgetFactory<OpenFormTemplateWid
     return new OpenFormTemplateWidget({
       context: context,
       services: this.services
+    });
+  }
+}
+
+
+export
+class OpenFormResultsWidget extends BaseOpenFormWidget implements DocumentRegistry.IReadyWidget{
+  constructor(options: OpenFormWidget.IOptions) {
+    super(options);
+
+    this.id = '@simonbiggs/jupyterlab-form/open-form-results';
+
+    console.log(options.templateEditor)
+
+    this._context = options.context;
+    this._services = options.services;
+
+    this.title.label = PathExt.basename(this._context.path);
+    this._context.pathChanged.connect(this.onPathChanged, this);
+
+    this.form = new FormWidget({
+      context: this._context,
+      services: this._services
+    })
+
+    this.setLayout(this.form)
+
+    this._context.ready.then(() => {
+      this.updateTemplate();
+    });
+  }
+
+  updateTemplate() {
+    const content = this._context.model.toString();
+    this.form.updateTemplate(content);
+  }
+}
+
+
+export
+namespace OpenFormResultsWidgetFactory {
+  export
+  interface IOptions extends DocumentRegistry.IWidgetFactoryOptions {
+    services: ServiceManager;
+  }
+}
+
+export
+class OpenFormResultsWidgetFactory extends ABCWidgetFactory<OpenFormResultsWidget, DocumentRegistry.IModel> {
+  services: ServiceManager;
+
+  constructor(options: OpenFormResultsWidgetFactory.IOptions) {
+    super(options);
+    this.services = options.services;
+    // options.modelName
+  }
+
+  protected createNewWidget(context: DocumentRegistry.Context, templateEditor?: Contents.IModel): OpenFormResultsWidget {
+    return new OpenFormResultsWidget({
+      context: context,
+      services: this.services,
+      templateEditor: templateEditor
     });
   }
 }

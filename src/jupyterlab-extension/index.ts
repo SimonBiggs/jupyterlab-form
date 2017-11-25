@@ -21,13 +21,14 @@ import {
 
 import {
   OpenFormTemplateWidget, OpenFormTemplateWidgetFactory,
-  // FormResultsWidget,
-  // FormResultsWidgetFactory
+  OpenFormResultsWidget,
+  OpenFormResultsWidgetFactory
 } from './widget';
 
 import {
   // FormResultsModel,
-  FormModelFactory
+  FormModelFactory, 
+  // FormModel
 } from './model';
 
 import {
@@ -43,8 +44,12 @@ import {
 } from '@jupyterlab/docmanager';
 
 import {
-  DockPanel
+  DockPanel, Widget
 } from '@phosphor/widgets';
+
+import {
+  PromiseDelegate
+} from '@phosphor/coreutils';
 
 import {
   CodeMirrorEditor
@@ -63,11 +68,11 @@ import {
 // } from '@jupyterlab/services';
 
 const formTemplateFactoryName = 'Form Template';
-// const formResultsFactoryName = 'Form Results';
+const formResultsFactoryName = 'Form Results';
 const editorFactoryName = 'Editor';
 
 const formTemplateFileExt = '.form.md';
-// const formResutsFileExt = '.form.json';
+const formResutsFileExt = '.form.json';
 
 function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocumentManager, launcher: ILauncher | null) {  
   const services = app.serviceManager;
@@ -82,13 +87,13 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
     fileFormat: 'text'
   });
 
-  // app.docRegistry.addFileType({
-  //   name: 'form-results',
-  //   mimeTypes: ['application/x-form+json'],
-  //   extensions: [formResutsFileExt],
-  //   contentType: 'file',
-  //   fileFormat: 'json'
-  // });
+  app.docRegistry.addFileType({
+    name: 'form-results',
+    mimeTypes: ['application/x-form+json'],
+    extensions: [formResutsFileExt],
+    contentType: 'file',
+    fileFormat: 'json'
+  });
 
   // Define the widget factories
   const openFormTemplateWidgetFactory = new OpenFormTemplateWidgetFactory({
@@ -99,28 +104,27 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
     services: services
   });
 
-  // const formResultsWidgetFactory = new FormResultsWidgetFactory({
-  //   name: formResultsFactoryName,
-  //   modelName: 'form-results',
-  //   fileTypes: ['form-results'],
-  //   defaultFor: ['form-results'],
-  //   services: services,
-  //   template: ''
-  // });
+  const openFormResultsWidgetFactory = new OpenFormResultsWidgetFactory({
+    name: formResultsFactoryName,
+    modelName: 'form-results',
+    fileTypes: ['form-results'],
+    defaultFor: ['form-results'],
+    services: services,
+  });
 
   // Register factories
   registry.addModelFactory(new FormModelFactory({}));
   registry.addWidgetFactory(openFormTemplateWidgetFactory);
-  // registry.addWidgetFactory(formResultsWidgetFactory);
+  registry.addWidgetFactory(openFormResultsWidgetFactory);
 
   // Set up the trackers
   const formTemplateTracker = new InstanceTracker<OpenFormTemplateWidget>({
-    namespace: '@simonbiggs/jupyterlab-form/template'
+    namespace: '@simonbiggs/jupyterlab-form/open-form-template'
   });
 
-  // const formResultsTracker = new InstanceTracker<FormResultsWidget>({
-  //   namespace: '@simonbiggs/jupyterlab-form/results'
-  // });
+  const formResultsTracker = new InstanceTracker<OpenFormResultsWidget>({
+    namespace: '@simonbiggs/jupyterlab-form/open-form-results'
+  });
 
   // Set up state restorers
   restorer.restore(formTemplateTracker, {
@@ -129,11 +133,11 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
     name: widget => widget.context.path
   });
 
-  // restorer.restore(formResultsTracker, {
-  //   command: 'docmanager:open',
-  //   args: widget => ({ path: widget.context.path, factory: formResultsFactoryName }),
-  //   name: widget => widget.context.path
-  // });
+  restorer.restore(formResultsTracker, {
+    command: 'docmanager:open',
+    args: widget => ({ path: widget.context.path, factory: formResultsFactoryName }),
+    name: widget => widget.context.path
+  });
 
   // Connect the trackers
   openFormTemplateWidgetFactory.widgetCreated.connect((sender, widget) => {
@@ -141,10 +145,10 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
     widget.context.pathChanged.connect(() => { formTemplateTracker.save(widget); });
   });
 
-  // formResultsWidgetFactory.widgetCreated.connect((sender, widget) => {
-  //   formResultsTracker.add(widget);
-  //   widget.context.pathChanged.connect(() => { formResultsTracker.save(widget); });
-  // });
+  openFormResultsWidgetFactory.widgetCreated.connect((sender, widget) => {
+    formResultsTracker.add(widget);
+    widget.context.pathChanged.connect(() => { formResultsTracker.save(widget); });
+  });
 
 
 
@@ -152,10 +156,11 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
   const callback = (cwd: string, name: string) => {
     return app.commands.execute(
       'docmanager:new-untitled', { path: cwd, type: 'file', ext: formTemplateFileExt }
-    ).then((formModel: Contents.IModel) => {
+    )
+    .then((editorModel: Contents.IModel) => {
       // console.log(formModel)
       return app.commands.execute('docmanager:open', {
-        path: formModel.path, factory: editorFactoryName
+        path: editorModel.path, factory: editorFactoryName
       }).then((editor: FileEditor) => {
         const panelAny: any = editor.parent;
         const panel: DockPanel = panelAny;
@@ -176,42 +181,54 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, docManager: IDocum
 
       })
       .then(() => {
-        return app.commands.execute('docmanager:open', {
-          path: formModel.path, factory: formTemplateFactoryName
-        });
+        let formWidgetPromise = new PromiseDelegate<Widget>()
 
         // The \d is a workaround for https://github.com/jupyterlab/jupyterlab/issues/3113
-        // let baseName = formModel.path.match(/^(.*)\.form\d*\.md$/)[1]
-        // let extensionMatch = formModel.path.match(/^(.*)\.form*\.md$/)
+        // let baseName = editorModel.path.match(/^(.*)\.form\d*\.md$/)[1]
+        let extensionMatch = editorModel.path.match(/^(.*)\.form*\.md$/)
 
-        // if (extensionMatch === null) {
-        //   throw RangeError("The created form does not have the extension '.form.md'")
-        // }
+        if (extensionMatch === null) {
+          throw RangeError("The created form does not have the extension '.form.md'")
+        }
 
-        // let baseName = formModel.path.match(/^(.*)\.form*\.md$/)[1]
-        // let resultsName = baseName.concat(RESULT_EXTENSION)
+        let baseName = editorModel.path.match(/^(.*)\.form*\.md$/)[1]
+        let resultsName = baseName.concat(formResutsFileExt)
 
-        // // docManager.createNew(resultsName, FORMRESULTSFACTORY)
-        // let getResultsFilePromise = docManager.services.contents.get(resultsName, { content: false })
+        // docManager.createNew(resultsName, FORMRESULTSFACTORY)
+        let getResultsFilePromise = services.contents.get(resultsName, { content: false })
+        getResultsFilePromise.then((formContentModel: Contents.IModel) => {
+          app.commands.execute('docmanager:open', {
+            path: formContentModel.path, factory: formResultsFactoryName
+          }).then(widget => {
+            formWidgetPromise.resolve(widget)
+          });
+        })
 
-        // getResultsFilePromise.then((resultsModel: Contents.IModel) => {
-        //   return app.commands.execute('docmanager:open', {
-        //     path: resultsModel.path, factory: FORMRESULTSFACTORY
-        //   })
-        // })
+        getResultsFilePromise.catch(() => {
+          services.contents.newUntitled({
+            path: cwd,
+            ext: formResutsFileExt,
+            type: 'file'
+          }).then((formContentModel: Contents.IModel) => {
+            console.log()
+            return docManager.rename(formContentModel.path, resultsName)
+          })
+          .then((formContentModel: Contents.IModel) => {
+            app.commands.execute('docmanager:open', {
+              path: formContentModel.path, factory: formResultsFactoryName
+            }).then(widget => {
+              formWidgetPromise.resolve(widget)
+            })
+          })
+        })
 
-        // getResultsFilePromise.catch(() => {
-        //   docManager.services.contents.newUntitled({
-        //     path: cwd,
-        //     ext: RESULT_EXTENSION,
-        //     type: 'file'
-        //   })
-        //   .then((resultsModel: Contents.IModel) => {
-        //     return app.commands.execute('docmanager:open', {
-        //       path: resultsModel.path, factory: FORMRESULTSFACTORY
-        //     })
-        //   })
-        // })
+        return formWidgetPromise.promise;
+
+
+        // return app.commands.execute('docmanager:open', {
+        //   path: editorModel.path, factory: formTemplateFactoryName
+        // });
+
 
       });
     });
