@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import {
   IObservableString
- } from '@jupyterlab/coreutils';
+ } from '@jupyterlab/observables';
 
  import {
   PromiseDelegate

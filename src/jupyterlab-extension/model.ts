@@ -11,7 +11,7 @@ import {
 
 import {
  IModelDB, IObservableString
-} from '@jupyterlab/coreutils';
+} from '@jupyterlab/observables';
 
 import {
   Contents
