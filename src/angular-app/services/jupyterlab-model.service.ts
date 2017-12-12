@@ -6,7 +6,7 @@ import {
 
 import {
   IObservableString
- } from '@jupyterlab/coreutils';
+ } from '@jupyterlab/observables';
 
  import {
   PromiseDelegate

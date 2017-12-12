@@ -24,10 +24,6 @@ import {
 } from '../angular-app/app.module';
 
 import {
-  // IObservableString
- } from '@jupyterlab/coreutils';
-
-import {
   ServiceManager, ContentsManager, 
   // Contents
 } from '@jupyterlab/services';

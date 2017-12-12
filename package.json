@@ -1,6 +1,6 @@
 {
   "name": "@simonbiggs/jupyterlab-form",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
@@ -37,11 +37,12 @@
     "@angular/forms": "^5.0.0",
     "@angular/material": "5.0.0-rc.1",
     "@angular/platform-browser": "^5.0.0",
-    "@jupyterlab/application": "0.13.0",
+    "@jupyterlab/application": "0.13.1",
     "@jupyterlab/coreutils": "0.13.0",
     "@jupyterlab/docmanager": "0.13.0",
     "@jupyterlab/fileeditor-extension": "0.13.0",
-    "@jupyterlab/launcher": "0.13.0",
+    "@jupyterlab/launcher": "0.13.2",
+    "@jupyterlab/observables": "^0.2.0",
     "@jupyterlab/outputarea": "0.13.0",
     "@jupyterlab/rendermime": "0.13.0",
     "@jupyterlab/services": "0.52.0",
