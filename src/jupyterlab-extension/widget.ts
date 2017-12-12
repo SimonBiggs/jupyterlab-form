@@ -25,7 +25,7 @@ import {
 
 import {
   ServiceManager, ContentsManager, 
-  // Contents
+  Contents
 } from '@jupyterlab/services';
 
 import {
