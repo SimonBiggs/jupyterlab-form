@@ -2,6 +2,16 @@
 
 [![Gitter chat](https://badges.gitter.im/simonbiggs/jupyterlab-form.png)](https://gitter.im/simonbiggs/jupyterlab-form)
 
+## Project moved and renamed
+
+See http://scriptedforms.com.au for the maintained version of this project.
+
+
+## Description
+
+
+
+
 An extension for jupyterlab to create scripted forms.
 
 ## Requirements
